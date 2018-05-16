@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${member != null} ? ${member.name.firstName} + ' ' + ${member.name.lastName} + ' | Mude' : 'No-User | Mude'">Brijesh Patel | Mude</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="shortcut icon" href="images/logo-white.ico">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="fontawesome/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="owlcarousel/owl.carousel.min.css">
+    <link rel="stylesheet" href="owlcarousel/owl.theme.default.min.css">
+    <link rel="stylesheet" href="css/member.css">
+</head>
+<body>
+    <section class="px-0" th:replace="index :: header"></section>
+    <div th:replace="index :: header-modal"></div>
+    <section th:replace="index :: loader"></section>
+
+    <section class="d-none">
+        <div class="container-fluid mx-0 my-0 px-0 pt-4 pb-4 bg-dark">
+            <div class="row mx-0 my-0 px-0 py-2">
+                <div class="col-md-4 col-12 mx-0 my-0 px-2 py-md-0 pt-sm-5 pb-sm-0 pt-4 pb-0">
+                    <div class="mx-0 my-0 px-2 py-0 profile-box" style="display:flex;">
+                        <div class="col-4 card mx-0 my-0 px-0 py-0 profile-box-inside">
+                            <img src="images/poster.png" th:src="@{${T(us.mude.common.GlobalProps).FS_URI + '/' + member.profileImage + '/' + T(us.mude.common.GlobalProps).POSTER}}" onerror="this.onerror=null; this.src='images/poster.png';" class="card-img-top img-thumbnail px-1 py-1 h-100">
+                            <div class="card-img-overlay row mx-0 my-0 px-0 py-0" th:if="${session.member != null and session.member.id == member.id}">
+                                <div class="mx-0 mb-auto mt-0 px-0 py-2 profile-update-box" style="display:flex; background-color: rgba(0, 0, 0, 0.5); opacity:0.8;">
+                                    <div class="mx-0 my-0 px-2 py-0 text-center">
+                                        <i class="fas fa-camera"></i>
+                                    </div>
+                                    <div class="mx-0 my-0 px-0 py-0">
+                                        <p class="mx-0 my-0 px-0 py-0" id="update_photo">Update Profile Picture</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-8 mx-0 mt-auto pl-3 py-0">
+                            <span class="full-name" th:text="${member != null} ? ${member.name.firstName} + ' ' + ${member.name.lastName} : 'No-User'">
+                                Jude Woo
+                            </span>
+                            <p class="mx-0 mb-2 px-0 py-0 role">
+                                <th:block th:if="${member.memberType == T(us.mude.common.MemberType).AUDIENCE}">(Audience)</th:block>
+                                <th:block th:if="${member.memberType == T(us.mude.common.MemberType).CRITIC}">(Critic)</th:block>
+                                <th:block th:if="${member.memberType == T(us.mude.common.MemberType).ADMIN}">(Admin)</th:block>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row mx-0 my-0 px-0 py-0 bg-black rounded" th:if="${session.member != null and session.member.id == member.id}">
+                        <div class="row ml-auto mr-0 my-0 px-0 py-0">
+                            <div class="dropdown my-auto">
+                                <a class="text-danger-light hover-blue-dark mx-0 my-0 px-lg-2 px-md-1 px-2 py-xl-3 py-2 border-dark border-left control-button dropdown-toggle"
+                                   id="settings-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="cursor: pointer; font-size:1.3rem;">Account Settings</a>
+
+                                <div class="dropdown-menu" aria-labelledby="settings-button">
+                                    <!--<button class="dropdown-item"></button>-->
+                                    <a class="dropdown-item" href="#" onclick="getuserinfo();">Edit Profile</a>
+                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#changepassword">Change Password</a>
+
+                                </div>
+                            </div>
+
+                            <a class="text-danger-light hover-blue-dark mx-0 my-0 px-lg-2 px-md-1 px-2 py-xl-3 py-2 border-dark border-left control-button"
+                            id="delete-button" style="cursor: pointer; font-size:1.3rem;" onclick="fukIT();">Delete Account</a>
+                        </div>
+                    </div>
+                    <!--CHANGE PASSWORD-->
+                    <div id="changepassword" class="modal fade text-black" tabindex="-1" role="dialog" aria-labelledby="changepasswordmodalcenter" aria-hidden="true" style="color:black;">
+                        <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body" id="changepasswordBody">
+                                    <div class="col-12 mx-auto">
+                                        <h6>NEW PASSWORD:</h6>
+                                        <input type="password" id="new_password" placeholder="new password" value="">
+                                    </div>
+                                    <div class="col-12 mx-auto">
+                                        <h6>CURRENT PASSWORD:</h6>
+                                        <input type="password" id="current_password" placeholder="current password" value="">
+                                    </div>
+                                </div>
+                                <div class="modal-footer border-0">
+                                    <div class="row m-0 p-0">
+                                        <button class="btn btn-primary" onclick="changepassword();">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--END OF CHANGE PASSWORD-->
+                    <!--CHANGE PERSONAL INFORMATION-->
+                    <div id="changepersonalinfo" class="modal fade text-black" tabindex="-1" role="dialog" aria-labelledby="changepersonalinfomodalcenter" aria-hidden="true" style="color:black;">
+                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title text-center" id="editinfo_Title">MEDIA</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="clearAllModal();">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body" id="changepersonalinfoBody">
+                                    <div class="row m-0 p-3 w-100">
+                                        <div class="col-4 border-bottom">
+                                            <h6>First Name:</h6>
+                                        </div>
+                                        <div class="col-8">
+                                            <input class="w-100 border-top-0 border-left-0 border-right-0 border-bottom" type="text" placeholder="FIRST NAME" id="editinfo_firstname">
+                                        </div>
+                                    </div>
+                                    <div class="row m-0 p-3 w-100">
+                                        <div class="col-4 border-bottom">
+                                            <h6>Last Name:</h6>
+                                        </div>
+                                        <div class="col-8">
+                                            <input class="w-100 border-top-0 border-left-0 border-right-0 border-bottom" type="text" placeholder="LAST NAME" id="editinfo_lastname">
+                                        </div>
+                                    </div>
+                                    <div class="row m-0 p-3 w-100">
+                                        <div class="col-4 border-bottom">
+                                            <h6>Email:</h6>
+                                        </div>
+                                        <div class="col-8">
+                                            <input class="w-100 border-top-0 border-left-0 border-right-0 border-bottom" type="email" placeholder="EMAIL" id="editinfo_email">
+                                        </div>
+                                    </div>
+                                    <div class="row m-0 p-3 w-100">
+                                        <div class="col-4 border-bottom">
+                                            <h6>Privacy Setting:</h6>
+                                        </div>
+                                        <div class="col-8">
+                                            <select class="w-100 border-top-0 border-left-0 border-right-0 border-bottom" id="editinfo_privacy">
+                                                <option value="false" selected>Public</option>
+                                                <option value="true">Private</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row m-0 p-3 w-100">
+                                        <div class="col-4 border-bottom">
+                                            <h6>Description:</h6>
+                                        </div>
+                                        <div class="col-8">
+                                            <input class="w-100 border-top-0 border-left-0 border-right-0 border-bottom" type="text" placeholder="SOMETHING ABOUT YOU" id="editinfo_desc">
+                                        </div>
+                                    </div>
+                                    <div class="row m-0 p-3 w-100">
+                                        <div class="col-4 border-bottom">
+                                            <h6>Current Password:</h6>
+                                        </div>
+                                        <div class="col-8">
+                                            <input class="w-100 border-top-0 border-left-0 border-right-0 border-bottom" type="password" placeholder="PASSWORD" id="editinfo_pwd">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer border-0">
+                                    <div class="row m-0 p-0">
+                                        <button class="btn btn-primary" onclick="submit_editinfo();">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--END OF CHANGE EMAIL-->
+                    <!-- HERE IS ADMIN OPTION -->
+                    <div class="row mx-0 mt-3 p-0 py-2" id="adminpanel">
+                        <div id="admin_options" class="col-12 m-0 px-2 py-0">
+                            <div class="mx-0 my-0 px-0 py-0 bg-danger" style="display:flex;">
+                                <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:2%;"></div>
+                                <h5 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark">
+                                    ADMIN PANEL
+                                </h5>
+                            </div>
+                            <div class="btn-group users-tab d-xl-flex" role="group" aria-label="admin tab">
+                                <button type="button" class="btn btn-outline-light border-0 rounded d-md-block" style="z-index:0;" id="editmedia" data-toggle="modal" data-target="#selectmediatoedit">
+                                    Media / Filmography
+                                </button>
+                                <button type="button" class="btn btn-outline-light border-0 rounded d-md-block" style="z-index:0;" id="addmedia" data-toggle="modal" data-target="#editmediamodal">
+                                    Add Media
+                                </button>
+
+                                <button type="button" class="btn btn-outline-light border-0 rounded d-md-block" style="z-index:0;" id="addimagetomedia" data-toggle="modal" data-target="#addpicturetomedia">
+                                    Add Pictures to Media
+                                </button>
+                            </div>
+                            <div class="btn-group users-tab d-xl-flex" role="group" aria-label="admin tab">
+                                <button type="button" class="btn btn-outline-light border-0 rounded d-md-block" style="z-index:0;" onclick="getallreportedreview();">
+                                    Reported Review
+                                </button>
+                                <button type="button" class="btn btn-outline-light border-0 rounded d-md-block" style="z-index:0;" onclick="getAllCriticRequests();">
+                                    Critic Requests
+                                </button>
+                                <button type="button" class="btn btn-outline-light border-0 rounded d-md-block" style="z-index:0;" data-toggle="modal" data-target="#deleteotheruser">
+                                    Delete User
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ADMIN OPTION ENDS HERE -->
+                    <!--DELETE OTHER USER-->
+                    <div id="deleteotheruser" class="modal fade text-black" tabindex="-1" role="dialog" aria-labelledby="deleteotherusermodalcenter" aria-hidden="true" style="color:black;">
+                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title text-center" id="deleteotheruser_Title">DELETE SPECIFIC USER</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="clearAllModal();">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body" id="deleteotheruserBody">
+                                    <div class="row m-0 p-3 w-100">
+                                        <div class="col-4 border-bottom">
+                                            <h6>Member ID:</h6>
+                                        </div>
+                                        <div class="col-8">
+                                            <input class="w-100 border-top-0 border-left-0 border-right-0 border-bottom" type="number" placeholder="ID NUMBER" id="deleteotheruser_memberID">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer border-0">
+                                    <div class="row m-0 p-0">
+                                        <button class="btn btn-primary" onclick="deleteotheruser();">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--END OF DELETE OTHER USER MODAL-->
+                    <div class="col-12 mx-0 my-0 px-0 pt-5 pb-0" id="statDiv">
+                        <div class="mx-0 my-0 px-0 py-0" style="display:flex;">
+                            <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:4%;"></div>
+                            <h5 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark">
+                                Stats
+                            </h5>
+                        </div>
+                        <div class="col-12 mx-0 my-0 px-2 py-4">
+                            <div class="mx-0 my-0 px-0 py-0">
+                                <span><b>Want to See:</b></span>
+                            </div>
+                            <div class="mx-0 my-0 px-0 py-0">
+                                <span th:text="${wtsCnt}">
+                                    0
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 mx-0 my-0 px-2 py-4">
+                            <div class="mx-0 my-0 px-0 py-0">
+                                <span><b>Not Interested:</b></span>
+                            </div>
+                            <div class="mx-0 my-0 px-0 py-0">
+                                <span th:text="${niCnt}">
+                                    0
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 mx-0 my-0 px-2 py-4">
+                            <div class="mx-0 my-0 px-0 py-0">
+                                <span><b>Total Written Reviews:</b></span>
+                            </div>
+                            <div class="mx-0 my-0 px-0 py-0">
+                                <span th:text="${rCnt}">
+                                    0
+                                </span>
+                            </div>
+                        </div>
+                        <th:block th:if="${member != null and member.memberType == T(us.mude.common.MemberType).CRITIC}">
+                            <div class="col-12 mx-0 my-0 px-2 py-4">
+                                <div class="mx-0 my-0 px-0 py-0">
+                                    <span><b>Highest Reviewed Movie:</b></span>
+                                </div>
+                                <th:block th:if="${heighestReviewdMovie != null}">
+                                    <span th:text="${heighestReviewdMovie.media.mediaName}">
+
+                                    </span>
+                                </th:block>
+                                <th:block th:unless="${heighestReviewdMovie != null}">
+                                    <span>
+                                        NA
+                                    </span>
+                                </th:block>
+                            </div>
+                            <div class="col-12 mx-0 my-0 px-2 py-4">
+                                <div class="mx-0 my-0 px-0 py-0">
+                                    <span><b>Highest Reviewed TV:</b></span>
+                                </div>
+                                <div class="mx-0 my-0 px-0 py-0">
+                                    <th:block th:if="${heighestReviewdTV != null}">
+                                        <span th:text="${heighestReviewdTV.media.mediaName}">
+
+                                        </span>
+                                    </th:block>
+                                    <th:block th:unless="${heighestReviewdTV != null}">
+                                        <span>
+                                            NA
+                                        </span>
+                                    </th:block>
+                                </div>
+                            </div>
+                        </th:block>
+                        <!--<div class="col-12 mx-0 my-0 px-2 py-4">-->
+                            <!--<div class="mx-0 my-0 px-0 py-0">-->
+                                <!--<span>-->
+                                    <!--<b>Profile Views Last 7 Days:</b>-->
+                                <!--</span>-->
+                            <!--</div>-->
+                            <!--<div class="mx-0 my-0 px-0 py-0">-->
+                                <!--<span>-->
+                                    <!--0-->
+                                <!--</span>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    </div>
+                    <div class="col-12 mx-0 my-0 px-0 pt-5 pb-0">
+                        <div class="mx-0 my-0 px-0 py-0" style="display:flex;">
+                            <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:4%;"></div>
+                            <h5 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark">
+                                About
+                            </h5>
+                        </div>
+                        <div class="col-12 mx-0 my-0 px-2 py-4">
+                            <div class="mx-0 my-0 px-0 py-0">
+                                <span>
+                                    <b>Member Since</b>
+                                </span>
+                            </div>
+                            <div class="mx-0 my-0 px-0 py-0">
+				                 <th:block th:if="${member.regDate != null}">
+                                 <span th:text="${(member.regDate.get(T(java.util.Calendar).MONTH)+1) + ', ' + member.regDate.get(T(java.util.Calendar).YEAR)}">
+                                    March 1999
+                                </span>
+				                </th:block>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 mx-0 my-0 px-0 pt-5 pb-0" id="descDiv">
+                        <div class="mx-0 my-0 px-0 py-0" style="display:flex;">
+                            <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:4%;"></div>
+                            <h5 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark">
+                                Description
+                            </h5>
+                        </div>
+                        <div class="col-12 mx-0 my-0 px-2 py-4">
+                            <div class="mx-0 my-0 px-0 py-0">
+                                <th:block th:if="${member.desc != null or member.desc != ''}">
+                                 <span th:text="${member.desc}">
+                                     Non Available
+                                </span>
+                                </th:block>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8 col-12 mx-0 my-0 px-2 py-0" style="overflow: hidden;">
+                    <!--REPORTED REVIEWS-->
+                    <div id="reportedreview" class="modal fade text-black" tabindex="-1" role="dialog" aria-labelledby="reportedreviewmodalcenter" aria-hidden="true" style="color:black;">
+                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title text-center">REPORTED REVIEWS</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body" id="reportedreviewBody" style="height:500px;overflow:scroll;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--END OF REPORTED REVIEWS-->
+                    <!--CRETIC REQUESTS-->
+                    <div id="criticrequest" class="modal fade text-black" tabindex="-1" role="dialog" aria-labelledby="criticrequestmodalcenter" aria-hidden="true" style="color:black;">
+                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title text-center">REQUESTS TO BECOME CRITIC</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body" id="criticrequestBody" style="height:300px;overflow:scroll; color:black;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--END OF CRETIC REQUESTS-->
+                    <!--  CHANGE NAME MODAL -->
+                    <div id="changename" class="modal fade text-black" tabindex="-1" role="dialog" aria-labelledby="changenamemodalcenter" aria-hidden="true" style="color:black;">
+                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="clearAllModal()">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row m-0 p-0 w-100">
+                                        <form method="POST" action="/chname">
+                                            <div class="col-8 m-0 p-1">
+                                                <input type="hidden" name="memberID" th:value="${member.id}"/>
+                                                <label for="firstName">First Name:<input name="firstName" type="text" th:value="${member.name.firstName}"></label>
+                                                <label for="lastName">Last Name:<input name="lastName" type="text" th:value="${member.name.lastName}"></label>
+                                                <input type="submit" class="btn btn-outline-primary" value="Save Changes"/>
+                                                <input type="reset" class="btn btn-outline-danger" value="Reset"/>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- UPDATE PICTURE  MODAL -->
+                    <div id="updatepicture" class="modal fade text-black" tabindex="-1" role="dialog" aria-labelledby="updatepicturemodalcenter" aria-hidden="true" style="color:black;">
+                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="clearAllModal()">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row m-0 p-0 w-100">
+                                        <form action="http://23.94.27.164/upload.php" method="POST" enctype="multipart/form-data" onsubmit="doSubmit2(this);">
+                                            <div class="col-4 w-100 m-0 p-1">
+                                                <p style="color: black">Select Picture <i class="fa fa-camera"></i></p>
+                                            </div>
+                                            <div class="col-8 m-0 p-1">
+                                                <input type="hidden" name="basedir" th:value="${ 'resource/members/' + member.id + '/photos' }" />
+                                                <input type="hidden" name="replace" value="true" />
+                                                <input type="file" name="file[]" />
+                                                <input type="submit" value="Upload" />
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END OF SELECT MEDIA MODAL -->
+                    <!-- UPDATE MEDIA PICTURE  MODAL -->
+                    <div id="addpicturetomedia" class="modal fade text-black" tabindex="-1" role="dialog" aria-labelledby="addpicturetomediamodalcenter" aria-hidden="true" style="color:black;">
+                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="clearAllModal()">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row m-0 p-0 w-100">
+                                        <form action="http://23.94.27.164/upload.php" method="POST" enctype="multipart/form-data" onsubmit="doSubmit(this)">
+                                            <div class="col-4 w-100 m-0 p-1">
+                                                <p style="color: black">Select Picture <i class="fa fa-camera"></i></p>
+                                            </div>
+                                            <div class="col-8 m-0 p-1">
+                                                <input type="hidden" name="basedir" />
+                                                <input type="hidden" name="replace" value="false" />
+                                                <p style="color:black">Picture:</p>
+                                                <input type="file" name="file[]" multiple="multiple"/>
+                                                <p style="color:black">Media ID:</p>
+                                                <input type="text" name="mediaID" />
+                                                <p></p>
+                                                <input type="submit" value="Upload" />
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END OF SELECT MEDIA MODAL -->
+                    <!-- SELECT MEDIA  MODAL -->
+                    <div id="selectmediatoedit" class="modal fade text-black" tabindex="-1" role="dialog" aria-labelledby="selectmediatoeditmodalcenter" aria-hidden="true" style="color:black;">
+                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="clearAllModal()">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body " id="selectmediatoeditBody">
+                                    <div class="row m-0 p-0 w-100">
+                                        <div class="col-4 w-100 m-0 p-1">
+                                            <select id="editaction" class="w-100">
+                                                <option value="media" selected>EDIT MEDIA</option>
+                                                <option value="removemedia">REMOVE MEDIA</option>
+                                                <option value="filmography">ADD/REMOVE FILMOGRAPHY</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-8 m-0 p-1">
+                                            <div class="input-group dropdown border-0" id="edit-media-search-bar-box">
+                                                <input type="search" id="edit-media-search-bar" class="form-control border-0 search-bar"
+                                                       placeholder="Search Movie, TV" aria-label="Search"
+                                                       aria-describedby="edit-media-search-text" data-toggle="dropdown" style="font-size: 1.3rem !important;"
+                                                       name="editmediakeyword" autocomplete="off">
+                                                <div class="input-group-append bg-white border-0 rounded-right px-0">
+                                                    <a class="nav-link mt-1 mb-0 px-2 py-0 border-0 hover-none search-link"
+                                                       onclick="searchmediatoedit()" style="cursor: pointer;">
+                                                        <i class="fas fa-search text-dark search-icon"></i>
+                                                    </a>
+                                                </div>
+                                                <div class="dropdown-menu my-0" aria-labelledby="edit-media-search-bar" style="width:100%;"
+                                                     id="edit-media-search-bar-dd">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END OF SELECT MEDIA MODAL -->
+                    <!-- FILMOGRAPHY  MODAL -->
+                    <div id="filmographymodal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="filmographymodalcenter" aria-hidden="true" style="color:black;">
+                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="clearAllModal()">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body " id="filmographymodalBody">
+                                    <div class="row">
+                                        <div class="col-12 m-0 p-1">
+                                            <select id="mediaSelectedForFilmography" class="w-50">
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row m-0 p-1">
+                                        <div class="col-6 m-0 p-1">
+                                            <div class="input-group dropdown border-0" id="edit-filmography-search-bar-box">
+                                                <input type="search" id="edit-filmography-search-bar" class="form-control border-0 search-bar"
+                                                       placeholder="Search Artist" aria-label="Search"
+                                                       aria-describedby="edit-filmography-search-text" data-toggle="dropdown" style="font-size: 1.3rem !important;"
+                                                       name="editfilmographykeyword" autocomplete="off">
+                                                <div class="input-group-append bg-white border-0 rounded-right px-0">
+                                                    <a class="nav-link mt-1 mb-0 px-2 py-0 border-0 hover-none search-link"
+                                                       onclick="searchforartists()" style="cursor: pointer;">
+                                                        <i class="fas fa-search text-dark search-icon"></i>
+                                                    </a>
+                                                </div>
+                                                <div class="dropdown-menu my-0" aria-labelledby="edit-filmography-search-bar" style="width:100%; height:500px; overflow:scroll;"
+                                                     id="edit-filmography-search-bar-dd">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-3 m-0 p-1">
+                                            <select id="addFilmographySelectArtistType">
+                                                <option value="CAST" selected>Cast</option>
+                                                <option value="DIRECTOR">Director</option>
+                                                <option value="WRITER">Writer</option>
+                                                <option value="PRODUCER">Producer</option>
+                                                <option value="CREATOR">Creator</option>
+                                                <option value="OTHER">Other</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-3 m-0 p-1">
+                                            <input placeholder="ROLE" value="" id="addFilmographySelectArtistRole">
+                                        </div>
+                                    </div>
+                                    <div class="row m-0 p-1">
+                                        <div class="col-6 m-0 p-0">
+                                            <select id="artistsToRemoveFromFilmography" class="w-100" multiple>
+                                                <!--HERE WE WILL LOAD ALL THE CURRENT FILMOGRAPHY FROM DATABASE-->
+                                            </select>
+                                        </div>
+                                        <div class="col-3">
+                                            <button class="btn btn-danger" onclick="removeFromFilmography()">REMOVE ARTISTS</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END OF FILMOGRAPHY MODAL -->
+                    <!--EDIT MEDIA MODAL-->
+                    <div id="editmediamodal" class="modal fade text-black" tabindex="-1" role="dialog" aria-labelledby="editmediamodalcenter" aria-hidden="true" style="color:black;">
+                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header border-0">
+                                    <h5 class="modal-title text-center" id="editmediamodalTitle">MEDIA</h5>
+                                    <a href="#" class="hover-dark my-0 py-0 mx-0 my-auto" data-dismiss="modal" aria-label="Close" onclick="clearAllModal()">
+                                        <p class="mx-0 my-0 px-0 py-0 text-danger-light">Close</p>
+                                    </a>
+                                </div>
+                                <div class="modal-body text-center" id="editmediamodalBody">
+                                    <div class="row m-0 p-3 w-100">
+                                        <div class="col-4 border-bottom">
+                                            <h6>Media Name:</h6>
+                                        </div>
+                                        <div class="col-8">
+                                            <input class="w-100 border-top-0 border-left-0 border-right-0 border-bottom" type="text" placeholder="ENTER MOVIE, TV, SEASON, EPISODE NAME" id="editmediamdoal_mediaName">
+                                        </div>
+                                    </div>
+                                    <div class="row m-0 p-3 w-100">
+                                        <div class="col-4 text-center border-bottom">
+                                            <h6>Parent ID:</h6>
+                                        </div>
+                                        <div class="col-8">
+                                            <input class="w-100 border-top-0 border-left-0 border-right-0 border-bottom" type="number" placeholder="ENTER PARENT ID FOR ABOVE MEDIA" id="editmediamdoal_parentid" value="-1">
+                                        </div>
+                                    </div>
+                                    <div class="row m-0 p-3 w-100">
+                                        <div class="col-4 text-center border-bottom">
+                                            <h6>Media Type:</h6>
+                                        </div>
+                                        <div class="col-8">
+                                            <select id="editmediamdoal_mediatype" class="w-100 border-top-0 border-left-0 border-right-0 border-bottom">
+                                                <option value="MOVIE" selected>MOVIE</option>
+                                                <option value="TVSERIES">TVSERIES</option>
+                                                <option value="SEASON">SEASON</option>
+                                                <option value="EPISODE">EPISODE</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row m-0 p-3 w-100">
+                                        <div class="col-4 text-center border-bottom">
+                                            <h6>Media Rating:</h6>
+                                        </div>
+                                        <div class="col-8">
+                                            <select id="editmediamdoal_mediarating" class="w-100 border-top-0 border-left-0 border-right-0 border-bottom">
+                                                <option value="NA" selected>NA</option>
+                                                <option value="G">G</option>
+                                                <option value="PG">PG</option>
+                                                <option value="PG13">PG-13</option>
+                                                <option value="R">R</option>
+                                                <option value="NC17">NC-17</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row m-0 p-3 w-100">
+                                        <div class="col-4 text-center border-bottom">
+                                            <h6>Description:</h6>
+                                        </div>
+                                        <div class="col-8">
+                                            <input class="w-100 border-top-0 border-left-0 border-right-0 border-bottom" type="text" placeholder="MEDIA DESCRIPTION" id="editmediamdoal_description">
+                                        </div>
+                                    </div>
+                                    <div class="row m-0 p-3 w-100">
+                                        <div class="col-4 text-center border-bottom">
+                                            <h6>Release Date:</h6>
+                                        </div>
+                                        <div class="col-8">
+                                            <input class="w-100 border-top-0 border-left-0 border-right-0 border-bottom" type="date" placeholder="" id="editmediamdoal_releasedate" value="1000-01-01">
+                                        </div>
+                                    </div>
+                                    <div class="row m-0 p-3 w-100">
+                                        <div class="col-4 text-center border-bottom">
+                                            <h6>DVD Release:</h6>
+                                        </div>
+                                        <div class="col-8">
+                                            <input class="w-100 border-top-0 border-left-0 border-right-0 border-bottom" type="date" placeholder="" id="editmediamdoal_dvdreleasedate" value="1000-01-01">
+                                        </div>
+                                    </div>
+                                    <div class="row m-0 p-3 w-100">
+                                        <div class="col-4 text-center border-bottom">
+                                            <h6>Runtime:</h6>
+                                        </div>
+                                        <div class="col-8">
+                                            <input class="w-100 border-top-0 border-left-0 border-right-0 border-bottom" type="number" placeholder="ENTER TIME IN MINUTES" id="editmediamdoal_runtime" value="0">
+                                        </div>
+                                    </div>
+                                    <div class="row m-0 p-3 w-100">
+                                        <div class="col-4 text-center border-bottom">
+                                            <h6>Box Office:</h6>
+                                        </div>
+                                        <div class="col-8">
+                                            <input class="w-100 border-top-0 border-left-0 border-right-0 border-bottom" type="number" placeholder="ENTER AMOUNT IN DOLLAR" id="editmediamdoal_boxoffice" value="0">
+                                        </div>
+                                    </div>
+                                    <div class="row m-0 p-3 w-100">
+                                        <div class="col-4 text-center border-bottom">
+                                            <h6 class="">Genre:</h6>
+                                        </div>
+                                        <div class="col-8">
+                                            <select id="editmediamdoal_genres" multiple>
+                                                <option value="ACTION">Action</option>
+                                                <option value="ANIMATION">Animation</option>
+                                                <option value="ARTFOREIGN">Art&amp;Foreign</option>
+                                                <option value="CLASSIC">Classic</option>
+                                                <option value="COMEDY">Comedy</option>
+                                                <option value="DOCUMENTARY">Documentary</option>
+                                                <option value="DRAMA">Drama</option>
+                                                <option value="HORROR">Horror</option>
+                                                <option value="KIDSFAMILY">Kids&amp;Family</option>
+                                                <option value="MYSTERY">Mystery</option>
+                                                <option value="ROMANCE">Romance</option>
+                                                <option value="SFFANTASY">Sci-Fi&amp;Fantasy</option>
+                                                <option value="OTHER">Other</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer border-0">
+                                    <div class="row m-0 p-0">
+                                        <button class="btn btn-primary" onclick="submiteditmediainfo()">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--END OF EDIT MEDIA MODAL-->
+
+                    <div id="user_options" class="col-12 mx-0 my-0 px-2 py-0">
+                        <div class="btn-group users-tab d-xl-flex d-none" role="group" aria-label="users tab">
+                            <button type="button" class="btn btn-outline-light active border-0 rounded d-md-block d-none" style="z-index:0;" id="overview">
+                                Overview
+                            </button>
+                            <button type="button" class="btn btn-outline-light border-0 rounded d-md-block d-none" style="z-index:0;" id="movie-reviews">
+                                My Reviews
+                            </button>
+                            <!--<button type="button" class="btn btn-outline-light border-0 rounded d-md-block d-none" style="z-index:0;" id="tv-reviews">-->
+                                <!--My TV Reviews-->
+                            <!--</button>-->
+                            <button type="button" class="btn btn-outline-light border-0 rounded d-md-block d-none" style="z-index:0;" id="wts-ni">
+                                Want To See &amp; Not Interested
+                            </button>
+                            <!--<button type="button" class="btn btn-outline-light border-0 rounded d-lg-block d-none" style="z-index:0;" id="my-critics">
+                                My Critics
+                            </button>-->
+                        </div>
+                        <div class="row mx-0 my-0 px-2 py-1 rounded d-xl-none d-flex">
+                            <div class="dropdown ml-auto" id="filter-dropdown">
+                                <button class="btn btn-outline-light dropdown-toggle menu-button" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                    Menu
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#">Overview</a>
+                                    <a class="dropdown-item" href="#">My Reviews</a>
+                                    <!--<a class="dropdown-item" href="#">My TV Reviews</a>-->
+                                    <a class="dropdown-item" href="#">Want To See & Not Interested</a>
+                                    <a class="dropdown-item" href="#">My Critics</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 mx-0 my-0 px-0 py-0 bg-dark" id="load-page-bounce-user" style="width:100%; height:100%; z-index:2; position: absolute; display: none;">
+                        <div class="row mx-0 my-0 px-0 py-0" style="height:80%;">
+                            <div class="mx-auto my-auto spinner">
+                                <div class="bounce1"></div>
+                                <div class="bounce2"></div>
+                                <div class="bounce3"></div>
+                                <div class="bounce4"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 mx-0 my-0 px-2 pt-4 pb-0" id="wts-movie-box">
+                        <div class="mx-0 my-0 px-0 py-0 bg-danger" style="display:flex;">
+                            <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:2%;"></div>
+                            <h5 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark">
+                                Want To See List
+                            </h5>
+                        </div>
+
+                        <div id="wts-list" style="display:none">
+                            <div class="details owl-carousel owl-theme mx-0 mt-3 mb-0 px-0 pt-3 pb-0" style="z-index:0;">
+                                <p th:if="${member.wantToSee.size() == 0}">No movies in the Want to See List</p>
+                                <th:block th:each="movie : ${member.wantToSee}">
+                                <div th:class="${'item movie-card-' + movie.id}">
+                                    <a class="mx-0 my-0 px-0 py-0 hover-blue" th:href="@{/movie(mediaID=${movie.id})}" href="#">
+                                        <div class="card px-0 py-0 mx-0 my-0">
+                                            <img class="card-img-top rounded-0" src="images/tv1.jpg" alt="Card image cap" th:src="@{${T(us.mude.common.GlobalProps).FS_URI +
+									'/' + movie.resourcePath + '/' + T(us.mude.common.GlobalProps).POSTER}}"
+                                                 onerror="this.onerror=null; this.src='images/poster.png';">
+                                        </div>
+                                    </a>
+                                    <th:block th:if="${session.member != null and session.member.id == member.id}">
+                                        <div class="mx-0 px-0 my-0 py-2">
+                                            <a style="cursor: pointer;" th:onclick="${'removeFromWTS( ' + session.member.id + ',' + movie.id + ')'}" th:if="${member.id == session.member.id}">
+                                                <i class="fa fa-minus-circle"></i> Remove
+                                            </a>
+                                        </div>
+                                    </th:block>
+                                </div>
+                                </th:block>
+                                </th:block>
+                            </div>
+                        </div>
+
+                        <div id="want-to-see-movie-box" class="mx-0 my-0 px-0 py-0">
+                            <div class="details owl-carousel owl-theme mx-0 mt-3 mb-0 px-0 pt-3 pb-0" style="z-index:0;">
+                                <th:block th:each="movie : ${member.wantToSee}">
+                                <div th:class="${'item movie-card-' + movie.id}">
+                                    <a class="mx-0 my-0 px-0 py-0 hover-blue" th:href="@{/movie(mediaID=${movie.id})}" href="#">
+                                        <div class="card px-0 py-0 mx-0 my-0">
+                                            <img class="card-img-top rounded-0" src="images/poster.png" style="width: 100%;"
+                                                 th:src="@{${T(us.mude.common.GlobalProps).FS_URI +
+									'/' + movie.resourcePath + '/' + T(us.mude.common.GlobalProps).POSTER}}"
+                                                 onerror="this.onerror=null; this.src='images/poster.png';" alt="Trailer-Image">
+                                        </div>
+                                        <th:block th:if="${!session.isEmpty( ) and session.member.id == member.id}">
+                                            <div class="mx-0 px-0 my-0 py-2">
+                                                <a style="margin-top:10px" href="#" th:onclick="${'removeFromWTS( ' + session.member.id + ',' + movie.id + ')'}" th:if="${member.id == session.member.id}">
+                                                    <i class="fa fa-minus-circle"></i> Remove
+                                                </a>
+                                            </div>
+                                        </th:block>
+                                    </a>
+                                </div>
+                                </th:block>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 mx-0 my-0 px-2 pt-4 pb-0" id="wts-tv-box">
+                        <div class="mx-0 my-0 px-0 py-0 bg-danger" style="display:flex;">
+                            <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:2%;"></div>
+                            <h5 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark">
+                               Not Interested List 
+                            </h5>
+                        </div>
+
+                        <div id="ni-list" style="">
+                            <div class="details owl-carousel owl-theme mx-0 mt-3 mb-0 px-0 pt-3 pb-0" style="z-index:0;">
+                                <p th:if="${member.notInterested.size() == 0}">No TV shows in the Not Interest List</p>
+                                <th:block th:each="tvshow : ${member.notInterested}">
+                                <div th:class="${'item movie-card-' + tvshow.id}">
+                                    <a class="mx-0 my-0 px-0 py-0 hover-blue" th:href="@{/movie(mediaID=${tvshow.id})}" href="#">
+                                        <div class="card px-0 py-0 mx-0 my-0">
+                                            <img src="images/tv1.jpg" class="card-img-top rounded-0" th:src="@{${T(us.mude.common.GlobalProps).FS_URI +
+									'/' + tvshow.resourcePath + '/' + T(us.mude.common.GlobalProps).POSTER}}"
+                                                 onerror="this.onerror=null; this.src='images/poster.png';" alt="Trailer-Image">
+                                        </div>
+                                        <th:block th:if="${session.member != null and session.member.id == member.id}">
+                                        <a style="margin-top:10px" href="#" th:onclick="${'removeFromWTS( ' + session.member.id + ',' + tvshow.id + ')'}" th:if="${member.id == session.member.id}">
+                                            <i class="fa fa-minus-circle"></i> Remove
+                                        </a>
+                                        </th:block>
+                                    </a>
+                                </div>
+                                </th:block>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 mx-0 my-0 px-2 pt-4 pb-0" id="review-history-box">
+                        <div class="mx-0 my-0 px-0 py-0 bg-danger" style="display:flex;">
+                            <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:2%;"></div>
+                            <h5 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark">
+                                MY Reviews
+                            </h5>
+                        </div>
+                        <div id="movie-reviews">
+                            <th:block th:each="rev : ${member.ratingHistory}">
+                            <!--<th:block th:if="${rev.media.mediaType == T(us.mude.common.MediaType).MOVIE or rev.media.mediaType == T(us.mude.common.MediaType).FRANCHISE}">-->
+                            <div class="mx-0 my-0 px-0 py-0">
+                                <div class="row mx-0 mt-2 mb-4 px-0 py-0 tv-middle-box-row">
+                                    <div class="col-2 mx-0 my-0 px-0 py-0 text-center">
+                                        <a href="tv-series.html" style="text-decoration: none;">
+                                            <img src="images/tv1-sm.png" style="width: 90%;" th:src="@{${T(us.mude.common.GlobalProps).FS_URI +
+									'/' + rev.media.resourcePath + '/' + T(us.mude.common.GlobalProps).POSTER}}"
+                                                 onerror="this.onerror=null; this.src='images/poster.png';">
+                                        </a>
+                                    </div>
+                                    <div class="col-10 mx-0 my-0 px-0 py-0">
+                                        <a href="tv-series.html" class="mx-0 my-0 px-0 py-0 hover-none">
+                                            <p class="ml-3 my-0 px-0 py-0 hover-blue" style="font-size:1.0em; font-weight: bold;" th:text="${rev.media.mediaName}">The Good Place: Season 2</p>
+                                        </a>
+                                        <div class="row ml-3 mr-0 my-1 px-0 py-0">
+                                            <th:block th:if="${rev.score >= 3.5}">
+                                            <h5 class="my-0 gold">M</h5>
+                                            </th:block>
+                                            <th:block th:if="${rev.score >= 3.0 and rev.score < 3.5}">
+                                            <h5 class="my-0 silver">M</h5>
+                                            </th:block>
+                                            <th:block th:if="${rev.score >= 2.5 and rev.score < 3.5}">
+                                            <h5 class="my-0 bronze">M</h5>
+                                            </th:block>
+                                            <th:block th:if="${rev.score < 2.5}">
+                                            <h5 class="my-0 black">M</h5>
+                                            </th:block>
+                                            <p class="mx-1 my-0 px-0 py-0" th:text="${rev.score + '/5'}">68%</p>
+                                        </div>
+                                        <div class="row ml-3 mr-0 my-1 px-0 py-0">
+                                            <p class="description">
+                                            <p th:text="${rev.comment}">By voluntarily blowing up its premise, The Good Place sets up a second season
+                                                that proves even funnier than its first.</p>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--</th:block>-->
+                            </th:block>
+                        </div>
+                        <!--<div id="tv-reviews" class="d-none">-->
+                            <!--<th:block th:each="rev : ${member.ratingHistory}">-->
+                            <!--<th:block th:if="${rev.media.mediaType == T(us.mude.common.MediaType).TVSERIES or rev.media.mediaType == T(us.mude.common.MediaType).SEASON or rev.media.mediaType == T(us.mude.common.MediaType).EPISODE}">-->
+                            <!--<div class="mx-0 my-0 px-0 py-0">-->
+                                <!--<div class="row mx-0 mt-2 mb-4 px-0 py-0 tv-middle-box-row">-->
+                                    <!--<div class="col-2 mx-0 my-0 px-0 py-0 text-center">-->
+                                        <!--<a href="tv-series.html" style="text-decoration: none;">-->
+                                            <!--<img src="images/tv1-sm.png" style="width: 90%;" th:src="@{${T(us.mude.common.GlobalProps).FS_URI +-->
+									<!--'/' + rev.media.resourcePath + '/' + T(us.mude.common.GlobalProps).POSTER}}"-->
+                                                 <!--onerror="this.onerror=null; this.src='images/poster.png';">-->
+                                        <!--</a>-->
+                                    <!--</div>-->
+                                    <!--<div class="col-10 mx-0 my-0 px-0 py-0">-->
+                                        <!--<a href="tv-series.html" class="mx-0 my-0 px-0 py-0 hover-none">-->
+                                            <!--<p class="ml-3 my-0 px-0 py-0 hover-blue" style="font-size:1.0em; font-weight: bold;" th:text="${rev.media.mediaName}">The Good Place: Season 2</p>-->
+                                        <!--</a>-->
+                                        <!--<div class="row ml-3 mr-0 my-1 px-0 py-0">-->
+                                            <!--<th:block th:if="${rev.score >= 3.5}">-->
+                                            <!--<h5 class="my-0 gold">M</h5>-->
+                                            <!--</th:block>-->
+                                            <!--<th:block th:if="${rev.score >= 3.0 and rev.score < 3.5}">-->
+                                            <!--<h5 class="my-0 silver">M</h5>-->
+                                            <!--</th:block>-->
+                                            <!--<th:block th:if="${rev.score >= 2.5 and rev.score < 3.5}">-->
+                                            <!--<h5 class="my-0 bronze">M</h5>-->
+                                            <!--</th:block>-->
+                                            <!--<th:block th:if="${rev.score < 2.5}">-->
+                                            <!--<h5 class="my-0 black">M</h5>-->
+                                            <!--</th:block>-->
+                                            <!--<p class="mx-1 my-0 px-0 py-0" th:text="${rev.score + '/5'}">68%</p>-->
+                                        <!--</div>-->
+                                        <!--<div class="row ml-3 mr-0 my-1 px-0 py-0">-->
+                                            <!--<p class="description">-->
+                                            <!--<p th:text="${rev.comment}">By voluntarily blowing up its premise, The Good Place sets up a second season-->
+                                                <!--that proves even funnier than its first.</p>-->
+                                            <!--</p>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--</th:block>-->
+                            <!--</th:block>-->
+                        <!--</div>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="px-0 d-none" th:replace="index :: footer">
+    </footer>
+    
+    <script src="jquery/jquery-3.3.1.min.js"></script>
+    <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="owlcarousel/owl.carousel.min.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/member.js"></script>
+    <script type="text/javascript" th:inline="javascript">
+        window.onload = function( ) {
+            showAdminPanel( );
+        }
+        if( document.getElementById( 'update_photo' ) != undefined ) {
+            document.getElementById( 'update_photo' ).onclick = function( ) {
+                $( '#updatepicture' ).modal("toggle");
+            }
+        }
+        function doSubmit( ev ) {
+            document.getElementsByName( 'basedir' )[ 1 ].value = 'resource/media/'
+                + document.getElementsByName( 'mediaID' )[ 0 ].value
+                + '/photos';
+            return true;
+        }
+
+        function getLoggedInMemberID(){
+            return [[ ${ !session.isEmpty( ) ? session.member.id : 0 } ]];
+        }
+        function showAdminPanel(){
+            var m1 = getLoggedInMemberID( );
+            var m2 = getParameterByName( "memberID" );
+
+            if ( m1 == m2 && [[ ${ session.member != null and session.member.memberType == T(us.mude.common.MemberType).ADMIN } ]] ){
+                $("#adminpanel").show( );
+                console.log("SHOWING ADMIN PANEL")
+            }
+            else{
+                $("#adminpanel").hide( );
+                console.log("HIDE ADMIN PANEL")
+            }
+        }
+        function removeFromWTS( memberID, mediaID ) {
+            $.ajax({
+                url: "/rmfromwts",
+                type: "POST",
+                data: "memberID=" + memberID
+                    + "&mediaID=" + mediaID,
+                success: function( data ) {
+                    if( data.success ) {
+                        $('.movie-card-'+mediaID).addClass('d-none');
+                        reloadDivByID("statDiv");
+                    }
+                }
+            });
+        }
+        function doSubmit2( ev ) {
+            $.ajax({
+                url: "/chpic",
+                type: "POST",
+                data: "memberID=" + [[${session.member != null ? session.member.id : 0}]],
+                complete: function( data ) {
+                    var response = JSON.parse( data.responseText );
+
+                    if( response.success ) {
+                        refreshSession();
+                        return true;
+                    }
+                }
+            });
+
+            return false;
+        }
+        $( "#chname" ).click( function( ) {
+            $( "#changename" ).toggle( "modal" );
+        });
+    </script>
+</body>
+</html>

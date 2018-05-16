@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Artist | Mude</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="shortcut icon" href="images/logo-white.ico">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="fontawesome/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="owlcarousel/owl.carousel.min.css">
+    <link rel="stylesheet" href="owlcarousel/owl.theme.default.min.css">
+    <link rel="stylesheet" href="css/details.css">
+</head>
+
+<body>
+    <section class="px-0" th:replace="index :: header"></section>
+    <div th:replace="index :: header-modal"></div>
+    <section th:replace="index :: loader"></section>
+
+    <section class="d-none">
+        <div class="container-fluid px-0 py-0 mt-md-0 mt-5 bg-dark">
+            <div class="row mx-0 my-0 px-2 py-2">
+                <div class="row col-lg-9 col-12 mx-0 mt-2 mb-0 px-0 py-2">
+                    <div class="col-md-3 col-12 art-img-container mx-0 my-0 pl-0 pr-md-2 pr-0 py-0" >
+                        <img style="width:100%;" src="images/critics.gif" th:src="@{${T(us.mude.common.GlobalProps).FS_URI} + '/' + ${artist.resourcePath} + '/photos/0.jpg'}" onerror="this.onerror=null; this.src='images/critics.gif';" alt="Card image cap">
+                    </div>
+                    <div class="col-md-9 col-12 mx-0 my-0 pl-4 pr-0 py-2">
+                        <h5 class="my-0 py-0" th:text="${artist.name.firstName + ' ' + artist.name.lastName}">MATT DAMON</h5>
+                        <div class="row mx-0 my-0 px-0 py-0">
+
+                            <div class="col-sm-3 col-4 mx-0 my-0 px-2 py-3 text-right">
+                                <b>Highest Rated</b>:
+                            </div>
+                            <div th:if="${heighest != null}" class="row col-sm-9 col-8 mx-0 my-0 px-2 py-3">
+                                <h3 th:if="${heighest.mudemeter.criticMudemeter >= 80}" 
+                                class="my-auto py-0 neon">M</h3>
+                                <h3 th:if="${heighest.mudemeter.criticMudemeter >= 70 
+                                and heighest.mudemeter.criticMudemeter < 80.00}" 
+                                class="my-auto py-0 gold">M</h3>
+                                <h3 th:if="${heighest.mudemeter.criticMudemeter >= 60 
+                                and heighest.mudemeter.criticMudemeter < 70}" 
+                                class="my-auto py-0 silver">M</h3>
+                                <h3 th:if="${heighest.mudemeter.criticMudemeter >= 50 
+                                and heighest.mudemeter.criticMudemeter < 60}" 
+                                class="my-auto py-0 bronze">M</h3>
+                                <h3 th:if="${heighest.mudemeter.criticMudemeter < 50 
+                                and heighest.mudemeter.criticMudemeter > 0}" 
+                                class="my-auto py-0 black">M</h3>
+                                <h6 th:if="${heighest.mudemeter.criticMudemeter == 0}" 
+                                class="mx-0 my-auto py-0"
+                                style="color:white; font-family: 'Roboto', sans-serif;">
+                                    Not Available
+                                </h6>
+                                <h6 th:if="${heighest.mudemeter.criticMudemeter != 0}" 
+                                th:text="${T(java.lang.Math).round(heighest.mudemeter.criticMudemeter) 
+                                + '%'}" class="ml-2 my-auto py-0 c-mudemeter">98%</h6>
+                                <a href="#" th:href="@{${'/' + #strings.toLowerCase(#strings.toString(heighest.mediaType)) + '?mediaID='
+                                + heighest.id}}" class="text-danger-light hover-dark my-auto ml-2">
+                                    <span th:text="${heighest.mediaName + ' '}">The Leisure Class</span> 
+                                    <span>([[${#strings.substring(heighest.releaseDate.theatre, 0, 4)}]])</span>
+                                </a>
+                            </div>
+                    
+                            <div class="col-sm-3 col-4 mx-0 my-0 px-2 py-3 text-right">
+                                <b>Lowest Rated</b>:
+                            </div>
+                            <div th:if="${lowest != null}" class="row col-sm-9 col-8 mx-0 my-0 px-2 py-3">
+                                <h3 th:if="${lowest.mudemeter.criticMudemeter >= 80}" 
+                                class="my-auto py-0 neon">M</h3>
+                                <h3 th:if="${lowest.mudemeter.criticMudemeter >= 70 
+                                and lowest.mudemeter.criticMudemeter < 80.00}" 
+                                class="my-auto py-0 gold">M</h3>
+                                <h3 th:if="${lowest.mudemeter.criticMudemeter >= 60 
+                                and lowest.mudemeter.criticMudemeter < 70}" 
+                                class="my-auto py-0 silver">M</h3>
+                                <h3 th:if="${lowest.mudemeter.criticMudemeter >= 50 
+                                and lowest.mudemeter.criticMudemeter < 60}" 
+                                class="my-auto py-0 bronze">M</h3>
+                                <h3 th:if="${lowest.mudemeter.criticMudemeter < 50 
+                                and lowest.mudemeter.criticMudemeter > 0}" 
+                                class="my-auto py-0 black">M</h3>
+                                <h6 th:if="${lowest.mudemeter.criticMudemeter == 0}" 
+                                class="mx-0 my-auto py-0"
+                                style="color:white; font-family: 'Roboto', sans-serif;">
+                                    Not Available
+                                </h6>
+                                <h6 th:if="${lowest.mudemeter.criticMudemeter != 0}" 
+                                th:text="${T(java.lang.Math).round(lowest.mudemeter.criticMudemeter) 
+                                + '%'}" class="ml-2 my-auto py-0 c-mudemeter">98%</h6>
+                                <a href="#" th:href="@{${'/' + #strings.toLowerCase(#strings.toString(lowest.mediaType)) + '?mediaID='
+                                + lowest.id}}" class="text-danger-light hover-dark my-auto ml-2">
+                                    <span th:text="${lowest.mediaName + ' '}">The Leisure Class</span> 
+                                    <span>([[${#strings.substring(lowest.releaseDate.theatre, 0, 4)}]])</span>
+                                </a>
+                            </div>
+
+                            <div class="col-sm-3 col-4 mx-0 my-0 px-2 py-3 text-right">
+                                <b>Birthday</b>:
+                            </div>
+                            <div th:if="${artist.birthdate.get(T(java.util.Calendar).YEAR) != 1000}" class="row col-sm-9 col-8 mx-0 my-0 px-2 py-3">
+                                 [[${artist.parseDate(artist.birthdate) + ', ' + artist.birthdate.get(T(java.util.Calendar).YEAR)}]]
+                            </div>
+                            <div th:if="${artist.birthdate.get(T(java.util.Calendar).YEAR) == 1000}" class="row col-sm-9 col-8 mx-0 my-0 px-2 py-3">
+                                Not Available
+                            </div>
+
+                            <div class="col-sm-3 col-4 mx-0 my-0 px-2 py-3 text-right">
+                                <b>Birthplace</b>:
+                            </div>
+                            <div class="row col-sm-9 col-8 mx-0 my-0 px-2 py-3" th:text="${artist.birthplace != '' ? artist.birthplace : 'Not Available'}">
+                                Cambridge, Massachusetts, USA
+                            </div>
+                            
+                        </div>
+                        <div class="mx-0 my-0 px-2 py-3">
+                            <span class="artist-desc" th:text="${artist.desc != null ? artist.desc : 'Not Available'}">Going from obscure actor to Hollywood golden boy in just a handful of years, Matt Damon became an instant sensation when
+                            he co-wrote and starred in Good Will Hunting. With his Best Original Screenplay Oscar (shared by co-writer and co-star Ben
+                            Affleck), he was ensured a place on the Hollywood "It" boy roster. A product of Cambridge...</span>
+                            <a class="text-danger-light hover-dark artist-desc-b" style="cursor: pointer; display: none;">More</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Advertisement -->
+                <div class="col-lg-3 mx-0 my-0 px-3 pt-1 pb-0 d-lg-block d-none">
+                    <div class="mx-0 my-0 px-0 py-0 text-center">
+                        <div class="mx-0 my-4 px-0 py-0 text-center">
+                            <a class="mx-0 my-0 px-0 py-0">
+                                <img id="ad3" src="images/ad-3.png" style="width:100%;">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="d-none">
+        <div class="container-fluid mx-0 my-0 px-0 pt-0 pb-3 bg-dark" id="photo-box">
+            <div class="mx-0 my-0 px-0 pt-2 pb-0 bg-dark">
+                <div class="row mx-0 mt-md-2 mt-0 mb-0 px-0 py-0 bg-danger header-label">
+                    <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:2%;"></div>
+                    <h4 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark d-md-block d-none">
+                        Photos
+                    </h4>
+                    <h5 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark d-md-none d-block">
+                        Photos
+                    </h5>
+                </div>
+            </div>
+    
+            <div class="mx-0 mt-3 mb-0 px-0 pt-3 pb-0 text-center" id="no-photo" style="display: none;">
+                <h4 class="my-0 py-0">Not Yet Available!</h4>
+            </div>
+            
+            <div class="mx-0 mt-3 mb-0 px-1 pt-3 pb-0" id="photo-container" style="z-index:0;">
+                <th:block th:each="i : ${#numbers.sequence(5, 0, -1)}">
+                    <div class="item">
+                        <a class="mx-0 my-0 px-0 py-0 hover-blue img-btn" style="cursor: pointer;" data-toggle="modal" data-src="images/banner.jpg"
+                            data-target="#photoModal" th:data-src="${T(us.mude.common.GlobalProps).FS_URI} + '/' + ${artist.resourcePath} + '/photos/' + ${i + 1} + '.jpg'">
+                            <div class="card px-0 py-0 mx-0 my-0">
+                                <img class="card-img-top rounded-0" src="images/banner.jpg" th:src="@{${T(us.mude.common.GlobalProps).FS_URI} + '/' + ${artist.resourcePath} + '/photos/' +
+            								${i + 1} + '.jpg'}" onerror="this.parentNode.parentNode.parentNode.style.display='none';">
+                            </div>
+                        </a>
+                    </div>
+                </th:block>
+            </div>
+        </div>
+    </section>
+
+    <section class="d-none">
+        <div class="container-fluid mx-0 my-0 px-0 py-0 bg-dark">
+            <div class="mx-0 my-0 px-0 pt-4 pb-0 bg-dark">
+                <div class="row mx-0 mt-md-4 mt-0 mb-0 px-0 py-0 bg-danger header-label">
+                    <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:2%;"></div>
+                    <h4 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark d-md-block d-none">
+                        Filmography
+                    </h4>
+                    <h6 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark d-md-none d-block">
+                        Filmography
+                    </h6>
+                </div>
+            </div>
+
+            <div th:if="${artist.filmography == null or artist.filmography.isEmpty()}" class="mx-0 mt-3 mb-0 px-0 pt-3 pb-0 text-center">
+                <h4 class="my-0 py-0">Not Available!</h4>
+            </div>
+
+            <div th:if="${artist.filmography != null and !artist.filmography.isEmpty()}" class="mx-0 my-0 px-sm-2 px-0 py-2">
+                <h6 class="px-3 py-3">Movies</h6>
+                <div class="col-12 mx-0 my-0 px-2 pt-2 pb-4">
+                    <div class="row mx-0 my-0 px-2 py-2">
+                        <div class="col-2 mx-0 my-0 pl-0 pr-1 py-0">
+                            <b>MudeMeter</b>
+                        </div>
+                        <div class="col-3 mx-0 my-0 pr-1 py-0">
+                            <b>Title</b>
+                        </div>
+                        <div class="col-3 mx-0 my-0 pr-3 py-0">
+                            <b>Comment</b>
+                        </div>
+                        <div class="col-2 mx-0 my-0 pr-1 py-0">
+                            <b>Box Office</b>
+                        </div>
+                        <div class="col-2 mx-0 my-0 pr-1 py-0">
+                            <b>Year</b>
+                        </div>
+                    </div>
+
+                    <th:block th:each="f, fStat : ${artist.filmography}">
+                        <div th:if="${f.mediaType == T(us.mude.common.MediaType).MOVIE}" class="row mx-0 my-0 px-2 py-2">
+                            <div class="col-2 row mx-0 my-0 pl-0 pr-1 py-0">
+                                <h3 th:if="${f.mudemeter.criticMudemeter >= 80}" class="my-auto py-0 neon">M</h3>
+                                <h3 th:if="${f.mudemeter.criticMudemeter >= 70 
+                                and f.mudemeter.criticMudemeter < 80.00}" class="my-auto py-0 gold">M</h3>
+                                <h3 th:if="${f.mudemeter.criticMudemeter >= 60 
+                                and f.mudemeter.criticMudemeter < 70}" class="my-auto py-0 silver">M</h3>
+                                <h3 th:if="${f.mudemeter.criticMudemeter >= 50 
+                                and f.mudemeter.criticMudemeter < 60}" class="my-auto py-0 bronze">M</h3>
+                                <h3 th:if="${f.mudemeter.criticMudemeter < 50 
+                                and f.mudemeter.criticMudemeter > 0}" class="my-auto py-0 black">M</h3>
+                                <h6 th:if="${f.mudemeter.criticMudemeter == 0}" class="mx-0 my-auto py-0" style="color:white; font-family: 'Roboto', sans-serif;">
+                                    Not Available
+                                </h6>
+                                <p th:if="${f.mudemeter.criticMudemeter != 0}" th:text="${T(java.lang.Math).round(f.mudemeter.criticMudemeter) 
+                                + '%'}" class="ml-2 my-auto py-0 c-mudemeter" style="font-size:1.2rem;">98%</p>
+                            </div>
+                            <div class="col-3 row mx-0 my-0 pr-1 py-0">
+                                <div class="mx-0 my-auto px-0 py-0">
+                                    <a class="text-danger-light hover-dark" 
+                                    href="#" th:href="@{${'/' + #strings.toLowerCase(#strings.toString(f.mediaType)) + '?mediaID=' + f.id}}"
+                                    th:text="${f.mediaName + ' '}">Touch Me Not</a>
+                                </div>
+                            </div>
+                            <div class="col-3 mx-0 my-0 pr-3 py-0">
+                                <div class="mx-0 my-0 px-0 py-0">
+                                    <span th:if="${f.reviews != null}">
+                                        <th:block th:each="review, reviewStat : ${f.reviews}" th:if="${review.ratingType == T(us.mude.common.RatingType).CRITIC}"
+                                            th:unless="${reviewStat.index > 0}">
+                                            [[${review.comment}]]
+                                        </th:block>
+                                        <th:block th:each="review, reviewStat : ${f.reviews}" th:if="${review.ratingType != T(us.mude.common.RatingType).CRITIC}"
+                                            th:unless="${reviewStat.index > 0}">
+                                            No Data
+                                        </th:block>
+                                    </span>
+                                    <span th:if="${f.reviews == null}" class="text-danger-light">
+                                        No Data
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-2 mx-0 my-0 pr-1 py-0">
+                                <b th:if="${f.boxOffice.getNumber().intValue() != 0}" class="text-danger-light">
+                                    [[${"$" + #strings.toString(T(java.lang.Math).round(f.boxOffice.getNumber().intValue() / 1000000.0) / 10.0) +
+                                    "M"}]]
+                                </b>
+                                <b th:if="${f.boxOffice.getNumber().intValue() == 0}" class="text-danger-light">
+                                    No Data
+                                </b>
+                            </div>
+                            <div class="col-2 mx-0 my-0 pr-1 py-0">
+                                [[${#strings.substring(f.releaseDate.theatre, 0, 4)}]]
+                            </div>
+                        </div>
+                    </th:block>
+                </div>
+
+                <h6 class="mt-3 px-3 py-3">Tv</h6>
+                <div class="col-12 mx-0 my-0 px-2 pt-2 pb-4">
+                    <div class="row mx-0 my-0 px-2 py-2 bg-light text-dark">
+                        <div class="col-2 mx-0 my-0 pl-0 pr-1 py-0">
+                            <b>MudeMeter</b>
+                        </div>
+                        <div class="col-4 mx-0 my-0 pr-1 py-0">
+                            <b>Title</b>
+                        </div>
+                        <div class="col-4 mx-0 my-0 pr-1 py-0">
+                            <b>Comment</b>
+                        </div>
+                        <div class="col-2 mx-0 my-0 pr-1 py-0">
+                            <b>Year</b>
+                        </div>
+                    </div>
+
+                    <th:block th:each="f, fStat : ${artist.filmography}">
+                        <div th:if="${f.mediaType != T(us.mude.common.MediaType).MOVIE}" class="row mx-0 my-0 px-2 py-2 tv-row">
+                            <div class="col-2 row mx-0 my-0 pl-0 pr-1 py-0">
+                                <h3 th:if="${f.mudemeter.criticMudemeter >= 80}" class="my-auto py-0 neon">M</h3>
+                                <h3 th:if="${f.mudemeter.criticMudemeter >= 70 
+                                    and f.mudemeter.criticMudemeter < 80.00}"
+                                    class="my-auto py-0 gold">M</h3>
+                                <h3 th:if="${f.mudemeter.criticMudemeter >= 60 
+                                    and f.mudemeter.criticMudemeter < 70}"
+                                    class="my-auto py-0 silver">M</h3>
+                                <h3 th:if="${f.mudemeter.criticMudemeter >= 50 
+                                    and f.mudemeter.criticMudemeter < 60}"
+                                    class="my-auto py-0 bronze">M</h3>
+                                <h3 th:if="${f.mudemeter.criticMudemeter < 50 
+                                    and f.mudemeter.criticMudemeter > 0}"
+                                    class="my-auto py-0 black">M</h3>
+                                <h6 th:if="${f.mudemeter.criticMudemeter == 0}" class="mx-0 my-auto py-0" style="font-family: 'Roboto', sans-serif;">
+                                    Not Available
+                                </h6>
+                                <p th:if="${f.mudemeter.criticMudemeter != 0}" th:text="${T(java.lang.Math).round(f.mudemeter.criticMudemeter) 
+                                + '%'}" class="ml-2 my-auto py-0 c-mudemeter"
+                                style="font-size:1.2rem;">98%</p>
+                            </div>
+                            <div class="col-4 row mx-0 my-0 pr-1 py-0">
+                                <div class="mx-0 my-auto px-0 py-0">
+                                    <a class="text-danger-light hover-dark" href="#" th:href="@{${'/' + #strings.toLowerCase(#strings.toString(f.mediaType)) + '?mediaID=' + f.id}}"
+                                        th:text="${f.mediaName + ' '}">Touch Me Not</a>
+                                </div>
+                            </div>
+                            <div class="col-4 mx-0 my-0 pr-1 py-0">
+                                <div class="mx-0 my-0 px-0 py-0">
+                                    <span th:if="${f.reviews != null}">
+                                        <th:block th:each="review, reviewStat : ${f.reviews}" th:if="${review.ratingType == T(us.mude.common.RatingType).CRITIC}"
+                                            th:unless="${reviewStat.index > 0}">
+                                            [[${review.comment != '' ? review.comment : 'No Data'}]]
+                                        </th:block>
+                                        <th:block th:each="review, reviewStat : ${f.reviews}" th:if="${review.ratingType != T(us.mude.common.RatingType).CRITIC}"
+                                            th:unless="${reviewStat.index > 0}">
+                                            No Data
+                                        </th:block>
+                                    </span>
+                                    <span th:if="${f.reviews == null}" class="text-danger-light">
+                                        No Data
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-2 mx-0 my-0 pr-1 py-0">
+                                [[${#strings.substring(f.releaseDate.theatre, 0, 4)}]]
+                            </div>
+                        </div>
+                    </th:block>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <footer class="px-0 d-none" th:replace="index :: footer">
+    </footer>
+
+    <script src="jquery/jquery-3.3.1.min.js"></script>
+    <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="owlcarousel/owl.carousel.min.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/details.js"></script>
+    <script src="js/artist.js"></script>
+    <script>
+        $(function () {
+            var $description = $(".artist-desc").text();
+
+            if ($(".artist-desc").text().length > 300) {
+                $(".artist-desc-b").show();
+            }
+
+            $(".artist-desc").text(trimString($(".artist-desc").text(), 300));
+
+            $(".artist-desc-b").click(function () {
+                $(".artist-desc").text($description);
+                $(".artist-desc-b").hide();
+            });
+
+            $(".tv-row").each(function (index) {
+               if (index % 2 !== 0) {
+                   $(this).addClass("bg-light text-black");
+               } 
+            });
+
+            setTimeout(function () {
+                $("#photo-container").find(":hidden").remove();
+                if ($("#photo-container").children().hasClass('item')) {
+                    $("#photo-container").addClass("photos owl-carousel owl-theme");
+                    $('.photos').owlCarousel({
+                        margin: 10,
+                        autoWidth: false,
+                        nav: true,
+                        items: 4,
+                        responsive: {
+                            0: {
+                                items: 1
+                            },
+                            500: {
+                                items: 2
+                            },
+                            1000: {
+                                items: 4
+                            }
+                        }
+                    });
+                    if ($("#photo-container .item").length > 5)
+                        $(".photo-button").show();
+                }
+                else {
+                    $("#no-photo").show();
+                    $("#photo-container").hide();
+                    $(".photo-button").hide();
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+
+</html>

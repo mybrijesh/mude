@@ -1,0 +1,207 @@
+/* Extra small devices (portrait phones, less than 576px) */
+@media (max-width: 575.98px) {
+    .full-name {
+        font-size: 1.3rem; 
+        font-family: 'Lovelo Black';
+    }
+    .role {
+        font-size: 1.05rem; 
+        font-family: 'Lovelo Black';
+    }
+    .control-button {
+        font-size: 0.95rem; 
+    }
+    .profile-box-inside {
+        width: 120px; 
+        height: 150px; 
+        cursor: pointer;
+    }
+    .profile-box-inside img {
+        width: 100%;
+    } 
+    .menu-button {
+        font-size: 1rem;
+    }
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) and (max-width: 767.98px) { 
+    .full-name {
+        font-size: 1.5rem; 
+        font-family: 'Lovelo Black';
+    }
+    .role {
+        font-size: 1.2rem; 
+        font-family: 'Lovelo Black';
+    }
+    .control-button {
+        font-size: 1.1rem; 
+    }
+    .profile-box-inside {
+        width: 130px; 
+        height: 160px; 
+        cursor: pointer;
+    }
+    .profile-box-inside img {
+        width: 100%;
+    }
+    .menu-button {
+        font-size: 1rem;
+    }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) and (max-width: 991.98px) { 
+    .full-name {
+        font-size: 1.2rem; 
+        font-family: 'Lovelo Black';
+    }
+    .role {
+        font-size: 0.9rem; 
+        font-family: 'Lovelo Black';
+    }
+    .control-button {
+        font-size: 0.85rem; 
+    }
+    .profile-box-inside {
+        width: 120px; 
+        height: 145px; 
+        cursor: pointer;
+    }
+    .profile-box-inside img {
+        width: 100%;
+    }
+    .menu-button {
+        font-size: 0.8rem;
+    }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) and (max-width: 1199.98px) { 
+    .full-name {
+        font-size: 1.3rem; 
+        font-family: 'Lovelo Black';
+    }
+    .role {
+        font-size: 1.0rem; 
+        font-family: 'Lovelo Black';
+    }
+    .control-button {
+        font-size: 0.9rem; 
+    }
+    .profile-box-inside {
+        width: 130px; 
+        height: 150px; 
+        cursor: pointer;
+    }
+    .profile-box-inside img {
+        width: 90%;
+    }
+    .menu-button {
+        font-size: 0.8rem;
+    }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) { 
+    .full-name {
+        font-size: 1.5rem; 
+        font-family: 'Lovelo Black';
+    }
+    .role {
+        font-size: 1.2rem; 
+        font-family: 'Lovelo Black';
+    }
+    .control-button {
+        font-size: 1.0rem; 
+    }
+    .profile-box-inside {
+        width: 150px; 
+        height: 180px; 
+        cursor: pointer;
+    }
+    .profile-box-inside img {
+        width: 100%;
+    }
+    .menu-button {
+        font-size: 1.0rem;
+    }
+}
+
+.card {
+    overflow: hidden !important;
+}
+
+.owl-item img {
+  transition: all .2s ease-in-out;
+}
+
+.owl-item:hover img {
+  transform: scale(1.1);
+}
+
+.profile-box .card-img-overlay {
+    display: flex;
+    overflow: hidden;
+    left: 0;
+    right: 0;
+    height: 0%;
+    transition: all .2s ease-in-out;
+}
+
+.profile-box .card:hover .card-img-overlay {
+    bottom: 0;
+    height: 100%;
+}
+
+.profile-box .card:hover i {
+    display: inline-block;
+    position: relative;
+    -moz-animation: bounce 0.1s 3 linear;
+    -o-animation: bounce 0.1s 3 linear;
+    -webkit-animation: bounce 0.1s 3 linear;
+    animation: bounce 0.1s 3 linear;
+}
+
+.profile-update-box:hover {
+    opacity: 1 !important;
+    background-color: rgba(0, 0, 0, 0.9) !important;
+}
+
+@-webkit-keyframes bounce {
+    0% { top: 0; }
+    50% { top: -0.1em; }
+    70% { top: -0.2em; }
+    100% { top: 0; }
+}
+@-moz-keyframes bounce {
+    0% { top: 0; }
+    50% { top: -0.1em; }
+    70% { top: -0.2em; }
+    100% { top: 0; }
+}
+@-o-keyframes bounce {
+    0% { top: 0; }
+    50% { top: -0.1em; }
+    70% { top: -0.2em; }
+    100% { top: 0; }
+}
+@-ms-keyframes bounce {
+    0% { top: 0; }
+    50% { top: -0.1em; }
+    70% { top: -0.2em; }
+    100% { top: 0; }
+}
+@keyframes bounce {
+    0% { top: 0; }
+    50% { top: -0.1em; }
+    70% { top: -0.2em; }
+    100% { top: 0; }
+}
+
+.search .results{
+display: none;
+    position: absolute;
+}
+.search .results li { display: block }
+.search input:focus + .results { display: block }

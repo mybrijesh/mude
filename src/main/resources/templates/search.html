@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Search Results | Mude</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="shortcut icon" href="images/logo-white.ico">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="fontawesome/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/review.css">
+    <script src="jquery/jquery-3.3.1.min.js"></script>
+    <script src="js/main.js"></script>
+</head>
+<body>
+    <section class="px-0" th:replace="index :: header"></section>
+    <div th:replace="index :: header-modal"></div>
+    <section th:replace="index :: loader"></section>
+
+    <section class="d-none">
+        <div class="container-fluid px-0 py-0 mt-md-0 mt-5 bg-dark">
+            <div class="col-12 mx-0 mt-0 mb-3 px-4 py-4">
+                <h5>Search Result for: "<span class="keyword" th:text="${keyword}">Black Panther</span>"</h5>
+                <div class="btn-group mt-3 mb-3" role="group" aria-label="search button">
+                    <button type="button" class="btn btn-outline-light active border-0 rounded d-md-block all-button-s" 
+                    style="z-index:0;">
+                        All
+                    </button>
+                    <button th:if="${fCnt != 0}" type="button" class="btn btn-outline-light border-0 
+                    rounded d-md-block d-none franchise-button-s" style="z-index:0;">
+                        Franchises (<span class="franchise-num" th:text="${fCnt}">1</span>)
+                    </button>
+                    <button th:if="${mCnt != 0}" type="button" class="btn btn-outline-light border-0 
+                    rounded d-md-block d-none movie-button-s" style="z-index:0;">
+                        Movies (<span class="movie-num" th:text="${mCnt}">20</span>)
+                    </button>
+                    <button th:if="${tvCnt != 0}" type="button" class="btn btn-outline-light border-0 
+                    rounded d-md-block d-none tv-button-s" style="z-index:0;">
+                        TV (<span class="tv-num" th:text="${tvCnt}">15</span>)
+                    </button>
+                    <button th:if="${aCnt != 0}" type="button" class="btn btn-outline-light border-0 
+                    rounded d-lg-block d-none artist-button-s" style="z-index:0;">
+                        Artists (<span class="artist-num" th:text="${aCnt}">5</span>)
+                    </button>
+                    <button th:if="${cCnt != 0}" type="button" class="btn btn-outline-light border-0 
+                    rounded d-md-block d-none critic-button-s" style="z-index:0;">
+                        Critics (<span class="critic-num" th:text="${cCnt}">15</span>)
+                    </button>
+                </div>
+                <div th:if="${fCnt != 0}" class="mx-0 my-0 px-0 py-0 f-s-box">
+                    <h6 class="my-3 border-white border-bottom">Franchises</h6>
+                    <th:block th:each="f, fStat: ${franchise}">
+                        <div class="row mx-0 my-0 px-2 py-2">
+                            <div class="col-2 mx-0 my-0 text-left">
+                                <a href="#" th:href="@{/franchise(mediaID=f.id)}" class="hover-none">
+                                    <img class="my-0" style="width:103px;"
+                                    src="images/poster.png" th:src="@{${T(us.mude.common.GlobalProps).FS_URI + '/' + f.resourcePath + '/' + T(us.mude.common.GlobalProps).POSTER}}"
+                                    onerror="this.onerror=null; this.src='images/poster.png';">
+                                </a>
+                            </div>
+                            <div class="title mx-0 my-0 px-0 py-0">
+                                <a href="#" th:href="@{/franchise(mediaID=f.id)}" class="hover-none">
+                                    <p class="my-1 text-danger-light hover-dark" 
+                                style="font-size:1.2em; font-weight:bold;" th:text="${f.mediaName}">
+                                        Marvel Cinematic Universe
+                                    </p>
+                                </a>
+                            </div>
+                        </div>
+                        <div th:if="${fStat.index == fCnt-1}" class="w-100 text-right px-0">
+                            <a href="javascript:show_franchise( )" class="mr-auto hover-blue view-all">View All ></a>
+                        </div>
+                    </th:block>
+                    <nav aria-label="Page navigation" class="row mr-3 my-0 px-0 py-0">
+                        <ul class="pagination d-none pagination-lg ml-auto mt-auto">
+                            <li class="page-item disabled">
+                                <a class="page-link text-danger-light" href="#" aria-label="Pre-Previous" tabindex="-1">
+                                    <span aria-hidden="true" style="font-size:1.5rem;">&laquo;</span>
+                                    <span class="sr-only" style="font-size:1.5rem;">Previous</span>
+                                </a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link text-danger-light" href="#" aria-label="Previous" tabindex="-1">
+                                    <span aria-hidden="true" style="font-size:1.5rem;">&lsaquo;</span>
+                                </a>
+                            </li>
+                            <script th:inline="javascript" type="text/javascript">
+                                var ROW_COUNT   = 10;
+                                var nFranchise  = [[ ${ fCnt } ]];
+                                var nPages      = Math.ceil( nFranchise / ROW_COUNT );
+                                var keyword     = getParameterByName("keyword");
+
+                                for( var i = 0; i < nPages; ++i ) {
+                                    if( i == 0 ) {
+                                        document.write( "<li class=\"active page-item\">\n"
+                                            + "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_franchise('" + keyword + "'," + i + ")\" style=\"font-size:1.5rem;\">" + ( i+1 ) + "</a>\n"
+                                            + "</li>\n" );
+                                    } else {
+                                        document.write( "<li class=\"page-item\">\n"
+                                            + "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_franchise('" + keyword + "'," + i + ")\" style=\"font-size:1.5rem;\">" + ( i+1 ) + "</a>\n"
+                                            + "</li>\n" );
+                                    }
+                                }
+
+                            </script>
+                            <li class="page-item disabled">
+                                <a class="page-link text-danger-light" href="#" aria-label="Next">
+                                    <span aria-hidden="true" style="font-size:1.5rem;">&rsaquo;</span>
+                                    <span class="sr-only" style="font-size:1.5rem;">Next</span>
+                                </a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link text-danger-light" href="#" aria-label="Next">
+                                    <span aria-hidden="true" style="font-size:1.5rem;">&raquo;</span>
+                                    <span class="sr-only" style="font-size:1.5rem;">Next</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <div th:if="${mCnt != 0}" class="mx-0 my-0 px-0 py-0 m-s-box">
+                    <h6 class="my-3 white-border border-bottom">Movies</h6>
+                    <th:block th:each="m, mStat : ${movies}">
+                        <div class="row mx-0 my-0 px-2 py-2">
+                            <th:block th:if="${m.mudemeter.audienceMudemeter >= 70}"><h1 class="col-1 my-auto gold">M</h1></th:block>
+                            <th:block th:if="${m.mudemeter.audienceMudemeter >= 60 and m.mudemeter.audienceMudemeter < 70}"><h1 class="col-1 my-auto silver">M</h1></th:block>
+                            <th:block th:if="${m.mudemeter.audienceMudemeter >= 50 and m.mudemeter.audienceMudemeter < 60}"><h1 class="col-1 my-auto bronze">M</h1></th:block>
+                            <th:block th:if="${m.mudemeter.audienceMudemeter < 50}"><h1 class="col-1 my-auto black">M</h1></th:block>
+                            <p class="col-1 my-auto pl-1 pr-2" style="font-size:1.3rem;"
+                            th:text="${T(java.lang.Math).round(m.mudemeter.audienceMudemeter) + '%'}">94%</p>
+                            <div class="col-2 mx-0 my-0 text-left">
+                                <a href="#" th:href="@{/movie(mediaID=${m.id})}" class="hover-none">
+                                    <img class="my-0" style="width:103px;"
+                                    src="images/poster.png" th:src="@{${T(us.mude.common.GlobalProps).FS_URI + '/' + m.resourcePath
+                                    + '/' + T(us.mude.common.GlobalProps).POSTER}}" onerror="this.onerror=null; this.src='images/poster.png';" alt="Trailer-Image">
+                                </a>
+                            </div>
+                            <div class="col-8 title mx-0 my-0 px-0 py-0">
+                                <a href="#" th:href="@{/movie(mediaID=${m.id})}" class="hover-none">
+                                    <p class="text my-1 text-danger-light hover-dark" 
+                                    style="font-size:1.5rem; font-weight:bold;" th:text="${m.mediaName + 
+                                        ' (' + ( m.releaseDate.theatre.getYear() + 1900 ) + ')'}">
+                                        The Story of Adele H (<span class="year">1975</span>)
+                                    </p>
+                                    <p class="desc my-1 hover-dark" th:text="${m.desc}" style="font-size:1.3rem;">
+                                        Isabelle Adjani, Sylvia Marriott, Bruce Robinson
+                                    </p>
+                                </a>
+                            </div>
+                        </div>
+                        <div th:if="${mStat.index == mCnt-1}" class="w-100 text-right px-0">
+                            <a href="javascript:show_movie( )" class="mr-auto hover-blue view-all">View All ></a>
+                        </div>
+                    </th:block>
+                    <nav aria-label="Page navigation" class="row mr-3 my-0 px-0 py-0">
+                        <ul class="pagination d-none pagination-lg ml-auto mt-auto">
+                            <li class="page-item disabled">
+                                <a class="page-link text-danger-light" href="#" aria-label="Pre-Previous" tabindex="-1">
+                                    <span aria-hidden="true" style="font-size:1.5rem;">&laquo;</span>
+                                    <span class="sr-only" style="font-size:1.5rem;">Previous</span>
+                                </a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link text-danger-light" href="#" aria-label="Previous" tabindex="-1">
+                                    <span aria-hidden="true" style="font-size:1.5rem;">&lsaquo;</span>
+                                </a>
+                            </li>
+                            <script th:inline="javascript" type="text/javascript">
+                                var keyword     = getParameterByName("keyword");
+                                var ROW_COUNT   = 10;
+                                var nMovies     = [[ ${ mCnt } ]];
+                                var nPages      = Math.ceil( nMovies / ROW_COUNT );
+
+                                for( var i = 0; i < nPages; ++i ) {
+                                    if( i == 0 ) {
+                                        document.write( "<li class=\"active page-item\">\n"
+                                                + "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_movies('" + keyword + "'," + i + ")\" style=\"font-size:1.5rem;\">" + (i+1) + "</a>\n"
+                                                + "</li>\n" );
+                                    } else {
+                                        document.write( "<li class=\"page-item\">\n"
+                                                + "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_movies('" + keyword + "'," + i + ")\" style=\"font-size:1.5rem;\">" + (i+1) + "</a>\n"
+                                                + "</li>\n" );
+                                    }
+                                }
+                            </script>
+                            <li class="page-item disabled">
+                                <a class="page-link text-danger-light" href="#" aria-label="Next">
+                                    <span aria-hidden="true" style="font-size:1.5rem;">&rsaquo;</span>
+                                    <span class="sr-only" style="font-size:1.5rem;">Next</span>
+                                </a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link text-danger-light" href="#" aria-label="Next">
+                                    <span aria-hidden="true" style="font-size:1.5rem;">&raquo;</span>
+                                    <span class="sr-only" style="font-size:1.5rem;">Next</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <div th:if="${tvCnt != 0}" class="mx-0 my-0 px-0 py-0 t-s-box">
+                    <h6 class="my-3 border-white border-bottom">TV</h6>
+                    <th:block th:each="m, tvStat : ${tvSeries}">
+                        <div class="row mx-0 my-0 px-2 py-2">
+                            <!--<th:block th:if="${m.mudemeter.audienceMudemeter >= 70}"><h1 class="col-1 my-auto gold">M</h1></th:block>
+                            <th:block th:if="${m.mudemeter.audienceMudemeter >= 60 and m.mudemeter.audienceMudemeter < 70}"><h1 class="col-1 my-auto silver">M</h1></th:block>
+                            <th:block th:if="${m.mudemeter.audienceMudemeter >= 50 and m.mudemeter.audienceMudemeter < 60}"><h1 class="col-1 my-auto bronze">M</h1></th:block>
+                            <th:block th:if="${m.mudemeter.audienceMudemeter < 50}"><h1 class="col-1 my-auto black">M</h1></th:block>
+                            <p class="col-1 my-auto pl-1 pr-2" style="font-size:1.3rem;"
+                            th:text="${T(java.lang.Math).round(m.mudemeter.audienceMudemeter) + '%'}">94%</p>-->
+                            <div class="col-2 mx-0 my-0 text-left">
+                                <a href="#" th:href="@{/tvseries(mediaID=${m.id})}" class="hover-none">
+                                    <img class="my-0 img-fluid" style="width:103px;"
+                                    src="images/poster.png" th:src="@{${T(us.mude.common.GlobalProps).FS_URI + '/' + m.resourcePath + '/' + T(us.mude.common.GlobalProps).POSTER}}"
+                                    onerror="this.onerror=null; this.src='images/poster.png';">
+                                </a>
+                            </div>
+                            <div class="col-8 title mx-0 my-0 px-0 py-0">
+                                <a href="#" th:href="@{/tvseries(mediaID=${m.id})}" class="hover-none">
+                                    <p class="my-1 text-danger-light hover-dark" 
+                                    style="font-size:1.5rem; font-weight:bold;" th:text="${m.mediaName + ' (' + ( m.releaseDate.theatre.getYear() + 1900 ) + ')'}">
+                                        Lost (<span class="year">1975</span>)
+                                    </p>
+                                </a>
+                            </div>
+                        </div>
+                        <div th:if="${tvStat.index == tvCnt-1}" class="w-100 text-right px-0">
+                            <a href="javascript:show_tv( )" class="mr-auto hover-blue view-all">View All ></a>
+                        </div>
+                    </th:block>
+                    <nav aria-label="Page navigation" class="row mr-3 my-0 px-0 py-0">
+                        <ul class="pagination d-none pagination-lg ml-auto mt-auto">
+                            <li class="page-item disabled">
+                                <a class="page-link text-danger-light" href="#" aria-label="Pre-Previous" tabindex="-1">
+                                    <span aria-hidden="true" style="font-size:1.5rem;">&laquo;</span>
+                                    <span class="sr-only" style="font-size:1.5rem;">Previous</span>
+                                </a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link text-danger-light" href="#" aria-label="Previous" tabindex="-1">
+                                    <span aria-hidden="true" style="font-size:1.5rem;">&lsaquo;</span>
+                                </a>
+                            </li>
+                            <script th:inline="javascript" type="text/javascript">
+                                var ROW_COUNT   = 10;
+                                var nTV         = [[ ${ tvCnt } ]];
+                                var nPages      = Math.ceil( nTV / ROW_COUNT );
+                                var keyword     = getParameterByName("keyword");
+
+                                for( var i = 0; i < nPages; ++i ) {
+                                    if( i == 0 ) {
+                                        document.write( "<li class=\"active page-item\">\n"
+                                                + "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_tv('" + keyword + "'," + i  + ")\" style=\"font-size:1.5rem;\">" + (i+1) + "</a>\n"
+                                                + "</li>\n" );
+                                    } else {
+                                        document.write( "<li class=\"page-item\">\n"
+                                                + "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_tv('" + keyword + "'," + i + ")\" style=\"font-size:1.5rem;\">" + (i+1) + "</a>\n"
+                                                + "</li>\n" );
+                                    }
+                                }
+                            </script>
+                            <li class="page-item disabled">
+                                <a class="page-link text-danger-light" href="#" aria-label="Next">
+                                    <span aria-hidden="true" style="font-size:1.5rem;">&rsaquo;</span>
+                                    <span class="sr-only" style="font-size:1.5rem;">Next</span>
+                                </a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link text-danger-light" href="#" aria-label="Next">
+                                    <span aria-hidden="true" style="font-size:1.5rem;">&raquo;</span>
+                                    <span class="sr-only" style="font-size:1.5rem;">Next</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <div th:if="${aCnt != 0}" class="mx-0 my-0 px-0 py-0 a-s-box">
+                    <h6 class="my-3 border-white border-bottom">Artists</h6>
+                    <th:block th:each="a, aStat : ${artists}">
+                        <div class="row mx-0 my-0 px-2 py-2">
+                            <div class="col-2 mx-0 my-0 text-left">
+                                <a href="#" th:href="@{/artist(artistID=${a.id})}" class="hover-none">
+                                    <img class="my-0" style="width:103px;"
+                                     src="images/poster.png" th:src="@{${T(us.mude.common.GlobalProps).FS_URI + '/' + a.resourcePath + '/' + T(us.mude.common.GlobalProps).POSTER}}"
+                                    onerror="this.onerror=null; this.src='images/poster.png';">
+                                </a>
+                            </div>
+                            <div class="col-10 title mx-0 my-0 px-0 py-0">
+                                <a href="#" th:href="@{/artist(artistID=${a.id})}" class="hover-none">
+                                    <p class="my-1 text-danger-light hover-dark" 
+                                    style="font-size:1.2em; font-weight:bold;" th:text="${a.name.firstName + ' ' + a.name.lastName}">
+                                        Matt Damon
+                                    </p>
+                                </a>
+                            </div>
+                        </div>
+                        <div th:if="${aStat.index == aCnt-1}" class="w-100 text-right px-0">
+                            <a href="javascript:show_artist( )" class="mr-auto hover-blue view-all">View All ></a>
+                        </div>
+                    </th:block>
+                    <nav aria-label="Page navigation" class="row mr-3 my-0 px-0 py-0">
+                        <ul class="pagination d-none pagination-lg ml-auto mt-auto">
+                            <li class="page-item disabled">
+                                <a class="page-link text-danger-light" href="#" aria-label="Pre-Previous" tabindex="-1">
+                                    <span aria-hidden="true" style="font-size:1.5rem;">&laquo;</span>
+                                    <span class="sr-only" style="font-size:1.5rem;">Previous</span>
+                                </a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link text-danger-light" href="#" aria-label="Previous" tabindex="-1">
+                                    <span aria-hidden="true" style="font-size:1.5rem;">&lsaquo;</span>
+                                </a>
+                            </li>
+                            <script th:inline="javascript" type="text/javascript">
+                                var ROW_COUNT   = 10;
+                                var nArtists    = [[ ${ aCnt } ]];
+                                var nPages      = Math.ceil( nArtists / ROW_COUNT );
+                                var keyword     = getParameterByName("keyword");
+
+                                for( var i = 0; i < nPages; ++i ) {
+                                    if( i == 0 ) {
+                                        document.write( "<li class=\"active page-item\">\n"
+                                                + "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_artist('" + keyword + "'," + i + ")\" style=\"font-size:1.5rem;\">" + (i+1) + "</a>\n"
+                                                + "</li>\n" );
+                                    } else {
+                                        document.write( "<li class=\"page-item\">\n"
+                                                + "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_artist('" + keyword + "'," + i + ")\" style=\"font-size:1.5rem;\">" + (i+1) + "</a>\n"
+                                                + "</li>\n" );
+                                    }
+                                }
+                            </script>
+                            <li class="page-item disabled">
+                                <a class="page-link text-danger-light" href="#" aria-label="Next">
+                                    <span aria-hidden="true" style="font-size:1.5rem;">&rsaquo;</span>
+                                    <span class="sr-only" style="font-size:1.5rem;">Next</span>
+                                </a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link text-danger-light" href="#" aria-label="Next">
+                                    <span aria-hidden="true" style="font-size:1.5rem;">&raquo;</span>
+                                    <span class="sr-only" style="font-size:1.5rem;">Next</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <div th:if="${cCnt != 0}" class="mx-0 my-0 px-0 py-0 c-s-box">
+                    <h6 class="my-3 border-white border-bottom">Critics</h6>
+                    <th:block th:each="c, cStat : ${critics}">
+                        <div class="row mx-0 my-0 px-2 py-2">
+                            <div class="col-2 mx-0 my-0 text-left">
+                                <a href="#" th:href="@{/critic(criticID=${c.id})}" class="hover-none">
+                                    <img class="my-0" style="width:103px;"
+                                    src="images/poster.png" th:src="@{${T(us.mude.common.GlobalProps).FS_URI + '/' + c.profileImage + '/' + T(us.mude.common.GlobalProps).POSTER}}"
+                                    onerror="this.onerror=null; this.src='images/poster.png';">
+                                </a>
+                            </div>
+                            <div class="col-10 title mx-0 my-0 px-0 py-0">
+                                <a href="#" th:href="@{/critic(criticID=${c.id})}" class="hover-none">
+                                    <p class="my-1 text-danger-light hover-dark" style="font-size:1.2em; font-weight:bold;" th:text="${c.name.firstName + ' ' + c.name.lastName}">
+                                        Steve Jobs
+                                    </p>
+                                </a>
+                            </div>
+                        </div>
+                        <div th:if="${cStat.index == cCnt-1}" class="w-100 text-right px-0">
+                            <a href="javascript:show_critic( )" class="mr-auto hover-blue view-all">View All ></a>
+                        </div>
+                    </th:block>
+                    <nav aria-label="Page navigation" class="row mr-3 my-0 px-0 py-0">
+                        <ul class="pagination d-none pagination-lg ml-auto mt-auto">
+                            <li class="page-item disabled">
+                                <a class="page-link text-danger-light" href="#" aria-label="Pre-Previous" tabindex="-1">
+                                    <span aria-hidden="true" style="font-size:1.5rem;">&laquo;</span>
+                                    <span class="sr-only" style="font-size:1.5rem;">Previous</span>
+                                </a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link text-danger-light" href="#" aria-label="Previous" tabindex="-1">
+                                    <span aria-hidden="true" style="font-size:1.5rem;">&lsaquo;</span>
+                                </a>
+                            </li>
+                            <script th:inline="javascript" type="text/javascript">
+                                var ROW_COUNT   = 10;
+                                var nCritics    = [[ ${ cCnt } ]];
+                                var nPages      = Math.ceil( nCritics / ROW_COUNT );
+
+                                for( var i = 0; i < nPages; ++i ) {
+                                    if( i == 0 ) {
+                                        document.write( "<li class=\"active page-item\">\n"
+                                                + "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_critics('" + keyword + "'," + i + ")\" style=\"font-size:1.5rem;\">" + (i+1) + "</a>\n"
+                                                + "</li>\n" );
+                                    } else {
+                                        document.write( "<li class=\"page-item\">\n"
+                                                + "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_critics('" + keyword + "'," + i + ")\" style=\"font-size:1.5rem;\">" + (i+1) + "</a>\n"
+                                                + "</li>\n" );
+                                    }
+                                }
+                            </script>
+                            <li class="page-item disabled">
+                                <a class="page-link text-danger-light" href="#" aria-label="Next">
+                                    <span aria-hidden="true" style="font-size:1.5rem;">&rsaquo;</span>
+                                    <span class="sr-only" style="font-size:1.5rem;">Next</span>
+                                </a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link text-danger-light" href="#" aria-label="Next">
+                                    <span aria-hidden="true" style="font-size:1.5rem;">&raquo;</span>
+                                    <span class="sr-only" style="font-size:1.5rem;">Next</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="px-0 d-none" th:replace="index :: footer">
+    </footer>
+    
+    <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="owlcarousel/owl.carousel.min.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/search.js"></script>
+    <script type="application/javascript" th:inline="javascript">
+        var keyword = getParameterByName("keyword");
+        $(".keyword").text(keyword);
+        for (i = 0; i < $(".m-s-box .desc").length; i++)
+            $(".m-s-box .desc" + ":eq(" + i + ")").text(trimString($(".m-s-box .desc" + ":eq(" + i + ")").text(), 170));
+
+        /* boxes */
+        var franchise_box       = document.getElementsByClassName( "f-s-box" )[ 0 ];
+        var movie_box           = document.getElementsByClassName( "m-s-box" )[ 0 ];
+        var tv_box              = document.getElementsByClassName( "t-s-box" )[ 0 ];
+        var artist_box          = document.getElementsByClassName( "a-s-box" )[ 0 ];
+        var critic_box          = document.getElementsByClassName( "c-s-box" )[ 0 ];
+
+        /* buttons */
+        var all_button          = document.getElementsByClassName( "all-button-s"       )[ 0 ];
+        var franchise_button    = document.getElementsByClassName( "franchise-button-s" )[ 0 ];
+        var movie_button        = document.getElementsByClassName( "movie-button-s"     )[ 0 ];
+        var tv_button           = document.getElementsByClassName( "tv-button-s"        )[ 0 ];
+        var artist_button       = document.getElementsByClassName( "artist-button-s"    )[ 0 ];
+        var critic_button       = document.getElementsByClassName( "critic-button-s"    )[ 0 ];
+
+        function hide_view_all( ) {
+            var v = document.getElementsByClassName( "view-all" );
+
+            for( var i = 0; i < v.length; ++i )
+                v[ i ].classList.add( "d-none" );
+        }
+
+        function show_all( ) {
+            var p = document.getElementsByClassName( "pagination" );
+            var v = document.getElementsByClassName( "view-all" );
+
+            for( var i = 0; i < p.length; ++i )
+                p[ i ].classList.add( "d-none" );
+
+            for( var i = 0; i < v.length; ++i )
+                v[ i ].classList.remove( "d-none" );
+
+            if( all_button != undefined )
+                all_button.classList.add( "active" );
+            if( franchise_button != undefined )
+                franchise_button.classList.remove( "active" );
+            if( movie_button != undefined )
+                movie_button.classList.remove( "active" );
+            if( tv_button != undefined )
+                tv_button.classList.remove( "active" );
+            if( artist_button != undefined )
+                artist_button.classList.remove( "active" );
+            if( critic_button != undefined )
+                critic_button.classList.remove( "active" );
+            if( franchise_box != undefined )
+                franchise_box.classList.remove( "d-none" );
+            if( movie_box != undefined )
+                movie_box.classList.remove( "d-none" );
+            if( tv_box != undefined )
+                tv_box.classList.remove( "d-none" );
+            if( artist_box != undefined )
+                artist_box.classList.remove( "d-none" );
+            if( critic_box != undefined )
+                critic_box.classList.remove( "d-none" );
+
+            return true;
+        }
+
+        function show_franchise( ) {
+            var pagination = franchise_box.getElementsByClassName( "pagination" )[ 0 ];
+            hide_view_all( );
+
+            if( all_button != undefined )
+                all_button.classList.remove( "active" );
+            if( franchise_button != undefined )
+                franchise_button.classList.add( "active" );
+            if( movie_button != undefined )
+                movie_button.classList.remove( "active" );
+            if( tv_button != undefined )
+                tv_button.classList.remove( "active" );
+            if( artist_button != undefined )
+                artist_button.classList.remove( "active" );
+            if( critic_button != undefined )
+                critic_button.classList.remove( "active" );
+            if( franchise_box != undefined )
+                franchise_box.classList.remove( "d-none" );
+            if( movie_box != undefined )
+                movie_box.classList.add( "d-none" );
+            if( tv_box != undefined )
+                tv_box.classList.add( "d-none" );
+            if( artist_box != undefined )
+                artist_box.classList.add( "d-none" );
+            if( critic_box != undefined )
+                critic_box.classList.add( "d-none" );
+            pagination.classList.remove( "d-none" );
+
+            return true;
+        }
+
+        function show_movie( ) {
+            var pagination = movie_box.getElementsByClassName( "pagination" )[ 0 ];
+            hide_view_all( );
+
+            if( all_button != undefined )
+                all_button.classList.remove( "active" );
+            if( franchise_button != undefined )
+                franchise_button.classList.remove( "active" );
+            if( movie_button != undefined )
+                movie_button.classList.add( "active" );
+            if( tv_button != undefined )
+                tv_button.classList.remove( "active" );
+            if( artist_button != undefined )
+                artist_button.classList.remove( "active" );
+            if( critic_button != undefined )
+                critic_button.classList.remove( "active" );
+            if( franchise_box != undefined )
+                franchise_box.classList.remove( "d-none" );
+            if( franchise_box != undefined )
+                franchise_box.classList.add( "d-none" );
+            if( movie_box != undefined )
+                movie_box.classList.remove( "d-none" );
+            if( tv_box != undefined )
+                tv_box.classList.add( "d-none" );
+            if( artist_box != undefined )
+                artist_box.classList.add( "d-none" );
+            if( critic_box != undefined )
+                critic_box.classList.add( "d-none" );
+            pagination.classList.remove( "d-none" );
+
+            return true;
+        }
+
+        function show_tv( ) {
+            var pagination = tv_box.getElementsByClassName( "pagination" )[ 0 ];
+            hide_view_all( );
+
+            if( all_button != undefined )
+                all_button.classList.remove( "active" );
+            if( franchise_button != undefined )
+                franchise_button.classList.remove( "active" );
+            if( movie_button != undefined )
+                movie_button.classList.remove( "active" );
+            if( tv_button != undefined )
+                tv_button.classList.add( "active" );
+            if( artist_button != undefined )
+                artist_button.classList.remove( "active" );
+            if( critic_button != undefined )
+                critic_button.classList.remove( "active" );
+            if( franchise_box != undefined )
+                franchise_box.classList.add( "d-none" );
+            if( movie_box != undefined )
+                movie_box.classList.add( "d-none" );
+            if( tv_box != undefined )
+                tv_box.classList.remove( "d-none" );
+            if( artist_box != undefined )
+                artist_box.classList.add( "d-none" );
+            if( critic_box != undefined )
+                critic_box.classList.add( "d-none" );
+            pagination.classList.remove( "d-none" );
+
+            return true;
+        }
+
+        function show_artist( ) {
+            var pagination = artist_box.getElementsByClassName( "pagination" )[ 0 ];
+            hide_view_all( );
+
+            if( all_button != undefined )
+                all_button.classList.remove( "active" );
+            if( franchise_button != undefined )
+                franchise_button.classList.remove( "active" );
+            if( movie_button != undefined )
+                movie_button.classList.remove( "active" );
+            if( tv_button != undefined )
+                tv_button.classList.remove( "active" );
+            if( artist_button != undefined )
+                artist_button.classList.add( "active" );
+            if( critic_button != undefined )
+                critic_button.classList.remove( "active" );
+            if( franchise_box != undefined )
+                franchise_box.classList.add( "d-none" );
+            if( movie_box != undefined )
+                movie_box.classList.add( "d-none" );
+            if( tv_box != undefined )
+                tv_box.classList.add( "d-none" );
+            if( artist_box != undefined )
+                artist_box.classList.remove( "d-none" );
+            if( critic_box != undefined )
+                critic_box.classList.add( "d-none" );
+            pagination.classList.remove( "d-none" );
+
+            return true;
+        }
+
+        function show_critic( ) {
+            var pagination = critic_box.getElementsByClassName( "pagination" )[ 0 ];
+            hide_view_all( );
+
+            if( all_button != undefined )
+                all_button.classList.remove( "active" );
+            if( franchise_button != undefined )
+                franchise_button.classList.remove( "active" );
+            if( movie_button != undefined )
+                movie_button.classList.remove( "active" );
+            if( tv_button != undefined )
+                tv_button.classList.remove( "active" );
+            if( artist_button != undefined )
+                artist_button.classList.remove( "active" );
+            if( critic_button != undefined )
+                critic_button.classList.add( "active" );
+            if( franchise_box != undefined )
+                franchise_box.classList.add( "d-none" );
+            if( movie_box != undefined )
+                movie_box.classList.add( "d-none" );
+            if( tv_box != undefined )
+                tv_box.classList.add( "d-none" );
+            if( artist_box != undefined )
+                artist_box.classList.add( "d-none" );
+            if( critic_box != undefined )
+                critic_box.classList.remove( "d-none" );
+            pagination.classList.remove( "d-none" );
+
+            return true;
+        }
+
+        function fetch_franchise( keyword, nPage ) {
+            var xhr = new XMLHttpRequest( );
+
+            xhr.onreadystatechange = function( ) {
+                if( this.readyState == 4 && this.status == 200 ) {
+                    var response = JSON.parse( this.responseText );
+                    if( response.success ) {
+                        var franchise_body = "<h6 class=\"my-3 border-white border-bottom\">Franchises</h6>";
+                        var source = [[${T(us.mude.common.GlobalProps).FS_URI}]];
+                        var source2 = [[${T(us.mude.common.GlobalProps).POSTER}]];
+                        for( var i in response.media ) {
+                            franchise_body += "<div class=\"row mx-0 my-0 px-2 py-2\">\n"
+                                            + "<div class=\"col-2 mx-0 my-0 text-left\">\n"
+                                            + "<a href=\"#\" href=\"/franchise?mediaID=" + response.media[i].id + "\" class=\"hover-none\">\n"
+                                            + "<img class=\"my-0\" style=\"width:103px;\" src=\"" + source + '/' + response.media[i].resourcePath + "/photos/0.jpg\">\n"
+                                            + "</a></div>\n"
+                                            + "<div class=\"title mx-0 my-0 px-0 py-0\">\n"
+                                            + "<a href=\"#\" href=\"/franchise?mediaID=" + response.media[i].id + "\" class=\"hover-none\">\n"
+                                            + "<p class=\"my-1 text-danger-light hover-dark\" style=\"font-size:1.2em; font-weight:bold;\">\n"
+                                            + response.media[i].mediaName
+                                            + "</p></a></div></div>\n";
+                        }
+
+                        var ROW_COUNT   = 10;
+                        var keyword     = getParameterByName("keyword");
+                        var nFranchise  = [[ ${ fCnt } ]];
+                        var nPages      = Math.ceil( nFranchise / ROW_COUNT );
+
+                        
+                        franchise_body += "<nav aria-label=\"Page navigation\" class=\"row mr-3 my-0 px-0 py-0\">";
+                        franchise_body += "<ul class=\"pagination pagination-lg ml-auto mt-auto\">\n";
+                        if( nPage > 0 ) {
+                            franchise_body += "<li class=\"page-item\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_franchise('" + keyword + "'," + 0 + ")\" aria-label=\"Pre-Previous\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&laquo;</span>"
+                                + "<span class=\"sr-only\" style=\"font-size:1.5rem;\">Previous</span>"
+                                + "</a></li>"
+                                + "<li class=\"page-item\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_franchise('" + keyword + "'," + (nPage-1) + ")\" aria-label=\"Pre-Previous\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&lsaquo;</span>"
+                                + "</a></li>";
+                        } else {
+                            franchise_body += "<li class=\"page-item disabled\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"#\" aria-label=\"Pre-Previous\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&laquo;</span>"
+                                + "<span class=\"sr-only\" style=\"font-size:1.5rem;\">Previous</span>"
+                                + "</a></li>"
+                                + "<li class=\"page-item disabled\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"#\" aria-label=\"Previous\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&lsaquo;</span>"
+                                + "</a></li>";
+                        }
+
+                        for( var i = 0; i < nPages; ++i ) {
+                            if( nPage == i ) {
+                                franchise_body += "<li class=\"active page-item\">\n"
+                                               +  "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_franchise('" + keyword + "'," + i + ")\" style=\"font-size:1.5rem;\">" + ( i+1 ) + "</a>\n"
+                                               +  "</li>\n";
+                            } else {
+                                franchise_body += "<li class=\"page-item\">\n"
+                                               +  "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_franchise('" + keyword + "'," + i + ")\" style=\"font-size:1.5rem;\">" + ( i+1 ) + "</a>\n"
+                                               +  "</li>\n";
+                            }
+                        }
+
+                        if( nPage < nPages-1 ) {
+                            franchise_body += "<li class=\"page-item\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_franchise('" + keyword + "'," + (nPage+1) + ")\" aria-label=\"Next\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&rsaquo;</span>"
+                                + "<span class=\"sr-only\" style=\"font-size:1.5rem;\">Next</span>"
+                                + "</a></li>"
+                                + "<li class=\"page-item\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_franchise('" + keyword + "'," + (nPages-1) + ")\" aria-label=\"Next\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&raquo;</span>"
+                                + "</a></li>";
+                        } else {
+                            franchise_body += "<li class=\"page-item disabled\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"#\" aria-label=\"Next\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&raquo;</span>"
+                                + "<span class=\"sr-only\" style=\"font-size:1.5rem;\">Next</span>"
+                                + "</a></li>"
+                                + "<li class=\"page-item disabled\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"#\" aria-label=\"Next\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&rsaquo;</span>"
+                                + "</a></li>";
+                        }
+
+                        franchise_box.innerHTML = franchise_body + "</ul></nav>\n";
+                    }
+                }
+            }
+
+            xhr.open( "GET", "/searchmedia?keyword=" + keyword + "&mediaType=FRANCHISE&pageNo=" + nPage );
+            xhr.setRequestHeader( "Content-Type", "application/json" );
+            xhr.send( );
+        }
+
+        function fetch_movies( keyword, nPage ) {
+            var xhr = new XMLHttpRequest( );
+
+            xhr.onreadystatechange = function( ) {
+                if( this.readyState == 4 && this.status == 200 ) {
+                    var response = JSON.parse( this.responseText );
+
+                    if( response.success ) {
+                        var movie_body = "<h6 class=\"my-3 border-white border-bottom\">Movies</h6>";
+                        var source = [[${T(us.mude.common.GlobalProps).FS_URI}]];
+                        var source2 = [[${T(us.mude.common.GlobalProps).POSTER}]];
+                        for( var i in response.media ) {
+                            var year = response.media[i].releaseDate.theatre.substring(0,
+                                response.media[i].releaseDate.theatre.indexOf('-'));
+                            var audienceScore = response.media[i].mudemeter.audienceMudemeter;
+                            movie_body += "<div class=\"row mx-0 my-0 px-2 py-2\">\n";
+
+                            if( audienceScore >= 70 )
+                                movie_body += "<h1 class=\"col-1 my-auto gold\">M</h1>";
+                            else if( audienceScore >= 60 && audienceScore < 70 )
+                                movie_body += "<h1 class=\"col-1 my-auto silver\">M</h1>";
+                            else if( audienceScore >= 50 && audienceScore < 60 )
+                                movie_body += "<h1 class=\"col-1 my-auto bronze\">M</h1>";
+                            else
+                                movie_body += "<h1 class=\"col-1 my-auto black\">M</h1>";
+
+                            movie_body += "<p class=\"col-1 my-auto pl-1 pr-2\" style=\"font-size:1.3rem;\">" + audienceScore + "%</p>\n"
+                                        + "<div class=\"col-2 mx-0 my-0 text-left\">\n"
+                                        + "<a href=\"/movie?mediaID=" + response.media[i].id + "\" class=\"hover-none\">\n"
+                                        + "<img class=\"my-0\" style=\"width:103px;\" src=\"" + source + "/" + response.media[i].resourcePath + "/photos/0.jpg\">\n"
+                                        + "</a></div>"
+                                        + "<div class=\"col-8 title mx-0 my-0 px-0 py-0\">\n"
+                                        + "<a href=\"/movie?mediaID=" + response.media[i].id + "\" class=\"hover-none\">\n"
+                                        + "<p class=\"text my-1 text-danger-light hover-dark\" style=\"font-size:1.5rem; font-weight:bold;\">"
+                                        + response.media[i].mediaName
+                                        + "(<span class=\"year\">" + year  + "</span>)"
+                                        + "</p>"
+                                        + "<p class=\"desc my-1 hover-dark\" style=\"font-size:1.3rem;\">"
+                                        + response.media[i].desc.substring(0, 280)
+                                        + "</p></a></div></div>\n";
+                        }
+
+                        var ROW_COUNT   = 10;
+                        var keyword     = getParameterByName("keyword");
+                        var nMovies     = [[ ${ mCnt } ]];
+                        var nPages      = Math.ceil( nMovies / ROW_COUNT );
+
+                        movie_body += "<nav aria-label=\"Page navigation\" class=\"row mr-3 my-0 px-0 py-0\">";
+                        movie_body += "<ul class=\"pagination pagination-lg ml-auto mt-auto\">";
+                        if( nPage > 0 ) {
+                            movie_body += "<li class=\"page-item\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_movies('" + keyword + "'," + 0 + ")\" aria-label=\"Pre-Previous\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&laquo;</span>"
+                                + "<span class=\"sr-only\" style=\"font-size:1.5rem;\">Previous</span>"
+                                + "</a></li>"
+                                + "<li class=\"page-item\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_movies('" + keyword + "'," + (nPage-1) + ")\" aria-label=\"Pre-Previous\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&lsaquo;</span>"
+                                + "</a></li>";
+                        } else {
+                            movie_body += "<li class=\"page-item disabled\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"#\" aria-label=\"Pre-Previous\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&laquo;</span>"
+                                + "<span class=\"sr-only\" style=\"font-size:1.5rem;\">Previous</span>"
+                                + "</a></li>"
+                                + "<li class=\"page-item disabled\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"#\" aria-label=\"Previous\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&lsaquo;</span>"
+                                + "</a></li>";
+                        }
+
+                        for( var i = 0; i < nPages; ++i ) {
+                            if( nPage == i ) {
+                                movie_body += "<li class=\"active page-item\">\n"
+                                               +  "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_movies('" + keyword + "'," + i + ")\" style=\"font-size:1.5rem;\">" + ( i+1 ) + "</a>\n"
+                                               +  "</li>\n";
+                            } else {
+                                movie_body += "<li class=\"page-item\">\n"
+                                               +  "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_movies('" + keyword + "'," + i + ")\" style=\"font-size:1.5rem;\">" + ( i+1 ) + "</a>\n"
+                                               +  "</li>\n";
+                            }
+                        }
+
+                        if( nPage < nPages-1 ) {
+                            movie_body += "<li class=\"page-item\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_movies('" + keyword + "'," + (nPage+1) + ")\" aria-label=\"Next\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&rsaquo;</span>"
+                                + "<span class=\"sr-only\" style=\"font-size:1.5rem;\">Next</span>"
+                                + "</a></li>"
+                                + "<li class=\"page-item\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_movies('" + keyword + "'," + (nPages-1) + ")\" aria-label=\"Next\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&raquo;</span>"
+                                + "</a></li>";
+                        } else {
+                            movie_body += "<li class=\"page-item disabled\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"#\" aria-label=\"Next\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&raquo;</span>"
+                                + "<span class=\"sr-only\" style=\"font-size:1.5rem;\">Next</span>"
+                                + "</a></li>"
+                                + "<li class=\"page-item disabled\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"#\" aria-label=\"Next\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&rsaquo;</span>"
+                                + "</a></li>";
+                        }
+                        movie_body += "</ul></nav>"
+                            + "<div class=\"w-100 d-none text-right px-0\">"
+                            + "<a href=\"javascript:show_movie( )\" class=\"mr-auto hover-blue view-all\">View All ></a>"
+                            + "</div>";
+
+                        movie_box.innerHTML = movie_body;
+                    }
+                }
+            }
+
+            xhr.open( "GET", "/searchmedia?keyword=" + keyword + "&mediaType=MOVIE&pageNo=" + nPage );
+            xhr.setRequestHeader( "Content-Type", "application/json" );
+            xhr.send( );
+        }
+
+        function fetch_tv( keyword, nPage ) {
+            var xhr = new XMLHttpRequest( );
+
+            xhr.onreadystatechange = function( ) {
+                if( this.readyState == 4 && this.status == 200 ) {
+                    var response = JSON.parse( this.responseText );
+                    var source = [[${T(us.mude.common.GlobalProps).FS_URI}]];
+                    var source2 = [[${T(us.mude.common.GlobalProps).POSTER}]];
+
+                    if( response.success ) {
+                        var body = "<h6 class=\"my-3 border-white border-bottom\">TV</h6>";
+                        for( var i in response.media ) {
+                            var year = response.media[i].releaseDate.theatre.substring(0,
+                                response.media[i].releaseDate.theatre.indexOf('-'));
+                            body += "<div class=\"row mx-0 my-0 px-2 py-2\">\n"
+                                            + "<div class=\"col-2 mx-0 my-0 text-left\">\n"
+                                            + "<a href=\"/tvseries?mediaID=" + response.media[i].id + "\" class=\"hover-none\">\n"
+                                            + "<img class=\"my-0\" style=\"width:103px;\" src=\"" + source + "/" + response.media[i].resourcePath + "/photos/0.jpg\">\n"
+                                            + "</a></div>\n"
+                                            + "<div class=\"title mx-0 my-0 px-0 py-0\">\n"
+                                            + "<a href=\"/tvseries?mediaID=" + response.media[i].id + "\" class=\"hover-none\">\n"
+                                            + "<p class=\"my-1 text-danger-light hover-dark\" style=\"font-size:1.5rem; font-weight:bold;\">\n"
+                                            + response.media[i].mediaName
+                                            + " (<span class=\"year\">"
+                                            + year
+                                            + "</span>)"
+                                            + "</p></a></div></div>\n";
+                        }
+
+                        var ROW_COUNT   = 10;
+                        var keyword     = getParameterByName("keyword");
+                        var nTV         = [[ ${ tvCnt } ]];
+                        var nPages      = Math.ceil( nTV / ROW_COUNT );
+
+                        
+                        body += "<nav aria-label=\"Page navigation\" class=\"row mr-3 my-0 px-0 py-0\">";
+                        body += "<ul class=\"pagination pagination-lg ml-auto mt-auto\">\n";
+                        if( nPage > 0 ) {
+                            body += "<li class=\"page-item\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_tv('" + keyword + "'," + 0 + ")\" aria-label=\"Pre-Previous\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&laquo;</span>"
+                                + "<span class=\"sr-only\" style=\"font-size:1.5rem;\">Previous</span>"
+                                + "</a></li>"
+                                + "<li class=\"page-item\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_tv('" + keyword + "'," + (nPage-1) + ")\" aria-label=\"Pre-Previous\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&lsaquo;</span>"
+                                + "</a></li>";
+                        } else {
+                            body += "<li class=\"page-item disabled\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"#\" aria-label=\"Pre-Previous\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&laquo;</span>"
+                                + "<span class=\"sr-only\" style=\"font-size:1.5rem;\">Previous</span>"
+                                + "</a></li>"
+                                + "<li class=\"page-item disabled\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"#\" aria-label=\"Previous\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&lsaquo;</span>"
+                                + "</a></li>";
+                        }
+
+                        for( var i = 0; i < nPages; ++i ) {
+                            if( nPage == i ) {
+                                body += "<li class=\"active page-item\">\n"
+                                               +  "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_tv('" + keyword + "'," + i + ")\" style=\"font-size:1.5rem;\">" + ( i+1 ) + "</a>\n"
+                                               +  "</li>\n";
+                            } else {
+                                body += "<li class=\"page-item\">\n"
+                                               +  "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_tv('" + keyword + "'," + i + ")\" style=\"font-size:1.5rem;\">" + ( i+1 ) + "</a>\n"
+                                               +  "</li>\n";
+                            }
+                        }
+
+                        if( nPage < nPages-1 ) {
+                            body += "<li class=\"page-item\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_tv('" + keyword + "'," + (nPage+1) + ")\" aria-label=\"Next\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&rsaquo;</span>"
+                                + "<span class=\"sr-only\" style=\"font-size:1.5rem;\">Next</span>"
+                                + "</a></li>"
+                                + "<li class=\"page-item\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_tv('" + keyword + "'," + (nPages-1) + ")\" aria-label=\"Next\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&raquo;</span>"
+                                + "</a></li>";
+                        } else {
+                            body += "<li class=\"page-item disabled\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"#\" aria-label=\"Next\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&raquo;</span>"
+                                + "<span class=\"sr-only\" style=\"font-size:1.5rem;\">Next</span>"
+                                + "</a></li>"
+                                + "<li class=\"page-item disabled\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"#\" aria-label=\"Next\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&rsaquo;</span>"
+                                + "</a></li>";
+                        }
+
+                        tv_box.innerHTML = body + "</ul></nav>\n";
+                    }
+                }
+            }
+
+            xhr.open( "GET", "/searchmedia?keyword=" + keyword + "&mediaType=TVSERIES&pageNo=" + nPage );
+            xhr.setRequestHeader( "Content-Type", "application/json" );
+            xhr.send( );
+        }
+
+        function fetch_artist( keyword, nPage ) {
+            var xhr = new XMLHttpRequest( );
+
+            xhr.onreadystatechange = function( ) {
+                if( this.readyState == 4 && this.status == 200 ) {
+                    var response = JSON.parse( this.responseText );
+                    var source = [[${T(us.mude.common.GlobalProps).FS_URI}]];
+                    var source2 = [[${T(us.mude.common.GlobalProps).POSTER}]];
+
+                    if( response.success ) {
+                        console.log(response);
+                        var body = "<h6 class=\"my-3 border-white border-bottom\">Artists</h6>";
+                        for( var i in response.artists ) {
+                            body += "<div class=\"row mx-0 my-0 px-2 py-2\">\n"
+                                            + "<div class=\"col-2 mx-0 my-0 text-left\">\n"
+                                            + "<a href=\"/artist?artistID=" + response.artists[i].id + "\" class=\"hover-none\">\n"
+                                            + "<img class=\"my-0\" style=\"width:103px;\" src=\"" + source + "/" + response.artists[i].resourcePath + "/photos/0.jpg\" onerror=\"this.onerror=null; this.src='images/poster.png';\">\n"
+                                            + "</a></div>\n"
+                                            + "<div class=\"title mx-0 my-0 px-0 py-0\">\n"
+                                            + "<a href=\"/artist?artistID=" + response.artists[i].id + "\" class=\"hover-none\">\n"
+                                            + "<p class=\"my-1 text-danger-light hover-dark\" style=\"font-size:1.2em; font-weight:bold;\">\n"
+                                            + response.artists[i].name.firstName + " " + response.artists[i].name.lastName
+                                            + "</p></a></div></div>\n";
+                        }
+
+                        var ROW_COUNT   = 10;
+                        var keyword     = getParameterByName("keyword");
+                        var nArtists    = [[ ${ aCnt } ]];
+                        var nPages      = Math.ceil( nArtists / ROW_COUNT );
+
+                        
+                        body += "<nav aria-label=\"Page navigation\" class=\"row mr-3 my-0 px-0 py-0\">";
+                        body += "<ul class=\"pagination pagination-lg ml-auto mt-auto\">\n";
+                        if( nPage > 0 ) {
+                            body += "<li class=\"page-item\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_artist('" + keyword + "'," + 0 + ")\" aria-label=\"Pre-Previous\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&laquo;</span>"
+                                + "<span class=\"sr-only\" style=\"font-size:1.5rem;\">Previous</span>"
+                                + "</a></li>"
+                                + "<li class=\"page-item\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_artist('" + keyword + "'," + (nPage-1) + ")\" aria-label=\"Pre-Previous\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&lsaquo;</span>"
+                                + "</a></li>";
+                        } else {
+                            body += "<li class=\"page-item disabled\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"#\" aria-label=\"Pre-Previous\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&laquo;</span>"
+                                + "<span class=\"sr-only\" style=\"font-size:1.5rem;\">Previous</span>"
+                                + "</a></li>"
+                                + "<li class=\"page-item disabled\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"#\" aria-label=\"Previous\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&lsaquo;</span>"
+                                + "</a></li>";
+                        }
+
+                        for( var i = 0; i < nPages; ++i ) {
+                            if( nPage == i ) {
+                                body += "<li class=\"active page-item\">\n"
+                                               +  "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_artist('" + keyword + "'," + i + ")\" style=\"font-size:1.5rem;\">" + ( i+1 ) + "</a>\n"
+                                               +  "</li>\n";
+                            } else {
+                                body += "<li class=\"page-item\">\n"
+                                               +  "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_artist('" + keyword + "'," + i + ")\" style=\"font-size:1.5rem;\">" + ( i+1 ) + "</a>\n"
+                                               +  "</li>\n";
+                            }
+                        }
+
+                        if( nPage < nPages-1 ) {
+                            body += "<li class=\"page-item\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_artist('" + keyword + "'," + (nPage+1) + ")\" aria-label=\"Next\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&rsaquo;</span>"
+                                + "<span class=\"sr-only\" style=\"font-size:1.5rem;\">Next</span>"
+                                + "</a></li>"
+                                + "<li class=\"page-item\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_artist('" + keyword + "'," + (nPages-1) + ")\" aria-label=\"Next\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&raquo;</span>"
+                                + "</a></li>";
+                        } else {
+                            body += "<li class=\"page-item disabled\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"#\" aria-label=\"Next\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&raquo;</span>"
+                                + "<span class=\"sr-only\" style=\"font-size:1.5rem;\">Next</span>"
+                                + "</a></li>"
+                                + "<li class=\"page-item disabled\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"#\" aria-label=\"Next\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&rsaquo;</span>"
+                                + "</a></li>";
+                        }
+
+                        artist_box.innerHTML = body + "</ul></nav>\n";
+                    }
+                }
+            }
+
+            xhr.open( "GET", "/searchartists?keyword=" + keyword + "&pageNo=" + nPage );
+            xhr.setRequestHeader( "Content-Type", "application/json" );
+            xhr.send( );
+        }
+
+        function fetch_critics( keyword, nPage ) {
+            var FS_URI = [[${T(us.mude.common.GlobalProps).FS_URI}]];
+            var xhr = new XMLHttpRequest( );
+
+            xhr.onreadystatechange = function( ) {
+                if( this.readyState == 4 && this.status == 200 ) {
+                    var response = JSON.parse( this.responseText );
+
+                    if( response.success ) {
+                        var body = "<h6 class=\"my-3 border-white border-bottom\">Critics</h6>";
+                        for( var i in response.critics ) {
+                            console.log(response);
+                            body += "<div class=\"row mx-0 my-0 px-2 py-2\">\n"
+                                            + "<div class=\"col-2 mx-0 my-0 text-left\">\n"
+                                            + "<a href=\"/member?memberID=" + response.critics[i].id + "\" class=\"hover-none\">\n"
+                                            + "<img class=\"my-0\" style=\"width:103px;\" src=\"" + FS_URI + '/' + response.critics[i].profileImage + "/photos/0.jpg\" onerror=\"this.onerror=null; this.src='images/critics.gif';\">\n"
+                                            + "</a></div>\n"
+                                            + "<div class=\"title mx-0 my-0 px-0 py-0\">\n"
+                                            + "<a href=\"/member?memberID=" + response.critics[i].id + "\" class=\"hover-none\">\n"
+                                            + "<p class=\"my-1 text-danger-light hover-dark\" style=\"font-size:1.2em; font-weight:bold;\">\n"
+                                            + response.critics[i].name.firstName + " " + response.critics[i].name.lastName
+                                            + "</p></a></div></div>\n";
+                        }
+
+                        var ROW_COUNT   = 10;
+                        var keyword     = getParameterByName("keyword");
+                        var nCritics    = [[ ${ cCnt } ]];
+                        var nPages      = Math.ceil( nCritics / ROW_COUNT );
+
+                        
+                        body += "<nav aria-label=\"Page navigation\" class=\"row mr-3 my-0 px-0 py-0\">";
+                        body += "<ul class=\"pagination pagination-lg ml-auto mt-auto\">\n";
+                        if( nPage > 0 ) {
+                            body += "<li class=\"page-item\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_critics('" + keyword + "'," + 0 + ")\" aria-label=\"Pre-Previous\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&laquo;</span>"
+                                + "<span class=\"sr-only\" style=\"font-size:1.5rem;\">Previous</span>"
+                                + "</a></li>"
+                                + "<li class=\"page-item\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_critics('" + keyword + "'," + (nPage-1) + ")\" aria-label=\"Pre-Previous\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&lsaquo;</span>"
+                                + "</a></li>";
+                        } else {
+                            body += "<li class=\"page-item disabled\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"#\" aria-label=\"Pre-Previous\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&laquo;</span>"
+                                + "<span class=\"sr-only\" style=\"font-size:1.5rem;\">Previous</span>"
+                                + "</a></li>"
+                                + "<li class=\"page-item disabled\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"#\" aria-label=\"Previous\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&lsaquo;</span>"
+                                + "</a></li>";
+                        }
+
+                        for( var i = 0; i < nPages; ++i ) {
+                            if( nPage == i ) {
+                                body += "<li class=\"active page-item\">\n"
+                                               +  "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_critics('" + keyword + "'," + i + ")\" style=\"font-size:1.5rem;\">" + ( i+1 ) + "</a>\n"
+                                               +  "</li>\n";
+                            } else {
+                                body += "<li class=\"page-item\">\n"
+                                               +  "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_critics('" + keyword + "'," + i + ")\" style=\"font-size:1.5rem;\">" + ( i+1 ) + "</a>\n"
+                                               +  "</li>\n";
+                            }
+                        }
+
+                        if( nPage < nPages-1 ) {
+                            body += "<li class=\"page-item\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_critics('" + keyword + "'," + (nPage+1) + ")\" aria-label=\"Next\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&rsaquo;</span>"
+                                + "<span class=\"sr-only\" style=\"font-size:1.5rem;\">Next</span>"
+                                + "</a></li>"
+                                + "<li class=\"page-item\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"javascript:fetch_critics('" + keyword + "'," + (nPages-1) + ")\" aria-label=\"Next\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&raquo;</span>"
+                                + "</a></li>";
+                        } else {
+                            body += "<li class=\"page-item disabled\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"#\" aria-label=\"Next\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&raquo;</span>"
+                                + "<span class=\"sr-only\" style=\"font-size:1.5rem;\">Next</span>"
+                                + "</a></li>"
+                                + "<li class=\"page-item disabled\">"
+                                + "<a class=\"page-link text-danger-light\" href=\"#\" aria-label=\"Next\" tabindex=\"-1\">"
+                                + "<span aria-hidden=\"true\" style=\"font-size:1.5rem;\">&rsaquo;</span>"
+                                + "</a></li>";
+                        }
+
+                        critic_box.innerHTML = body + "</ul></nav>\n";
+                    }
+                }
+            }
+
+            xhr.open( "GET", "/searchcritics?keyword=" + keyword + "&pageNo=" + nPage );
+            xhr.setRequestHeader( "Content-Type", "application/json" );
+            xhr.send( );
+        }
+
+
+        if( all_button       != undefined ){ all_button.onclick        = show_all;      }
+        if( franchise_button != undefined ){ franchise_button.onclick  = show_franchise;}
+        if( movie_button     != undefined ){ movie_button.onclick      = show_movie;    }
+        if( tv_button        != undefined ){ tv_button.onclick         = show_tv;       }
+        if( artist_button    != undefined ){ artist_button.onclick     = show_artist;   }
+        if( critic_button    != undefined ){ critic_button.onclick     = show_critic;   }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1719 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Movie & TV Critics | Mude</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="shortcut icon" href="images/logo-white.ico">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="fontawesome/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/critics.css">
+</head>
+<body>
+    <section class="px-0" th:replace="index :: header"></section>
+    <div th:replace="index :: header-modal"></div>
+    <section th:replace="index :: loader"></section>
+
+    <!-- Success Modal -->
+    <div class="modal fade" id="criticRequestSuccessModalCenter" tabindex="-1" role="dialog" 
+    aria-labelledby="criticRequestSuccessModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="dialog">
+            <div class="modal-content" style="background-color: rgba(0,0,0,0.8) !important;">
+                <div class="modal-header border-0">
+                    <a href="#" class="hover-dark my-0 py-0 ml-auto mr-0 my-auto" data-dismiss="modal" aria-label="Close">
+                        <p class="mx-0 my-0 px-0 py-0 text-danger-light">Close</p>
+                    </a>
+                </div>
+                <div class="modal-body text-uppercase border-0">
+                    <div class="mx-0 my-0 px-0 py-2 text-center">
+                        <i class="far fa-check-circle fa-10x text-success"></i>
+                    </div>
+                    <div class="mx-0 my-0 px-0 py-2 text-center">
+                        <h5>Successful!</h5>
+                    </div>
+                    <div class="mx-0 my-0 px-0 py-0 text-center">
+                        <span class="text-muted">Your request to become a critic has been submitted!</span>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <div class="container">
+                        <div class="row">
+                            <a href="#" class="btn btn-outline-light btn-lg mx-auto" data-dismiss="modal">
+                                <b>OK</b>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="d-none">
+        <div class="container-fluid px-0 py-0">
+            <div class="row mx-0 my-0 px-3 py-3 bg-dark">
+                <div class="col-9 mx-0 my-0 pl-0 pr-4 py-0" id="critics-home">
+                    <div class="mx-0 my-0 px-0 pt-4 pb-0 bg-dark">
+                        <div class="row mx-0 my-0 px-0 py-0">
+                            <div class="mx-0 my-0 px-0 py-0" style="height:20px;">
+                                <h1 class="mx-0 my-0 px-0 py-0 text-uppercase bg-dark" style="font-family: 'Lovelo Black';">
+                                    Mude Critics
+                                </h1>
+                            </div>
+                            <div class="mx-0 my-0 px-0 py-0 ml-auto my-auto">
+                                <a href="#" class="btn btn-outline-light text-uppercase critic-request" id="nav-critic-application">
+                                    Become a Mude Critic
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 mx-0 mt-3 mb-0 px-0 py-0 rounded-0 critic-list-header">
+                        <div class="mx-0 my-0 px-0 pt-4 pb-0 bg-dark">
+                            <div class="row mx-0 my-0 px-0 py-0 bg-danger header-label">
+                                <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:2%;"></div>
+                                <h4 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark">
+                                    Critics Spotlight
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="row mx-0 my-0 pl-4 pr-0 py-4 critic-list">
+                            <div class="col-6 mx-0 my-0 px-0 py-0">
+                                <div class="row mx-0 my-0 px-0 py-0">
+                                    <a class="critic-detail-button" href="#" th:href="@{/critics(memberID=20)}">
+                                        <img src="images/critics.gif">
+                                    </a>
+                                    <a href="#" th:href="@{/critics(memberID=20)}" class="mx-3 text-danger-light hover-dark critic-detail-button">
+                                        Cory Baker
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-6 mx-0 my-0 px-0 py-0">
+                                <div class="row mx-0 my-0 px-0 py-0">
+                                    <a href="critics-detail.html"><img src="images/critics.gif"></a>
+                                    <a href="critics-detail.html" class="mx-3 text-danger-light hover-dark">Eve Blow</a>
+                                </div>
+                            </div>
+                        </div>
+                        <nav aria-label="Page navigation" class="row mr-3 my-0 px-0 py-0">
+                            <ul class="pagination pagination-lg ml-auto mt-auto">
+                            </ul>
+                        </nav>
+                    </div>
+
+                    <div class="col-12 mx-0 my-4 px-0 py-0 rounded-0">
+                        <div class="mx-0 my-0 px-0 pt-4 pb-0 bg-dark">
+                            <div class="row mx-0 my-0 px-0 py-0 bg-danger header-label">
+                                <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:2%;"></div>
+                                <h4 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark">
+                                    Latest Reviews
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="row mx-0 my-0 pl-4 pr-0 pt-4 pb-0">
+                            <div class="col-6 mx-0 my-0 px-0 py-3">
+                                <h5 class="mx-0 mb-3">Movies</h5>
+                                <div class="mx-0 my-2 px-0 py-0">
+                                    <div class="row mx-0 my-0 px-0 py-0">
+                                        <a href="movies-detail.html" class="text-danger-light hover-dark" style="font-weight:bold;">The Ardennes (D'Ardennen)</a>
+                                        <h5 class="ml-2 mr-0 my-0 gold">M</h5>
+                                    </div>
+                                    <p style="font-size:1em;">If occasionally predictable, The Ardennes is always gripping.</p>
+                                    <p style="font-size:1em;">‐ <a class="hover-blue">Christopher Llewellyn Reed</a>, Hammer to Nail</p>
+                                </div>
+                                <div class="mx-0 my-2 px-0 py-0">
+                                    <div class="row mx-0 my-0 px-0 py-0">
+                                        <a href="movies-detail.html" class="text-danger-light hover-dark" style="font-weight:bold;">Werewolf</a>
+                                        <h5 class="ml-2 mr-0 my-0 gold">M</h5>
+                                    </div>
+                                    <p style="font-size:1em;">The film achieves a strange irony, as its formal abstractions serve to heighten our emotional connection to the characters.</p>
+                                    <p style="font-size:1em;">‐ <a class="hover-blue">Chuck Bowen</a>, Slant Magazine</p>
+                                </div>
+                                <div class="mx-0 my-2 px-0 py-0">
+                                    <div class="row mx-0 my-0 px-0 py-0">
+                                        <a href="movies-detail.html" class="text-danger-light hover-dark" style="font-weight:bold;">Columbus</a>
+                                        <h5 class="ml-2 mr-0 my-0 gold">M</h5>
+                                    </div>
+                                    <p style="font-size:1em;">A chance encounter brings these two lost souls together and the resulting film charts their evolving relationship with such
+                                    serenity, the restorative effect they have on each other feels contagious.</p>
+                                    <p style="font-size:1em;">‐ <a class="hover-blue">Alistair Harkness</a>, Scotsman</p>
+                                </div>
+                            </div>
+                            
+                            <div class="col-6 mx-0 my-0 px-0 py-3">
+                                <h5 class="mx-0 mb-3">DVD/Streaming</h5>
+                                <div class="mx-0 my-2 px-0 py-0">
+                                    <div class="row mx-0 my-0 px-0 py-0">
+                                        <a href="movies-detail.html" class="text-danger-light hover-dark" style="font-weight:bold;">Yukinojo Henge (An Actor's Revenge)</a>
+                                        <h5 class="ml-2 mr-0 my-0 silver">M</h5>
+                                    </div>
+                                    <p style="font-size:1em;">If occasionally predictable, The Ardennes is always gripping.</p>
+                                    <p style="font-size:1em;">‐ Christopher Llewellyn Reed, Hammer to Nail</p>
+                                </div>
+                                <div class="mx-0 my-2 px-0 py-0">
+                                    <div class="row mx-0 my-0 px-0 py-0">
+                                        <a href="movies-detail.html" class="text-danger-light hover-dark" style="font-weight:bold;">Half Magic</a>
+                                        <h5 class="ml-2 mr-0 my-0 gold">M</h5>
+                                    </div>
+                                    <p style="font-size:1em;">The film displays a sprightly tone and blissful sense of liberation in charting the exploits of characters seeking to live
+                                    by their own feminine-centric rules.</p>
+                                    <p style="font-size:1em;">‐ Wes Greene, Slant Magazine</p>
+                                </div>
+                                <div class="mx-0 my-2 px-0 py-0">
+                                    <div class="row mx-0 my-0 px-0 py-0">
+                                        <a href="movies-detail.html" class="text-danger-light hover-dark" style="font-weight:bold;">Underground</a>
+                                        <h5 class="ml-2 mr-0 my-0 gold">M</h5>
+                                    </div>
+                                    <p style="font-size:1em;">Emir Kusturica's overwhelming satire of Yugoslavia's tortured history receives an excellent high-def release, which is bolstered
+                                    by the inclusion of the film's television version and an in-depth documentary.</p>
+                                    <p style="font-size:1em;">‐ Jake Cole, Slant Magazine</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-9 mx-0 my-0 pl-0 pr-4 py-0" id="critics-list" style="display: none;">
+                    <div class="row mx-0 mt-0 mb-3 pt-4 pb-0">
+                        <form class="form-inline mx-0 my-0">
+                            <div class="input-group border-0 mx-0 my-0 px-0 py-0" style="height:20px;">
+                                <input type="search" class="form-control rounded my-0 py-0" placeholder="Search Critics &nbsp; &nbsp; &nbsp; &nbsp;" aria-label="Search" aria-describedby="search-text">
+                                <a href="about.html" class="btn btn-outline-light btn-sm ml-3 text-uppercase">Search</a>
+                            </div>
+                        </form>
+                        <div class="mx-0 my-0 px-0 py-0 ml-auto my-auto">
+                            <a href="#" class="btn btn-outline-light text-uppercase critic-request">
+                                Become a Mude Critic
+                            </a>
+                        </div>
+                    </div>
+                
+                    <div class="col-12 mx-0 my-0 px-0 py-0 rounded-0">
+                        <div class="mx-0 my-0 px-0 py-4 bg-dark">
+                            <div class="row mx-0 my-0 px-0 py-0 bg-danger header-label">
+                                <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:2%;"></div>
+                                <h4 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark">
+                                    Current Critics List
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="col-12 mx-0 my-0 pl-4 pr-0 pt-2 pb-4">
+                            <p style="font-size:1em;">
+                                The Current Critics List includes all critics who have actively contributed to the MudeMeter within the last calendar
+                                year.
+                            </p>
+                            <ul>
+                                <li>
+                                    Critics with individual MuteMeter approval are marked as "MudeMeter Critic". Their reviews are always eligible for inclusion
+                                    from any publication.
+                                </li>
+                                <li>
+                                    Critics whose reviews are included at specific MudMeter-approved publications will have those outlets listed next to
+                                    their name.
+                                </li>
+                            </ul>
+                            <p style="font-size:1em;">
+                                For a list of critics who are no longer active, but whose reviews are still part of the MudeMeter, <a class="text-danger-light hover-dark">click here</a>.
+                            </p>
+                            <h6 class="small mt-4 mb-1">Listing by last name</h6>
+                            <div class="mx-0 my-0 px-0 py-0">
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination my-0 py-0">
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">A</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">B</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">C</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">D</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">E</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">F</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">G</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">H</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">I</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">J</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">K</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">L</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">M</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">N</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">O</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">P</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">Q</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">R</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">S</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">T</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">U</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">V</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">W</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">X</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">Y</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">Z</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+
+                            <div class="mx-0 mt-2 mb-0 pl-0 pr-3 py-0">
+                                <div class="row mx-0 my-0 px-5 py-2 bg-light critic-box-item">
+                                    <a class="text-danger-light hover-dark my-auto">Kyle Aaronson</a>
+                                    <p class="ml-3 my-auto text-dark">when published by PopMatters</p>
+                                </div>
+                                <div class="row mx-0 my-0 px-5 py-2 critic-box-item">
+                                    <a class="text-danger-light hover-dark my-auto"> Alex Abad-Santos</a>
+                                    <p class="ml-3 my-auto">when published by Vox</p>
+                                </div>
+                                <div class="row mx-0 my-0 px-5 py-2 bg-light critic-box-item">
+                                    <a class="text-danger-light hover-dark my-auto">Kate Abbott</a>
+                                    <p class="ml-3 my-auto text-dark">when published by Guardian</p>
+                                </div>
+                                <div class="row mx-0 my-0 px-5 py-2 critic-box-item">
+                                    <a class="text-danger-light hover-dark my-auto">Mae Abdulbaki</a>
+                                    <p class="ml-3 my-auto">when published by The Young Folks</p>
+                                </div>
+                            </div>
+                            <div class="col-12 mx-0 mt-3 mb-0 px-0 py-0">
+                                Mude is not affiliated with the authors and sources listed above and accepts no responsibility for the content posted which
+                                is provided to the user "as is" as a service. For more information, please review our legal disclaimer.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-9 mx-0 my-0 pl-0 pr-4 py-0" id="publications-list" style="display: none;">
+                    <div class="row mx-0 mt-0 mb-3 pt-4 pb-0">
+                        <form class="form-inline mx-0 my-0">
+                            <div class="input-group border-0 mx-0 my-0 px-0 py-0" style="height:20px;">
+                                <input type="search" class="form-control rounded my-0 py-0" placeholder="Search Critics &nbsp; &nbsp; &nbsp; &nbsp;" aria-label="Search"
+                                    aria-describedby="search-text">
+                                <a href="about.html" class="btn btn-outline-light btn-sm ml-3 text-uppercase">Search</a>
+                            </div>
+                        </form>
+                        <div class="mx-0 my-0 px-0 py-0 ml-auto my-auto">
+                            <a href="#" class="btn btn-outline-light text-uppercase critic-request">
+                                Become a Mude Critic
+                            </a>
+                        </div>
+                    </div>
+                
+                    <div class="col-12 mx-0 my-0 px-0 py-0 rounded-0">
+                        <div class="mx-0 my-0 px-0 py-4 bg-dark">
+                            <div class="row mx-0 my-0 px-0 py-0 bg-danger header-label">
+                                <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:2%;"></div>
+                                <h4 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark">
+                                    Current Publications List
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="col-12 mx-0 my-0 pl-4 pr-0 pt-2 pb-4">
+                            <p style="font-size:1em;">
+                                The Current Publications List includes outlets that are approved MudeMeter publications, and outlets that publish reviews
+                                from critics with individual MudeMeter approval. All reviews from MudeMeter-approved publications are eligible for inclusion
+                                on Mude.
+                            </p>
+                            <ul>
+                                <li>
+                                    Reviews written by any critic on such a publication are eligible for inclusion.
+                                </li>
+                                <li>
+                                    Publications that host reviews from specific 
+                                    MudeMeter-approved critics will have those critics listed.
+                                </li>
+                            </ul>
+                            <p style="font-size:1em;">
+                                For a list of publications that no longer actively contribute reviews, but whose reviews are still part of the MudeMeter,
+                                <a class="text-danger-light hover-dark">click here</a>.
+                            </p>
+                            <h6 class="small mt-4 mb-1">Listing by Source</h6>
+                            <div class="mx-0 my-0 px-0 py-0">
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination my-0 py-0">
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">A</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">B</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">C</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">D</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">E</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">F</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">G</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">H</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">I</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">J</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">K</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">L</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">M</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">N</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">O</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">P</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">Q</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">R</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">S</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">T</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">U</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">V</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">W</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">X</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">Y</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">Z</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark border-0 text-danger-light hover-dark px-2" href="#">#</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                
+                            <div class="mx-0 mt-2 mb-0 pl-0 pr-3 py-0">
+                                <div class="row mx-0 my-0 px-5 py-2 bg-light">
+                                    <a class="text-danger-light hover-dark publication-detail-button my-auto" href="/AARPMoviesforGrownups">AARP Movies for Grownups</a>
+                                    <p class="ml-3 my-auto text-black">MudeMeter Publication</p>
+                                </div>
+                                <div class="row mx-0 my-0 px-5 py-2">
+                                    <a class="text-danger-light hover-dark publication-detail-button my-auto">ABC Radio (Australia)</a>
+                                    <p class="ml-3 my-auto">MudeMeter Publication</p>
+                                </div>
+                                <div class="row mx-0 my-0 px-5 py-2 bg-light">
+                                    <a class="text-danger-light hover-dark publication-detail-button my-auto">ABC Radio Brisbane</a>
+                                    <p class="ml-3 text-black my-auto">MudeMeter Publication</p>
+                                </div>
+                                <div class="row mx-0 my-0 px-5 py-2">
+                                    <a class="text-danger-light hover-dark publication-detail-button my-auto">ABC Tucson</a>
+                                    <p class="ml-3 my-auto">when reviewed by Phil Villarreal</p>
+                                </div>
+                            </div>
+                            <div class="col-12 mx-0 mt-3 mb-0 px-0 py-0">
+                                Mude is not affiliated with the authors and sources listed 
+                                above and accepts no responsibility for the content
+                                posted which is provided to the user "as is" as a service. 
+                                For more information, please review our legal disclaimer.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-9 mx-0 my-0 pl-0 pr-4 py-0" id="critics-groups" style="display: none;">
+                    <div class="col-12 mx-0 my-0 px-0 py-0 rounded-0 border-white border">
+                        <h3 class="py-4">
+                            <span class="badge badge-danger rounded-0 py-2 px-3">CRITICS GROUPS & ASSOCIATIONS
+                            </span>
+                        </h3>
+                        <div class="col-12 mx-0 my-0 pl-4 pr-0 pt-2 pb-0">
+                            <p style="font-size:1em;">
+                                 Below is a listing of the major critics groups. Click on a group's link to 
+                                 display their members list. If you're a member of any of these critics groups, 
+                                 and are not listed on the members list, please follow the instructions to contact us.
+                            </p>
+                            <ul class="mx-0 px-0" style="list-style-type:none;">
+                                <li class="my-2">
+                                    <a class="text-danger-light hover-dark">Boston Society of Film Critics</a>
+                                </li>
+                                <li class="my-2">
+                                    <a class="text-danger-light hover-dark">Broadcast Film Critics Association</a>
+                                </li>
+                                <li class="my-2">
+                                    <a class="text-danger-light hover-dark">Chicago Film Critics Association</a>
+                                </li>
+                                <li class="my-2">
+                                    <a class="text-danger-light hover-dark">Dallas-Fort Worth Film Critics Association</a>
+                                </li>
+                                <li class="my-2">
+                                    <a class="text-danger-light hover-dark">Detroit Film Critics Society</a>
+                                </li>
+                                <li class="my-2">
+                                    <a class="text-danger-light hover-dark">Film Critics Circle of Australia</a>
+                                </li>
+                                <li class="my-2">
+                                    <a class="text-danger-light hover-dark">Florida Film Critics Circle</a>
+                                </li>
+                                <li class="my-2">
+                                    <a class="text-danger-light hover-dark">Houston Film Critics Society</a>
+                                </li>
+                                <li class="my-2">
+                                    <a class="text-danger-light hover-dark">Kansas City Film Critics Circle</a>
+                                </li>
+                                <li class="my-2">
+                                    <a class="text-danger-light hover-dark">Las Vegas Film Critics Society</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-9 mx-0 my-0 pl-0 pr-4 py-0" id="latest-film-reviews" style="display: none;">
+                    <div class="col-12 mx-0 my-0 px-0 py-0">
+                        <div class="mx-0 my-0 px-0 py-4 bg-dark">
+                            <div class="row mx-0 my-0 px-0 py-0 bg-danger header-label">
+                                <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:2%;"></div>
+                                <h4 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark">
+                                    latest Film Reviews
+                                </h4>
+                            </div>
+                        </div>
+                        
+                        <div class="col-12 mx-0 my-0 pl-4 pr-2 pt-2 pb-4" id="latest-film-revs-header">
+                            <div class="row mx-0 my-0 px-2 py-2 bg-light text-dark">
+                                <div class="col-2 mx-0 my-0 pl-0 pr-1 py-0">
+                                    <b>MudeMeter</b>
+                                </div>
+                                <div class="col-2 mx-0 my-0 pr-1 py-0">
+                                    <b>Movie</b>
+                                </div>
+                                <div class="col-6 mx-0 my-0 pr-1 py-0">
+                                    <b>Review</b>
+                                </div>
+                                <div class="col-2 mx-0 my-0 pr-1 py-0">
+                                    <b>Critic</b>
+                                </div>
+                            </div>
+                            <section id="latest-film-revs">
+                                <div class="row mx-0 my-0 px-2 py-2 bg-light text-dark">
+                                    <div class="col-2 row mx-0 my-0 pl-0 pr-1 py-0">
+                                        <h3 class="gold my-auto">
+                                            M
+                                        </h3>
+                                        <span class="ml-2 my-auto">97%</span>
+                                    </div>
+                                    <div class="col-2 row mx-0 my-0 pr-1 py-0">
+                                        <div class="mx-0 my-auto px-0 py-0">
+                                            <a href="movies-detail.html" class="text-danger-light hover-dark">Touch Me Not</a>
+                                            <p>(2018)</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mx-0 my-0 pr-1 py-0">
+                                        <div class="mx-0 my-0 px-0 py-0">
+                                            "A studious, intelligent, if flawed and scattershot, work with an open mind about modern sexuality and intimacy."
+                                        </div>
+                                        <div class="row mx-0 my-0 px-0 py-0">
+                                            <div class="row mx-0 my-0 px-0 py-1">
+                                                <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                <span class="ml-1 my-auto text-warning" style="font-size:1.2rem;">3</span>
+                                            </div>
+                                            <div class="row ml-auto mr-0 px-0 py-1">
+                                                <span class="my-auto">April 12, 2018</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 row mx-0 my-0 pr-1 py-0">
+                                        <div class="mx-0 my-auto px-0 py-0">
+                                            <div class="mx-0 my-0 px-0 py-0">
+                                                <a href="/Ed-Frankl" class="hover-blue-super critic-detail-button">
+                                                    <b>Ed Frankl</b>
+                                                </a>
+                                            </div>
+                                            <div class="mx-0 my-0 px-0 py-0">
+                                                <a href="/the-film-stage" class="hover-blue publication-detail-button">
+                                                    The Film Stage
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mx-0 my-0 px-2 py-2">
+                                    <div class="col-2 row mx-0 my-0 pl-0 pr-1 py-0">
+                                        <h3 class="gold my-auto">
+                                            M
+                                        </h3>
+                                        <span class="ml-2 my-auto">97%</span>
+                                    </div>
+                                    <div class="col-2 row mx-0 my-0 pr-1 py-0">
+                                        <div class="mx-0 my-auto px-0 py-0">
+                                            <a href="movies-detail.html" class="text-danger-light hover-dark">Touch Me Not</a>
+                                            <p>(2018)</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mx-0 my-0 pr-1 py-0">
+                                        <div class="mx-0 my-0 px-0 py-0">
+                                            "A studious, intelligent, if flawed and scattershot, work with an open mind about modern sexuality and intimacy."
+                                        </div>
+                                        <div class="row mx-0 my-0 px-0 py-0">
+                                            <div class="row mx-0 my-0 px-0 py-1">
+                                                <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                <span class="ml-1 my-auto text-warning" style="font-size:1.2rem;">3</span>
+                                            </div>
+                                            <div class="row ml-auto mr-0 px-0 py-1">
+                                                <span class="my-auto">April 12, 2018</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 row mx-0 my-0 pr-1 py-0">
+                                        <div class="mx-0 my-auto px-0 py-0">
+                                            <div class="mx-0 my-0 px-0 py-0">
+                                                <a href="/Ed-Frankl" class="hover-blue-super critic-detail-button">
+                                                    <b>Ed Frankl</b>
+                                                </a>
+                                            </div>
+                                            <div class="mx-0 my-0 px-0 py-0">
+                                                <a href="/the-film-stage" class="hover-blue publication-detail-button">
+                                                    The Film Stage
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mx-0 my-0 px-2 py-2 bg-light text-dark">
+                                    <div class="col-2 row mx-0 my-0 pl-0 pr-1 py-0">
+                                        <h3 class="gold my-auto">
+                                            M
+                                        </h3>
+                                        <span class="ml-2 my-auto">97%</span>
+                                    </div>
+                                    <div class="col-2 row mx-0 my-0 pr-1 py-0">
+                                        <div class="mx-0 my-auto px-0 py-0">
+                                            <a href="movies-detail.html" class="text-danger-light hover-dark">Touch Me Not</a>
+                                            <p>(2018)</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mx-0 my-0 pr-1 py-0">
+                                        <div class="mx-0 my-0 px-0 py-0">
+                                            "A studious, intelligent, if flawed and scattershot, work with an open mind about modern sexuality and intimacy."
+                                        </div>
+                                        <div class="row mx-0 my-0 px-0 py-0">
+                                            <div class="row mx-0 my-0 px-0 py-1">
+                                                <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                <span class="ml-1 my-auto text-warning" style="font-size:1.2rem;">3</span>
+                                            </div>
+                                            <div class="row ml-auto mr-0 px-0 py-1">
+                                                <span class="my-auto">April 12, 2018</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 row mx-0 my-0 pr-1 py-0">
+                                        <div class="mx-0 my-auto px-0 py-0">
+                                            <div class="mx-0 my-0 px-0 py-0">
+                                                <a href="/Ed-Frankl" class="hover-blue-super critic-detail-button">
+                                                    <b>Ed Frankl</b>
+                                                </a>
+                                            </div>
+                                            <div class="mx-0 my-0 px-0 py-0">
+                                                <a href="/the-film-stage" class="hover-blue publication-detail-button">
+                                                    The Film Stage
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                            <nav aria-label="Page navigation" class="row mx-0 my-0 px-2 py-0">
+                                <ul class="pagination ml-auto mt-auto">
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-9 mx-0 my-0 pl-0 pr-4 py-0" id="critics-criteria" style="display: none;">
+                    <div class="col-12 mx-0 my-0 px-0 py-0 rounded-0">
+                        <div class="mx-0 my-0 px-0 py-4 bg-dark">
+                            <div class="row mx-0 my-0 px-0 py-0 bg-danger header-label">
+                                <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:2%;"></div>
+                                <h4 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark">
+                                     MudeMETER® CRITERIA
+                                </h4>
+                            </div>
+                        </div>
+                        <p class="mx-4" style="font-size:1em;">
+                            Movie reviews in the MudeMeter® come from publications or individual critics that 
+                            have been selected by the Mude®
+                            staff. The criteria for inclusion for both 
+                            publications and critics are separated across three divisions; print, broadcast,
+                            and online, each with its own criteria for MudeMeter inclusion.
+                        </p>
+                        <div class="mx-4 my-0 pt-4 pb-4 border-top">
+                            <h6 class="text-danger small mb-2">Source Approval</h6>
+                            Print publications must achieve and maintain status as one of the following:
+                            <br />- A top 100 daily US newspaper 
+                            <br />- A top 100 weekly US newspaper 
+                            <br />- A top 100 magazine 
+                            <br />- A top 10 entertainment-based publication
+                            <br />Sources used to determine national publication ranks include the Audit Bureau of Circulations, The Magazine Publishers of
+                            America, and the Association of Alternative Weeklies. Applications for international publications will be made on a case-by-case
+                            basis, with input from local Mude editors when applicable.
+                            <br /><br /> <b class="text-danger-light">Broadcast</b> outlets must achieve and maintain status as a national TV or radio outlet (either via syndication or network broadcast) 
+                            for MudeMeter consideration. Alternatively, a TV outlet must be broadcasting in one of the top ten DMAs, as listed by 
+                            Nielsen Ratings. Radio outlets must be broadcasting in one of the top five DMAs, 
+                            as listed by Arbitron. In almost all cases, an outlet's individual reviews must be available 
+                            online, either as a segment transcript or an alternate, written review.
+                            <br /><br /> <b class="text-danger-light">Online publications</b> must achieve and maintain a minimum 500,000 unique monthly visitors according to comScore, Inc or Nielsen Net Ratings 
+                            and reviews must have an average length of at least 300 words. Publications must also show a consistent 
+                            standard of professionalism, writing quality, and editorial integrity across all reviews and articles. 
+                            Lastly, site design and layout should also reflect a reasonable level of quality and must have a domain 
+                            name specific to the property.
+                            <br/><br/>For all outlets, reviews should be readable within a standard browser; 
+                            reviews that require users to download additional
+                            software or browser plugins (ie PDFs) are strongly discouraged. 
+                            Applications for international outlets will be made on a
+                            case-by-case basis, with input from local Mude editors when applicable.
+                        </div>
+
+                        <div class="mx-4 my-0 pt-4 pb-4 border-top">
+                            <h6 class="text-danger small mb-2">Critics Approval</h6>
+                            <b class="text-danger-light">Print critics</b> must be currently employed as a film critic at a MudeMeter-approved publication for a minimum of two calendar
+                            years to be considered for individual approval.                            
+                            <br /><br />
+                            <b class="text-danger-light">Broadcast critics</b> must be currently employed as a film critic at a MudeMeter-approved outlet for a minimum of two calendar
+                            years to be considered for individual approval.
+                            <br />Sources used to determine national publication ranks include the Audit Bureau of Circulations, The Magazine Publishers
+                            of America, and the Association of Alternative Weeklies. Applications for international publications will be made on
+                            a case-by-case basis, with input from local Mude editors when applicable.
+                            <br />
+                            <br />
+                            <b class="text-danger-light">Online critics</b> must have published 
+                            no less than 100 reviews across two calendar years at a single, MudeMeter-approved publication,
+                            and all reviews should have an average length of at least 300 words to be considered for 
+                            individual approval.
+                            <br />
+                            <br />
+                            <b class="text-danger-light">Video critics</b> 
+                            <br />For critics who are primarily publishing their reviews on video, 
+                            inclusion on the MudeMeter is dependent on meeting the
+                            following criteria:
+                            <br/>
+                            <ul class="mt-3">
+                                <li>
+                                    Video critics must submit a resume outlining their qualifications to review films (include examples of web or print reviews,
+                                    film-related jobs, etc).
+                                </li>
+                                <li>
+                                    Video reviews must be embedded on a website or blog separate from a video hosting site like YouTube or Vimeo, and written
+                                    transcripts of the reviews must be included with each video entry.
+                                </li>
+                                <li>
+                                    Critics must be able to demonstrate a consistent level of professionalism and insight in both their reviews and in the production
+                                    of their videos.
+                                </li>
+                                <li>
+                                    Video critics must have at least 20,000 subscribers on a video hosting site.
+                                </li>
+                            </ul>
+                            <br/>In all cases applicants should have two years' worth of published reviews available online, 
+                            and all applicants must be able
+                            to demonstrate that their reviews have editorial oversight.
+                            <br/>In some cases, critics that are publishing reviews on a MudeMeter-approved outlet and have 
+                            membership in select critics
+                            associations may be considered for individual approval. 
+                            However, membership in a critics association does not guarantee approval.
+                            <br/>
+                            <br/>The approved societies are:
+                            <br/>
+                            <br/><span class="text-danger-light">- Boston Society of Film Critics</span>
+                            <br/>- Broadcast Film Critics Association 
+                            <br/>- Chicago Film Critics Association 
+                            <br/>- Dallas-Fort Worth Film Critics Association 
+                            <br/>- Detroit Film Critics Society 
+                            <br/>- Film Critics Circle of Australia 
+                            <br/>- Florida Film Critics Circle
+                            <br/>- Houston Film Critics Society 
+                            <br/>- Kansas City Film Critics Circle 
+                            <br/>- Las Vegas Film Critics Society 
+                            <br/>- London Film Critics Circle
+                            <br/>- Los Angeles Film Critics Association 
+                            <br/>- National Society of Film Critics 
+                            <br/>- Nevada Film Critics Society 
+                            <br/>- New York Film Critics Circle 
+                            <br/>- New York Film Critics Online 
+                            <br/>- Online Film Critics Society 
+                            <br/>- Philadelphia Film Critics Circle 
+                            <br/>- Phoenix Film Critics Society 
+                            <br/>- San Diego Film Critics Society 
+                            <br/>- San Francisco Film Critics Circle 
+                            <br/>- Santa Fe Film Critics Circle 
+                            <br/>- Southeastern Film Critics Association 
+                            <br/>- Toronto Film Critics Association 
+                            <br/>- Vancouver Film Critics Circle 
+                            <br/>- Washington, D.C. Area Film Critics Association
+                        </div>
+
+                        <div class="mx-4 my-0 pt-4 pb-4 border-top">
+                            <h6 class="text-danger small mb-2">Top Critics</h6>
+                            Top Critic is a title awarded to the most significant contributors of 
+                            cinematic and critical discourse. To be considered for Top Critics designation, 
+                            a critic must be published at a print publication in the top 10% of circulation, 
+                            employed as a film critic at a national broadcast outlet for no less than five years, 
+                            or employed as a film critic for an editorial-based website with over 1.5 million monthly 
+                            unique visitors for a minimum of three years. A Top Critic may also be recognized as such 
+                            based on their influence, reach, reputation, and/or quality of writing, as determined by 
+                            Mude staff.
+                        </div>
+
+                        <div class="mx-4 my-0 pt-4 pb-4 border-top">
+                            <h6 class="text-danger small mb-2">THE FINE PRINT</h6>
+                            Even if criteria under appropriate divisions are met, all applying 
+                            critics and sources will be evaluated for quality of writing and presentation, 
+                            as determined by Mude staff. In all cases, Mude maintains the 
+                            rights to approve, reject, and remove critics and sources across all divisions on a 
+                            case by case basis.
+                        </div>
+
+                        <div class="mx-4 my-0 pt-4 pb-4 border-top" id="critic-application">
+                            <h6 class="text-danger small mb-2">CRITIC APPLICATION</h6>
+                            Please follow the instructions below to become an <span class="text-danger-light">Approved MudeMeter Critic:
+                            </span>
+                            <br />
+                            <ol>
+                                <li>
+                                     Register for a Mude account if you haven't already. Click here to register. 
+                                     This is a required step.
+                                </li>
+                                <li>
+                                     Send an email to <span class="text-danger">mude-Applications@mude.com</span> with the subject <span class="text-danger-light">Film Critic 
+                                     Submission Application</span> and the following
+                                    information:
+                                    <ol>
+                                        <li>
+                                            Your Name
+                                        </li>
+                                        <li>
+                                            Your Email Address
+                                        </li>
+                                        <li>
+                                            Source Name (publications, web site, TV/radio station)
+                                        </li>
+                                        <li>
+                                            Source URL
+                                        </li>
+                                        <li>
+                                            URL to an index of your film reviews
+                                        </li>
+                                        <li>
+                                            URLs to at least three film reviews you've authored 
+                                        </li>
+                                        <li>
+                                            Critics Society or Association
+                                        </li>
+                                        <li>
+                                            Email address you registered with
+                                        </li>
+                                    </ol>
+                                </li>
+                            </ol>
+                            Questions? <a href="/about" class="text-danger-light hover-dark">Contact Us here.</a>
+                        </div>
+
+                        <div class="mx-4 my-0 pt-4 pb-4 border-top">
+                            <h6 class="text-danger small mb-2">SOURCE ADMINISTRATION APPLICATION</h6>
+                             Editors and webmasters of publications which are already contributing the Mude are encouraged to apply for "source
+                            administration" privileges. Once authorized, editors may log into Mude in order to add, edit, or delete articles
+                            and reviews from their publication on Mude. This allows editors to maintain their listings on Mude
+                            for multiple authors.
+                            <br />
+                            <br />
+                            Please follow the instructions below to apply:
+                            <br />
+                            <br />
+                            <ol>
+                                <li>
+                                    Register for a Mude account if you haven't already. Click here to register. This is a required step.
+                                </li>
+                                <li>
+                                    Send an email to
+                                    <span class="text-danger">mude-Applications@mude.com</span> with the subject
+                                    <span class="text-danger-light">Film Critic Submission Application</span> and the following information:
+                                    <ol>
+                                        <li>
+                                            Your Name
+                                        </li>
+                                        <li>
+                                            Your Email Address
+                                        </li>
+                                        <li>
+                                            Your Job Title
+                                        </li>
+                                        <li>
+                                            Source Name (publications, web site, TV/radio station)
+                                        </li>
+                                        <li>
+                                            Source URL
+                                        </li>
+                                        <li>
+                                            Mude Registration Name
+                                        </li>
+                                    </ol>
+                                </li>
+                            </ol>
+                            Questions?
+                            <a href="about.html" class="text-danger-light hover-dark">Contact Us here.</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-9 mx-0 my-0 pl-0 pr-4 py-0" id="critic-detail" style="display: none;">
+                    <div class="mx-0 mt-4 mb-3 px-0 py-0 border rounded" style="display: flex;">
+                        <div class="mx-0 my-0 px-2 py-2">
+                            <div class="row mx-0 my-0 px-0 py-0">
+                                <h1 class="mx-0 my-0 px-0 py-0 text-uppercase bg-dark" style="font-family: 'Lovelo Black';">
+                                    ALEX ABAD-SANTOS
+                                </h1>
+                                <p class="my-auto ml-3 top-badge" style="font-size:1.4rem;">
+                                    <span class="badge badge-danger px-2 py-2">TOP</span>
+                                </p>
+                            </div>
+                            <p>
+                                Alex Abad-Santos's reviews only count toward the Tomatometer when published at the following Tomatometer-approved publication(s):
+                                <a class="text-danger-light hover-dark" href="#">Vox</a>
+                            </p>
+                        </div>
+                        <div class="ml-auto mr-0 my-0 px-2 py-2">
+                            <img src="images/critics.gif" class="img-fluid" />
+                        </div>
+                    </div>
+                
+                    <div class="col-12 mx-0 my-0 px-0 pt-md-5 pt-4 pb-0">
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="movie-tab-c" data-toggle="tab" href="#movie-c" role="tab" aria-controls="home" aria-selected="true">
+                                    Movie
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="tv-tab-c" data-toggle="tab" href="#tv-c" role="tab" aria-controls="profile" aria-selected="false">
+                                    Tv Shows
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content mx-0 my-0 px-3 py-3" id="myCriticTabContent">
+                            <div class="tab-pane fade show active mx-0 my-0 px-0 py-0" id="movie-c" role="tabpanel" aria-labelledby="movie-tab-c">
+                                <div class="col-12 mx-0 my-0 px-2 pt-2 pb-4">
+                                    <div class="row mx-0 my-0 px-2 py-2 bg-light text-dark">
+                                        <div class="col-2 mx-0 my-0 pl-0 pr-1 py-0">
+                                            <b>MudeMeter</b>
+                                        </div>
+                                        <div class="col-3 mx-0 my-0 pr-1 py-0">
+                                            <b>Movie</b>
+                                        </div>
+                                        <div class="col-7 mx-0 my-0 pr-1 py-0">
+                                            <b>Review</b>
+                                        </div>
+                                    </div>
+                                    <div class="row mx-0 my-0 px-2 py-2">
+                                        <div class="col-2 row mx-0 my-0 pl-0 pr-1 py-0">
+                                            <h3 class="gold my-auto">
+                                                M
+                                            </h3>
+                                            <span class="ml-2 my-auto">97%</span>
+                                        </div>
+                                        <div class="col-3 row mx-0 my-0 pr-1 py-0">
+                                            <div class="mx-0 my-auto px-0 py-0">
+                                                <a href="movies-detail.html" class="text-danger-light hover-dark">Touch Me Not</a>
+                                                <p>(2018)</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-7 mx-0 my-0 pr-1 py-0">
+                                            <div class="mx-0 my-0 px-0 py-0">
+                                                 "A studious, intelligent, if flawed and scattershot, 
+                                                 work with an open mind about modern sexuality and intimacy."
+                                            </div>
+                                            <div class="row mx-0 my-0 px-0 py-0">
+                                                <div class="row mx-0 my-0 px-0 py-1">
+                                                    <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                    <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                    <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                    <span class="ml-1 my-auto text-warning" style="font-size:1.2rem;">3</span>
+                                                </div>
+                                                <div class="row ml-auto mr-0 px-0 py-1">
+                                                    <span class="my-auto">April 12, 2018</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mx-0 my-0 px-2 py-2 bg-light text-dark">
+                                        <div class="col-2 row mx-0 my-0 pl-0 pr-1 py-0">
+                                            <h3 class="gold my-auto">
+                                                M
+                                            </h3>
+                                            <span class="ml-2 my-auto">97%</span>
+                                        </div>
+                                        <div class="col-3 row mx-0 my-0 pr-1 py-0">
+                                            <div class="mx-0 my-auto px-0 py-0">
+                                                <a href="movies-detail.html" class="text-danger-light hover-dark">Touch Me Not</a>
+                                                <p>(2018)</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-7 mx-0 my-0 pr-1 py-0">
+                                            <div class="mx-0 my-0 px-0 py-0">
+                                                "A studious, intelligent, if flawed and scattershot, work with an open mind about modern sexuality and intimacy."
+                                            </div>
+                                            <div class="row mx-0 my-0 px-0 py-0">
+                                                <div class="row mx-0 my-0 px-0 py-1">
+                                                    <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                    <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                    <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                    <span class="ml-1 my-auto text-warning" style="font-size:1.2rem;">3</span>
+                                                </div>
+                                                <div class="row ml-auto mr-0 px-0 py-1">
+                                                    <span class="my-auto">April 12, 2018</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mx-0 my-0 px-2 py-2">
+                                        <div class="col-2 row mx-0 my-0 pl-0 pr-1 py-0">
+                                            <h3 class="gold my-auto">
+                                                M
+                                            </h3>
+                                            <span class="ml-2 my-auto">97%</span>
+                                        </div>
+                                        <div class="col-3 row mx-0 my-0 pr-1 py-0">
+                                            <div class="mx-0 my-auto px-0 py-0">
+                                                <a href="movies-detail.html" class="text-danger-light hover-dark">Touch Me Not</a>
+                                                <p>(2018)</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-7 mx-0 my-0 pr-1 py-0">
+                                            <div class="mx-0 my-0 px-0 py-0">
+                                                "A studious, intelligent, if flawed and scattershot, work with an open mind about modern sexuality and intimacy."
+                                            </div>
+                                            <div class="row mx-0 my-0 px-0 py-0">
+                                                <div class="row mx-0 my-0 px-0 py-1">
+                                                    <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                    <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                    <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                    <span class="ml-1 my-auto text-warning" style="font-size:1.2rem;">3</span>
+                                                </div>
+                                                <div class="row ml-auto mr-0 px-0 py-1">
+                                                    <span class="my-auto">April 12, 2018</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mx-0 my-0 px-2 py-2 bg-light text-dark">
+                                        <div class="col-2 row mx-0 my-0 pl-0 pr-1 py-0">
+                                            <h3 class="gold my-auto">
+                                                M
+                                            </h3>
+                                            <span class="ml-2 my-auto">97%</span>
+                                        </div>
+                                        <div class="col-3 row mx-0 my-0 pr-1 py-0">
+                                            <div class="mx-0 my-auto px-0 py-0">
+                                                <a href="movies-detail.html" class="text-danger-light hover-dark">Touch Me Not</a>
+                                                <p>(2018)</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-7 mx-0 my-0 pr-1 py-0">
+                                            <div class="mx-0 my-0 px-0 py-0">
+                                                "A studious, intelligent, if flawed and scattershot, work with an open mind about modern sexuality and intimacy."
+                                            </div>
+                                            <div class="row mx-0 my-0 px-0 py-0">
+                                                <div class="row mx-0 my-0 px-0 py-1">
+                                                    <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                    <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                    <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                    <span class="ml-1 my-auto text-warning" style="font-size:1.2rem;">3</span>
+                                                </div>
+                                                <div class="row ml-auto mr-0 px-0 py-1">
+                                                    <span class="my-auto">April 12, 2018</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade mx-0 my-0 px-0 py-0" id="tv-c" role="tabpanel" aria-labelledby="tv-tab-c">
+                                <div class="col-12 mx-0 my-0 px-2 pt-2 pb-4">
+                                    <div class="row mx-0 my-0 px-2 py-2 bg-light text-dark">
+                                        <div class="col-2 mx-0 my-0 pl-0 pr-1 py-0">
+                                            <b>MudeMeter</b>
+                                        </div>
+                                        <div class="col-3 mx-0 my-0 pr-1 py-0">
+                                            <b>TV Show</b>
+                                        </div>
+                                        <div class="col-7 mx-0 my-0 pr-1 py-0">
+                                            <b>Review</b>
+                                        </div>
+                                    </div>
+                                    <div class="row mx-0 my-0 px-2 py-2">
+                                        <div class="col-2 row mx-0 my-0 pl-0 pr-1 py-0">
+                                            <h3 class="gold my-auto">
+                                                M
+                                            </h3>
+                                            <span class="ml-2 my-auto">97%</span>
+                                        </div>
+                                        <div class="col-3 row mx-0 my-0 pr-1 py-0">
+                                            <div class="mx-0 my-auto px-0 py-0">
+                                                <a href="movies-detail.html" class="text-danger-light hover-dark">Touch Me Not</a>
+                                                <p>(2018)</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-7 mx-0 my-0 pr-1 py-0">
+                                            <div class="mx-0 my-0 px-0 py-0">
+                                                "A studious, intelligent, if flawed and scattershot, work with an open mind about modern sexuality and intimacy."
+                                            </div>
+                                            <div class="row mx-0 my-0 px-0 py-0">
+                                                <div class="row mx-0 my-0 px-0 py-1">
+                                                    <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                    <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                    <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                    <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                    <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                    <span class="ml-1 my-auto text-warning" style="font-size:1.2rem;">5</span>
+                                                </div>
+                                                <div class="row ml-auto mr-0 px-0 py-1">
+                                                    <span class="my-auto">April 12, 2018</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mx-0 my-0 px-2 py-2 bg-light text-dark">
+                                        <div class="col-2 row mx-0 my-0 pl-0 pr-1 py-0">
+                                            <h3 class="gold my-auto">
+                                                M
+                                            </h3>
+                                            <span class="ml-2 my-auto">97%</span>
+                                        </div>
+                                        <div class="col-3 row mx-0 my-0 pr-1 py-0">
+                                            <div class="mx-0 my-auto px-0 py-0">
+                                                <a href="movies-detail.html" class="text-danger-light hover-dark">Touch Me Not</a>
+                                                <p>(2018)</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-7 mx-0 my-0 pr-1 py-0">
+                                            <div class="mx-0 my-0 px-0 py-0">
+                                                "A studious, intelligent, if flawed and scattershot, work with an open mind about modern sexuality and intimacy."
+                                            </div>
+                                            <div class="row mx-0 my-0 px-0 py-0">
+                                                <div class="row mx-0 my-0 px-0 py-1">
+                                                    <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                    <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                    <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                    <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                    <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                    <span class="ml-1 my-auto text-warning" style="font-size:1.2rem;">5</span>
+                                                </div>
+                                                <div class="row ml-auto mr-0 px-0 py-1">
+                                                    <span class="my-auto">April 12, 2018</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mx-0 my-0 px-2 py-2">
+                                        <div class="col-2 row mx-0 my-0 pl-0 pr-1 py-0">
+                                            <h3 class="gold my-auto">
+                                                M
+                                            </h3>
+                                            <span class="ml-2 my-auto">97%</span>
+                                        </div>
+                                        <div class="col-3 row mx-0 my-0 pr-1 py-0">
+                                            <div class="mx-0 my-auto px-0 py-0">
+                                                <a href="movies-detail.html" class="text-danger-light hover-dark">Touch Me Not</a>
+                                                <p>(2018)</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-7 mx-0 my-0 pr-1 py-0">
+                                            <div class="mx-0 my-0 px-0 py-0">
+                                                "A studious, intelligent, if flawed and scattershot, work with an open mind about modern sexuality and intimacy."
+                                            </div>
+                                            <div class="row mx-0 my-0 px-0 py-0">
+                                                <div class="row mx-0 my-0 px-0 py-1">
+                                                    <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                    <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                    <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                    <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                    <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                    <span class="ml-1 my-auto text-warning" style="font-size:1.2rem;">5</span>
+                                                </div>
+                                                <div class="row ml-auto mr-0 px-0 py-1">
+                                                    <span class="my-auto">April 12, 2018</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mx-0 my-0 px-2 py-2 bg-light text-dark">
+                                        <div class="col-2 row mx-0 my-0 pl-0 pr-1 py-0">
+                                            <h3 class="gold my-auto">
+                                                M
+                                            </h3>
+                                            <span class="ml-2 my-auto">97%</span>
+                                        </div>
+                                        <div class="col-3 row mx-0 my-0 pr-1 py-0">
+                                            <div class="mx-0 my-auto px-0 py-0">
+                                                <a href="movies-detail.html" class="text-danger-light hover-dark">Touch Me Not</a>
+                                                <p>(2018)</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-7 mx-0 my-0 pr-1 py-0">
+                                            <div class="mx-0 my-0 px-0 py-0">
+                                                "A studious, intelligent, if flawed and scattershot, work with an open mind about modern sexuality and intimacy."
+                                            </div>
+                                            <div class="row mx-0 my-0 px-0 py-0">
+                                                <div class="row mx-0 my-0 px-0 py-1">
+                                                    <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                    <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                    <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                    <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                    <i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>
+                                                    <span class="ml-1 my-auto text-warning" style="font-size:1.2rem;">5</span>
+                                                </div>
+                                                <div class="row ml-auto mr-0 px-0 py-1">
+                                                    <span class="my-auto">April 12, 2018</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <nav aria-label="Page navigation" class="row mx-0 my-0 px-2 py-0">
+                                <ul class="pagination ml-auto mt-auto">
+                                    <li class="page-item disabled">
+                                        <a class="page-link text-danger-light" href="#" aria-label="Pre-Previous" tabindex="-1">
+                                            <span aria-hidden="true" style="font-size:1.5rem;">&laquo;</span>
+                                            <span class="sr-only" style="font-size:1.5rem;">Previous</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item disabled">
+                                        <a class="page-link text-danger-light" href="#" aria-label="Previous" tabindex="-1">
+                                            <span aria-hidden="true" style="font-size:1.5rem;">&lsaquo;</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item active">
+                                        <a class="page-link text-danger-light" href="#" style="font-size:1.5rem;">1</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link text-danger-light" href="#" style="font-size:1.5rem;">2</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link text-danger-light" href="#" style="font-size:1.5rem;">3</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link text-danger-light" href="#" aria-label="Next">
+                                            <span aria-hidden="true" style="font-size:1.5rem;">&rsaquo;</span>
+                                            <span class="sr-only" style="font-size:1.5rem;">Next</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link text-danger-light" href="#" aria-label="Next">
+                                            <span aria-hidden="true" style="font-size:1.5rem;">&raquo;</span>
+                                            <span class="sr-only" style="font-size:1.5rem;">Next</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-9 mx-0 my-0 pl-0 pr-4 py-0" id="publication-detail" style="display: none;">
+                    <div class="mx-0 mt-4 mb-3 px-0 py-0" style="display: flex;">
+                        <div class="mx-0 my-0 px-2 py-2">
+                            <h1 class="mx-0 my-0 px-0 py-0 text-uppercase bg-dark" style="font-family: 'Lovelo Black';">
+                                 NEW YORK TIMES
+                            </h1>
+                            <p>
+                                 MudeMeter-approved publication
+                            </p>
+                        </div>
+                    </div>
+                
+                    <div class="col-12 mx-0 my-0 px-2 pt-md-5 pt-4 pb-0">
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="movie-tab-p" data-toggle="tab" href="#movie-p" role="tab" aria-controls="Movie" aria-selected="true">
+                                    Movie
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="tv-tab-p" data-toggle="tab" href="#tv-p" role="tab" aria-controls="TV shows" aria-selected="false">
+                                    TV Shows
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content mx-0 my-0 px-3 py-3" id="myPubTabContent">
+                            <div class="tab-pane fade show active mx-0 my-0 px-0 py-0" id="movie-p" role="tabpanel" aria-labelledby="movie-tab-p">
+                                <div class="col-12 mx-0 my-0 px-2 pt-2 pb-4">
+                                    <div class="row mx-0 my-0 px-2 py-2 bg-light text-dark">
+                                        <div class="col-2 mx-0 my-0 pl-0 pr-1 py-0">
+                                            <b>MudeMeter</b>
+                                        </div>
+                                        <div class="col-2 mx-0 my-0 pr-1 py-0">
+                                            <b>Movie</b>
+                                        </div>
+                                        <div class="col-2 mx-0 my-0 pr-1 py-0">
+                                            <b>Author</b>
+                                        </div>
+                                        <div class="col-6 mx-0 my-0 pr-1 py-0">
+                                            <b>Quotes</b>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row mx-0 my-0 px-2 py-2">
+                                        <div class="col-2 row mx-0 my-0 pl-0 pr-1 py-0">
+                                            <h3 class="gold my-auto">
+                                                M
+                                            </h3>
+                                            <span class="ml-2 my-auto">97%</span>
+                                        </div>
+                                        <div class="col-2 row mx-0 my-0 pr-1 py-0">
+                                            <div class="mx-0 my-auto px-0 py-0">
+                                                <a href="movies-detail.html" class="text-danger-light hover-dark">Touch Me Not</a>
+                                                <p>(2018)</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-2 row mx-0 my-0 pr-1 py-0">
+                                            <div class="mx-0 my-auto px-0 py-0">
+                                                <a href="movies-detail.html" class="text-danger-light hover-dark">Tim Appelo</a>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 mx-0 my-0 pr-1 py-0">
+                                            <div class="mx-0 my-0 px-0 py-0">
+                                                "A studious, intelligent, if flawed and scattershot, work with an open mind about modern sexuality and intimacy."
+                                            </div>
+                                            <div class="row mx-0 my-0 px-0 py-0">
+                                                <div class="row mx-0 px-0 py-1">
+                                                    <span class="my-auto">April 12, 2018</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mx-0 my-0 px-2 py-2 bg-light text-dark">
+                                        <div class="col-2 row mx-0 my-0 pl-0 pr-1 py-0">
+                                            <h3 class="gold my-auto">
+                                                M
+                                            </h3>
+                                            <span class="ml-2 my-auto">97%</span>
+                                        </div>
+                                        <div class="col-2 row mx-0 my-0 pr-1 py-0">
+                                            <div class="mx-0 my-auto px-0 py-0">
+                                                <a href="movies-detail.html" class="text-danger-light hover-dark">Touch Me Not</a>
+                                                <p>(2018)</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-2 row mx-0 my-0 pr-1 py-0">
+                                            <div class="mx-0 my-auto px-0 py-0">
+                                                <a href="movies-detail.html" class="text-danger-light hover-dark">Tim Appelo</a>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 mx-0 my-0 pr-1 py-0">
+                                            <div class="mx-0 my-0 px-0 py-0">
+                                                "A studious, intelligent, if flawed and scattershot, work with an open mind about modern sexuality and intimacy."
+                                            </div>
+                                            <div class="row mx-0 my-0 px-0 py-0">
+                                                <div class="row mx-0 px-0 py-1">
+                                                    <span class="my-auto">April 12, 2018</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade mx-0 my-0 px-0 py-0" id="tv-p" role="tabpanel" aria-labelledby="tv-tab-p">
+                                <div class="col-12 mx-0 my-0 px-2 pt-2 pb-4">
+                                    <div class="row mx-0 my-0 px-2 py-2 bg-light text-dark">
+                                        <div class="col-2 mx-0 my-0 pl-0 pr-1 py-0">
+                                            <b>MudeMeter</b>
+                                        </div>
+                                        <div class="col-2 mx-0 my-0 pr-1 py-0">
+                                            <b>TV show</b>
+                                        </div>
+                                        <div class="col-2 mx-0 my-0 pr-1 py-0">
+                                            <b>Author</b>
+                                        </div>
+                                        <div class="col-6 mx-0 my-0 pr-1 py-0">
+                                            <b>Quotes</b>
+                                        </div>
+                                    </div>
+                                
+                                    <div class="row mx-0 my-0 px-2 py-2">
+                                        <div class="col-2 row mx-0 my-0 pl-0 pr-1 py-0">
+                                            <h3 class="gold my-auto">
+                                                M
+                                            </h3>
+                                            <span class="ml-2 my-auto">97%</span>
+                                        </div>
+                                        <div class="col-2 row mx-0 my-0 pr-1 py-0">
+                                            <div class="mx-0 my-auto px-0 py-0">
+                                                <a href="movies-detail.html" class="text-danger-light hover-dark">Touch Me Not</a>
+                                                <p>(2018)</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-2 row mx-0 my-0 pr-1 py-0">
+                                            <div class="mx-0 my-auto px-0 py-0">
+                                                <a href="movies-detail.html" class="text-danger-light hover-dark">Tim Appelo</a>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 mx-0 my-0 pr-1 py-0">
+                                            <div class="mx-0 my-0 px-0 py-0">
+                                                "A studious, intelligent, if flawed and scattershot, work with an open mind about modern sexuality and intimacy."
+                                            </div>
+                                            <div class="row mx-0 my-0 px-0 py-0">
+                                                <div class="row mx-0 px-0 py-1">
+                                                    <span class="my-auto">April 12, 2018</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mx-0 my-0 px-2 py-2 bg-light text-dark">
+                                        <div class="col-2 row mx-0 my-0 pl-0 pr-1 py-0">
+                                            <h3 class="gold my-auto">
+                                                M
+                                            </h3>
+                                            <span class="ml-2 my-auto">97%</span>
+                                        </div>
+                                        <div class="col-2 row mx-0 my-0 pr-1 py-0">
+                                            <div class="mx-0 my-auto px-0 py-0">
+                                                <a href="movies-detail.html" class="text-danger-light hover-dark">Touch Me Not</a>
+                                                <p>(2018)</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-2 row mx-0 my-0 pr-1 py-0">
+                                            <div class="mx-0 my-auto px-0 py-0">
+                                                <a href="movies-detail.html" class="text-danger-light hover-dark">Tim Appelo</a>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 mx-0 my-0 pr-1 py-0">
+                                            <div class="mx-0 my-0 px-0 py-0">
+                                                "A studious, intelligent, if flawed and scattershot, work with an open mind about modern sexuality and intimacy."
+                                            </div>
+                                            <div class="row mx-0 my-0 px-0 py-0">
+                                                <div class="row mx-0 px-0 py-1">
+                                                    <span class="my-auto">April 12, 2018</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <nav aria-label="Page navigation" class="row mx-0 my-0 px-2 py-0">
+                                <ul class="pagination ml-auto mt-auto">
+                                    <li class="page-item disabled">
+                                        <a class="page-link text-danger-light" href="#" aria-label="Pre-Previous" tabindex="-1">
+                                            <span aria-hidden="true" style="font-size:1.5rem;">&laquo;</span>
+                                            <span class="sr-only" style="font-size:1.5rem;">Previous</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item disabled">
+                                        <a class="page-link text-danger-light" href="#" aria-label="Previous" tabindex="-1">
+                                            <span aria-hidden="true" style="font-size:1.5rem;">&lsaquo;</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item active">
+                                        <a class="page-link text-danger-light" href="#" style="font-size:1.5rem;">1</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link text-danger-light" href="#" style="font-size:1.5rem;">2</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link text-danger-light" href="#" style="font-size:1.5rem;">3</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link text-danger-light" href="#" aria-label="Next">
+                                            <span aria-hidden="true" style="font-size:1.5rem;">&rsaquo;</span>
+                                            <span class="sr-only" style="font-size:1.5rem;">Next</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link text-danger-light" href="#" aria-label="Next">
+                                            <span aria-hidden="true" style="font-size:1.5rem;">&raquo;</span>
+                                            <span class="sr-only" style="font-size:1.5rem;">Next</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-3 mx-0 my-0 pl-2 pr-0 py-0" id="navbar-critics">
+                    <div class="col-12 mx-0 my-0 px-0 py-4">
+                        <div class="col-12 mx-0 my-0 px-0 py-2 list bat active" style="cursor: pointer;" id="nav-critics-home">
+                            <p class="ml-5 px-0 my-0 py-0">Critics Home</p>
+                        </div>
+                        <div class="col-12 mx-0 my-0 px-0 py-2 list bat" style="cursor: pointer;" id="nav-critics-list">
+                            <p class="ml-5 my-0 px-0 py-0">Critics List</p>
+                        </div>
+                        </a>
+                        <div class="col-12 mx-0 my-0 px-0 py-2 list bat d-none" style="cursor: pointer;" id="nav-critics-groups">
+                            <p class="ml-5 my-0 px-0 py-0">Critics Groups</p>
+                        </div>
+                        <div class="col-12 mx-0 my-0 px-0 py-2 list bat" style="cursor: pointer;" id="nav-latest-film-reviews">
+                            <p class="ml-5 px-0 my-0 py-0">Latest Reviews</p>
+                        </div>
+                        <div class="col-12 mx-0 my-0 px-0 py-2 list bat about" style="cursor: pointer;" id="nav-critics-criteria">
+                            <p class="ml-5 my-0 px-0 py-0">Critics Criteria</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer class="px-0 d-none" th:replace="index :: footer">
+    </footer>
+    
+    <script src="jquery/jquery-3.3.1.min.js"></script>
+    <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="owlcarousel/owl.carousel.min.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/critics.js"></script>
+    <script type="text/javascript" th:inline="javascript">
+        $( '.critic-request' ).click( function( ) {
+            if( [[ ${ session.member != null } ]] ) {
+                $.ajax({
+                    url: "/requestcritic",
+                    type: "POST",
+                    complete: function( data ) {
+                        if( data.readyState == 4 && data.status == 200 ) {
+                            var response = JSON.parse( data.responseText );
+
+                            if( response.success ) {
+                                $( '#criticRequestSuccessModalCenter' ).modal( 'show' );
+                                return;
+                            }
+                        }
+                    }
+                });
+            } else {
+                $( '#signUpModalCenter' ).modal( 'show' );
+                return;
+            }
+        });
+        var currentPage = 0;
+
+        function list_latest_reviews( n ) {
+            $.ajax({
+                url: "/latestreviews",
+                type: "POST",
+                data: "pageNo=" + n,
+                complete: function( data ) {
+                    if( data.readyState == 4 && data.status == 200 ) {
+                        var response = JSON.parse( data.responseText );
+                        var body = "";
+                        var n_pages = [[${rTotalCnt}]] / 10;
+
+                        for( var i in response.reviews ) {
+                            body += '<div class="row mx-0 my-0 px-2 py-2">'
+                                 +  '<div class="col-2 row mx-0 my-0 pl-0 pr-1 py-0">';
+                            if( response.reviews[i].score >= 4.5 )
+                                body +=    '<h3 class="gold my-auto">'
+                                     +          'M'
+                                     +      '</h3>';
+                            else if( response.reviews[i].score >= 3.0 && response.reviews[i].score < 4.5 )
+                                body +=    '<h3 class="silver my-auto">'
+                                     +          'M'
+                                     +      '</h3>';
+                            else if( response.reviews[i].score >= 2.5 && response.reviews[i].score < 3.0 )
+                                body +=    '<h3 class="bronze my-auto">'
+                                     +          'M'
+                                     +      '</h3>';
+                            else if( response.reviews[i].score < 2.5 )
+                                body +=    '<h3 class="black my-auto">'
+                                     +          'M'
+                                     +      '</h3>';
+                            body += '<span class="ml-2 my-auto">' +response.reviews[i].score+ ' / 5.0</span>'
+                                 +  '</div>'
+                                 +  '<div class="col-2 row mx-0 my-0 pr-1 py-0">'
+                                 +      '<div class="mx-0 my-auto px-0 py-0">'
+                                 +         '<a href="/movie?mediaID='+response.reviews[i].media.id+'" class="text-danger-light hover-dark">' +response.reviews[i].media.mediaName+ '</a>'
+                                 +         '<p>('+response.reviews[i].media.releaseDate.theatre.substring(0,4)+')</p>'
+                                 +      '</div>'
+                                 + '</div>'
+                                 + '<div class="col-6 mx-0 my-0 pr-1 py-0">'
+                                 +     '<div class="mx-0 my-0 px-0 py-0">'
+                                 +          '\"' + response.reviews[i].comment + '\"'
+                                 +      '</div>'
+                                 +      '<div class="row mx-0 my-0 px-0 py-0">'
+                                 +          '<div class="row mx-0 my-0 px-0 py-1">';
+
+                            for( var n = 0; n < Math.trunc( response.reviews[i].score ); n++ )
+                                body += '<i class="icon-star mx-2 my-auto text-warning" style="font-size:1.2rem;"></i>';
+
+                            body +=          '<span class="ml-1 my-auto text-warning" style="font-size:1.2rem;">'+response.reviews[i].score+'</span>'
+                                 +           '</div>'
+                                 +          '<div class="row ml-auto mr-0 px-0 py-1">'
+                                 +              '<span class="my-auto">' +response.reviews[i].regDate.substring(0, 10)+ '</span>'
+                                 +          '</div>'
+                                 +      '</div>'
+                                 +  '</div>'
+                                 +  '<div class="col-2 row mx-0 my-0 pr-1 py-0">'
+                                 +      '<div class="mx-0 my-auto px-0 py-0">'
+                                 +          '<div class="mx-0 my-0 px-0 py-0">'
+                                 +              '<a href="/member?memberID=' +response.reviews[i].member.id+ '" class="hover-blue-super critic-detail-button">'
+                                 +                  '<b>' +response.reviews[i].member.name.firstName + ' ' + response.reviews[i].member.name.lastName + '</b>'
+                                 +              '</a>'
+                                 +          '</div>'
+                                 +      '</div>'
+                                 +  '</div>'
+                                 +  '</div>';
+                        }
+
+                        $( '#latest-film-revs' ).html( body );
+
+                        body = "";
+                        window.currentPage = n;
+                        for( var i = (window.currentPage < 2 ? window.currentPage : window.currentPage - 2);
+                                i < ( window.currentPage < 2 ? 5 : window.currentPage + 3); ++i ) {
+                            if( i != n ) {
+                            body += "<li class='page-item'>"
+                                 +  "<a class='page-link text-danger-light' href='javascript:list_latest_reviews(" +i+ ")' style='font-size:1.5em;'>" +(i+1)+ "</a>"
+                                 +  "</li>";
+                            } else {
+                            body += "<li class='active page-item'>"
+                                 +  "<a class='page-link text-danger-light' href='javascript:list_latest_reviews(" +i+ ")' style='font-size:1.5em;'>" +(i+1)+ "</a>"
+                                 +  "</li>";
+                            }
+                        }
+
+                        $( '#latest-film-revs-header .pagination' ).html( body );
+                    }
+                }
+            });
+        }
+
+        function list_critics( n ) {
+            $.ajax({
+                url: "/criticlist",
+                type: "POST",
+                data: "pageNo=" + n,
+                complete: function( data ) {
+                    if( data.readyState == 4 && data.status == 200 ) {
+                        var FS_URI = [[ ${ T(us.mude.common.GlobalProps).FS_URI } ]];
+                        var POSTER = [[ ${ T(us.mude.common.GlobalProps).POSTER } ]];
+                        var response = JSON.parse( data.responseText );
+                        var body = "";
+                        var n_pages = [[ ${ totalCnt } ]] / 10;
+
+                        for( var i in response.critics ) {
+                            body += '<div class="col-6 mx-0 my-0 px-0 py-0">'
+                                 +  '<div class="row mx-0 my-0 px-0 py-0">'
+                                 +     '<a class="critic-detail-button" href="/member?memberID=' +response.critics[i].id+ '">'
+                                 +         '<img src="' +FS_URI+ '/' +response.critics[i].profileImage+ '/' +POSTER+ '" onerror="this.onerror=null;this.src=\'images/poster-100.png\'">'
+                                 +     '</a>'
+                                 +     '<a href="/member?memberID=' +response.critics[i].id+ '" class="mx-3 text-danger-light hover-dark critic-detail-button">'
+                                 +         response.critics[i].name.firstName +' '+ response.critics[i].name.lastName
+                                 +     '</a>'
+                                 +  '</div>'
+                                 +  '</div>';
+                        }
+
+                        $( '.critic-list' ).html( body );
+
+                        body = "";
+
+                        window.currentPage = n;
+                        for( var i = (window.currentPage < 2 ? window.currentPage : window.currentPage - 2);
+                                i < ( window.currentPage < 2 ? 5 : window.currentPage + 3); ++i ) {
+                            if( i != n ) {
+                            body += "<li class='page-item'>"
+                                 +  "<a class='page-link text-danger-light' href='javascript:list_critics(" +i+ ")' style='font-size:1.5em;'>" +(i+1)+ "</a>"
+                                 +  "</li>";
+                            } else {
+                            body += "<li class='active page-item'>"
+                                 +  "<a class='page-link text-danger-light' href='javascript:list_critics(" +i+ ")' style='font-size:1.5em;'>" +(i+1)+ "</a>"
+                                 +  "</li>";
+                            }
+                        }
+
+                        $( '.critic-list-header .pagination' ).html( body );
+                    }
+                }
+            });
+        }
+        $( document ).ready( function( ) {
+            list_critics( 0 );
+            list_latest_reviews( 0 );
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,2666 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Mude | Movies, TV Shows, Reviews and More!</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="shortcut icon" href="images/logo-white.ico">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="fontawesome/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="owlcarousel/owl.carousel.min.css">
+    <link rel="stylesheet" href="owlcarousel/owl.theme.default.min.css">
+</head>
+<body>
+    <section id="nav" class="d-none" th:fragment="header">
+        <div class="container-fluid px-0 py-0 mx-0 my-0 d-none d-md-block bg-dark">
+            <nav class="navbar navbar-expand mx-0 my-0 px-0 py-0" style="z-index:2;">
+                <a class="navbar-brand mr-auto mx-0 my-0 px-0 py-0">
+                </a>
+                <ul class="navbar-nav mx-0 mt-3 mb-0 pl-2 py-0" id="top-navbar-small">
+                    <li class="nav-item ml-0 mr-2 my-auto px-0 py-0 upper">
+                        <a class="nav-link mx-0 my-0 px-0 py-0" href="#" data-toggle="modal" 
+                        data-target="#meterModalCenter" style="font-family: 'Roboto', sans-serif;">
+                            <small>What's the MudeMeter®?</small>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown mx-2 my-0 px-1 py-0 upper border-0 user-tab d-none">
+                        <a class="nav-link dropdown-toggle mx-0 my-0 px-0 py-0 small nav-id" 
+                        href="#" th:href="@{/member(memberID=${session.member != null} ? ${session.member.id} : -1)}" 
+                        role="button" aria-haspopup="true" 
+                        aria-expanded="false" style="overflow:hidden;" id="userProfileOptions">
+                            <img class="ml-0 mr-1 rounded-circle" th:src="@{${session.member != null} ? ${T(us.mude.common.GlobalProps).FS_URI + '/' + session.member.profileImage + '/' + T(us.mude.common.GlobalProps).POSTER} : 'images/critics.gif'}" alt="Member-Image" onerror="this.onerror=null;this.src='images/critics.gif';"/>
+                            <small>Hey,&emsp;<span class="first-name" 
+                                th:text="${session.member != null} ? ${session.member.name.firstName} : 'No-User'">Wonyong</span>!</small>
+                        </a>
+                        <div class="dropdown-menu border-0 rounded-0" 
+                            aria-labelledby="navbarDropdown-id" id="navbarDropdown-id-box" 
+                            style="background-color: rgba(0,0,0,0.9) !important; color:#fff;">
+                            <div class="col-12 mx-0 my-0 px-2 py-0">
+                                <span class="first-name">
+                                    <b th:text="${session.member != null} ? ${session.member.name.firstName} : 'No-User'">
+                                        Wonyong
+                                    </b>
+                                </span>
+                                <span class="white-space">
+                                    <b>&emsp;</b>
+                                </span>
+                                <span class="last-name">
+                                    <b th:text="${session.member != null} ? ${session.member.name.lastName} : 'No-User'">
+                                        Jeong
+                                    </b>
+                                </span>
+                            </div>
+                            <a class="mx-0 my-0 px-0 py-0 hover-none hover-blue-super" id="nav-wts" href="#" 
+                            th:href="@{/member(memberID=${session.member != null} ? ${session.member.id} : -1, tab=0)}">
+                                <div class="row mx-0 my-0 px-2 py-1">
+                                    <i class="fas fa-plus text-primary my-auto" style="font-size:1.3rem;"></i>
+                                    <!-- <p class="mx-1 my-auto px-0 py-0" id="nav-wts-num" 
+                                    th:text="${session.member != null and session.member.wantToSee != null 
+                                        and !session.member.wantToSee.isEmpty()} ? ${#lists.size(session.member.wantToSee)} : '0'">10</p> -->
+                                    <p class="mx-1 my-auto px-0 py-0" id="nav-wts-num">10</p>
+                                    <p class="mx-0 my-auto px-0 py-0">Want To See</p>
+                                </div>
+                            </a>
+                            <a class="mx-0 my-0 px-0 py-0 hover-none hover-blue-super" id="nav-mReview" href="#"
+                            th:href="@{/member(memberID=${session.member != null} ? ${session.member.id} : -1, tab=1)}">
+                                <div class="row mx-0 my-0 px-2 py-1">
+                                    <i class="fas fa-minus text-warning my-auto"></i>
+                                    <!-- <p class="mx-1 my-auto px-0 py-0" id="nav-review-num"
+                                    th:text="${session.member != null and session.member.ratingHistory != null and 
+                                    !session.member.ratingHistory.isEmpty()} ? ${#lists.size(session.member.ratingHistory)} : '0'">10</p> -->
+                                    <p class="mx-1 my-auto px-0 py-0" id="nav-notinterested-num">10</p>
+                                    <p class="mx-0 my-auto px-0 py-0">Not Interested</p>
+                                </div>
+                            </a>
+                            <a class="mx-0 my-0 px-0 py-0 hover-none hover-blue-super" id="nav-tvReview" href="#"
+                            th:href="@{/member(memberID=${session.member != null} ? ${session.member.id} : -1, tab=2)}">
+                                <div class="row mx-0 my-0 px-2 py-1"
+                                style="border-bottom: 1px solid rgba(255, 255, 255, .5);">
+                                    <i class="fas fa-certificate text-info my-auto"></i>
+                                    <!-- <p class="mx-1 my-auto px-0 py-0" id="nav-tvreview-num"
+                                    th:text="${session.member != null and session.member.ratingHistory != null
+                                        and !session.member.ratingHistory.isEmpty()} ? ${#lists.size(session.member.ratingHistory)} : '0'"
+                                    style="text-indent: 2%;">5</p> -->
+                                    <p class="mx-1 my-auto px-0 py-0" id="nav-reviewcount-num"
+                                    style="text-indent: 2%;">5</p>
+                                    <p class="mx-0 my-auto px-0 py-0">Review Count</p>
+                                </div>
+                            </a>
+                            <a class="mx-0 my-0 px-0 py-0 hover-none hover-blue-super" id="nav-setting" href="#"
+                            th:href="@{/member(memberID=${session.member != null} ? ${session.member.id} : -1, tab=3)}">
+                                <div class="row mx-0 my-0 px-2 py-1">
+                                    <p class="mx-0 my-auto px-0 py-0">Account</p>
+                                </div>
+                            </a>
+                            <a class="mx-0 my-0 px-0 py-0 hover-none hover-blue-super" href="#" onclick="logout()">
+                                <div class="row mx-0 my-0 px-2 py-1">
+                                    <p class="mx-0 my-auto px-0 py-0">Sign Out</p>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+                    <li class="nav-item mx-2 my-auto px-0 py-0 upper signUp-label">
+                        <a class="nav-link mx-0 my-0 px-0 py-0" href="#" data-toggle="modal" data-target="#signUpModalCenter">
+                            <small>Sign Up</small>
+                        </a>
+                    </li>
+                    <li class="nav-item mx-0 my-auto px-0 py-0 upper signIn-label">
+                        <a class="nav-link mx-0 my-0 my-0 py-0" href="#" data-toggle="modal" data-target="#logInModalCenter">
+                            <small>Log In</small>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="container-fluid mx-0 my-0 px-0 py-0" id="navbar-second">
+            <nav class="navbar navbar-expand navbar-dark bg-dark mx-0 my-0 px-2 py-0" id="top-navbar-parent">
+                <a href="#" class="btn btn-outline-light d-md-none d-sm-block">
+                    <i class="fas fa-search search-icon"></i>
+                </a>
+                <a class="navbar-brand mx-md-0 my-0 px-0 py-0 mx-auto" href="#" id="top-logo">
+                    <span class="row mx-0 my-0 px-0 py-0">
+                        MUD
+                        <b class="text-danger">E</b>
+                    </span>
+                </a>
+                <button class="navbar-toggler btn-outline-light border-white border d-md-none d-sm-block 
+                d-block mr-0 py-2 text-white search-link" 
+                type="button" data-toggle="collapse" data-target="#navbarSupportedContent" 
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-bars bar-icon"></i>
+                </button>
+                <form class="form-inline mx-auto d-none d-md-block" id="search-form" action="#" 
+                th:action="@{/search}" method="get">
+                    <div class="input-group dropdown border-0" id="top-search-bar-box">
+                        <input type="search" id="top-search-bar" class="form-control border-0 search-bar" 
+                        placeholder="Search Movies, TV, actors, more..." aria-label="Search" 
+                        aria-describedby="search-text" data-toggle="dropdown" style="font-size: 1.3rem !important;" 
+                        name="keyword" th:value="*{keyword}" autocomplete="off">
+                        <div class="input-group-append bg-white border-0 rounded-right px-0">
+                            <a class="nav-link mt-1 mb-0 px-2 py-0 border-0 hover-none search-link" 
+                            onclick="document.getElementById('search-form').submit();" style="cursor: pointer;">
+                                <i class="fas fa-search text-dark search-icon"></i>
+                            </a>
+                        </div>
+                        <div class="dropdown-menu my-0" aria-labelledby="top-search-bar" style="width:100%;" 
+                        id="top-search-bar-dd">
+                                <div class="col-12 px-0 py-0 mt-md-0 mt-sm-5 mt-5 rounded"
+                                     style="background-color: #fff; overflow: hidden;">
+                                <div class="col-12 mx-0 my-0 px-0 py-0" id="load-page-bounce-search" 
+                                style="width:100%; height:100%; z-index:1; position: absolute; 
+                                display: none; background-color:white;">
+                                    <div class="row mx-0 my-0 px-0 py-0" style="height:100%;">
+                                        <div class="mx-auto my-auto spinner">
+                                            <div class="bounce1" style="background-color:#000 !important;"></div>
+                                            <div class="bounce2" style="background-color:#000 !important;"></div>
+                                            <div class="bounce3" style="background-color:#000 !important;"></div>
+                                            <div class="bounce4"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mx-0 my-0 px-0 pt-4 pb-0" style="background-color: #fff;" id="top-movie-heading">
+                                    <div class="row mx-0 my-0 px-0 py-0 bg-danger header-label-light">
+                                        <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:4%;"></div>
+                                        <h5 class="mx-0 my-0 px-2 py-0 text-uppercase" 
+                                        style="color: #000; background-color: #fff;">
+                                            In Theaters Now
+                                        </h5>
+                                    </div>
+                                </div>
+                                <div class="mx-0 my-0 px-0 py-0 top-box">
+                                    <a href="#"
+                                    class="mx-0 mt-1 mb-0 px-2 py-1 dropdown-item top-item" style="display: flex;">
+                                        <div class="col-2 mx-0 my-0 px-2 py-1">
+                                            <img class="img-fluid" src="images/poster.png"
+                                            alt="Top-Movie-Image" />
+                                        </div>
+                                        <div class="row col-10 mx-0 my-0 px-2 py-1">
+                                            <h6 class="my-auto text-truncate">
+                                                <b>Inception</b>
+                                                <span class="text-muted small my-auto">(2018)</span>
+                                            </h6>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="mx-0 my-0 px-0 pt-2 pb-0" 
+                                style="background-color: #fff; display: none;" id="movie-heading">
+                                    <div class="row mx-0 my-0 px-0 py-0 bg-danger header-label-light">
+                                        <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:4%;"></div>
+                                        <h5 class="mx-0 my-0 px-2 py-0 text-uppercase" 
+                                        style="color: #000; background-color: #fff;">
+                                            Movies
+                                        </h5>
+                                    </div>
+                                </div>
+                                <div class="mx-0 my-0 px-0 py-0 movie-box">
+                                    <a href="#" class="mx-0 mt-1 mb-0 px-2 py-1 dropdown-item movie-item" 
+                                    style="display: none;">
+                                        <div class="col-2 mx-0 my-0 px-2 py-1">
+                                            <img class="img-fluid" src="images/poster.png" alt="Movie-Image" />
+                                        </div>
+                                        <div class="row col-10 mx-0 my-0 px-2 py-1">
+                                            <h6 class="my-auto text-truncate">
+                                                <b>The Good Place M</b>
+                                                <span class="text-muted small">(2018)</span>
+                                            </h6>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="mx-0 my-0 px-0 pt-2 pb-0" 
+                                style="background-color: #fff; display: none;" id="tv-heading">
+                                    <div class="row mx-0 my-0 px-0 py-0 bg-danger header-label-light">
+                                        <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:4%;"></div>
+                                        <h5 class="mx-0 my-0 px-2 py-0 text-uppercase" 
+                                        style="color: #000; background-color: #fff;">
+                                            TV shows
+                                        </h5>
+                                    </div>
+                                </div>
+                                <div class="mx-0 my-0 px-0 py-0 tv-box">
+                                    <a href="#" class="mx-0 mt-1 mb-0 px-2 py-1 dropdown-item tv-item" style="display: none;">
+                                        <div class="col-2 mx-0 my-0 px-2 py-1">
+                                            <img class="img-fluid" src="images/poster.png" alt="TV-Image" />
+                                        </div>
+                                        <div class="row col-10 mx-0 my-0 px-2 py-1">
+                                            <h6 class="my-auto text-truncate">
+                                                <b>The Good Place T</b>
+                                                <span class="text-muted small">(2018)</span>
+                                            </h6>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="mx-0 my-0 px-0 pt-1 pb-0" style="background-color: #fff; display: none;" 
+                                id="artist-heading">
+                                    <div class="row mx-0 my-0 px-0 py-0 bg-danger header-label-light">
+                                        <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:4%;"></div>
+                                        <h5 class="mx-0 my-0 px-2 py-0 text-uppercase" 
+                                        style="color: #000; background-color: #fff;">
+                                            Artists
+                                        </h5>
+                                    </div>
+                                </div>
+                                <div class="mx-0 my-0 px-0 py-0 artist-box">
+                                    <a href="/member?memberID=101299" class="mx-0 mt-1 mb-0 px-2 py-1 dropdown-item artist-item" 
+                                    style="display: none;">
+                                        <div class="col-2 mx-0 my-0 px-2 py-1">
+                                            <img class="img-fluid" src="images/critics.gif" alt="Artist-Image" />
+                                        </div>
+                                        <div class="row col-10 mx-0 my-0 px-2 py-1">
+                                            <h6 class="my-auto text-truncate">
+                                                <b>Ave Merson-O'Brian</b>
+                                            </h6>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <ul class="navbar-nav" id="top-navbar">
+                    <li class="nav-item dropdown rounded mx-0 mt-5 pb-0 d-none d-md-block top-navbar-item">
+                        <a class="nav-link dropdown-toggle" href="#" th:href="@{/browse(tab=0)}" id="navbarDropdown1" 
+                        role="button" aria-haspopup="true" aria-expanded="false" style="height:100%;">
+                            Movies
+                        </a>
+                        <div class="dropdown-menu border-0" aria-labelledby="navbarDropdown1" id="navbarDropdownBox1" 
+                        style="background-color: rgba(0,0,0,0.9) !important; color:#fff;">
+                            <div class="container-fluid">
+                                <div class="row px-0 pt-0 pb-2">
+                                    <div class="col-2 pt-3 pb-0 my-0">
+                                        <ul class="px-0 py-0" style="list-style-type: none;">
+                                            <li class="px-0 py-0">
+                                                <h6>
+                                                    <a class="text-white hover-none">Movies In Theaters</a>
+                                                </h6>
+                                            </li>
+                                            <li class="px-0 py-0 mx-0 my-3">
+                                                <a href="#" th:href="@{/browse(tab=0)}" class="text-white hover-blue">
+                                                    Opening This Week
+                                                </a>
+                                            </li>
+                                            <li class="px-0 py-0 mx-0 my-3">
+                                                <a href="#" th:href="@{/browse(tab=1)}" class="text-white hover-blue">
+                                                    Top Box Office
+                                                </a>
+                                            </li>
+                                            <li class="px-0 py-0 mx-0 my-3">
+                                                <a href="#" th:href="@{/browse(tab=2)}" class="text-white hover-blue">
+                                                    Coming Soon to Theaters
+                                                </a>
+                                            </li>
+                                            <li class="px-0 py-0 mx-0 my-3">
+                                                <a href="#" th:href="@{/browse(tab=3)}" class="text-white hover-blue">
+                                                    Academy Award Winners
+                                                </a>
+                                            </li>
+                                            <li class="px-0 py-0 mx-0 my-3">
+                                                <a href="#" th:href="@{/browse(tab=4)}" class="text-white hover-blue">
+                                                    Certified Fresh Movies
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-10 pl-1 pt-3 pb-0 my-0 text-center">
+                                        <ul class="px-0 py-0" style="list-style-type: none;">
+                                            <li class="px-0 py-0">
+                                                <h6 class="text-light">Certified Fresh Movies</h6>
+                                            </li>
+                                            <li class="px-0 py-0">
+                                                <div th:if="${certified != null}" class="row mt-2">
+                                                    <th:block th:each="cMovie, cMovieStat : ${certified}" 
+                                                    th:unless="${cMovieStat.index > 5}">
+                                                        <div class="col text-center my-0 py-0">
+                                                            <a href="#" 
+                                                            th:href="@{/movie(mediaID=${cMovie.id})}" 
+                                                            style="text-decoration: none;">
+                                                                <div class="card hover-blue">
+                                                                    <img class="card-img-top img-fluid" src="images/poster.png"
+                                                                    th:src="@{${T(us.mude.common.GlobalProps).FS_URI + '/' + cMovie.resourcePath + '/' + T(us.mude.common.GlobalProps).POSTER}}"
+                                                                    onerror="this.onerror=null;
+                                                                    this.src='images/poster.png';" alt="Card image cap" />
+                                                                    <div class="card-body px-0 py-0">
+                                                                        <h3 th:if="${cMovie.mudemeter.criticMudemeter >= 80}" 
+                                                                        class="my-0 gold">M</h3>
+                                                                        <h3 th:if="${cMovie.mudemeter.criticMudemeter >= 70 
+                                                                        and cMovie.mudemeter.criticMudemeter < 80}" 
+                                                                        class="my-0 gold">M</h3>
+                                                                        <h3 th:if="${cMovie.mudemeter.criticMudemeter >= 60 
+                                                                        and cMovie.mudemeter.criticMudemeter < 70}" 
+                                                                        class="my-0 silver">M</h3>
+                                                                        <h3 th:if="${cMovie.mudemeter.criticMudemeter >= 50 
+                                                                        and cMovie.mudemeter.criticMudemeter < 60}" 
+                                                                        class="my-0 bronze">M</h3>
+                                                                        <h3 th:if="${cMovie.mudemeter.criticMudemeter > 0 and 
+                                                                         cMovie.mudemeter.criticMudemeter < 50}" 
+                                                                        class="my-0 black">M</h3>
+                                                                        <h3 class="col-2 mx-0 my-0 px-0 py-0" 
+                                                                        th:if="${cMovie.mudemeter.criticMudemeter == 0}" 
+                                                                        style="color:white; font-family: 'Roboto', sans-serif;">
+                                                                            —
+                                                                        </h3>
+                                                                        <h6 th:text="${cMovie.mediaName}" class="mx-0 my-0">
+                                                                            Black Panther
+                                                                        </h6>
+                                                                    </div>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                    </th:block>
+                                                </div>
+                                                <div th:if="${certified == null}" class="row mt-2">
+                                                    <div class="col text-center my-0 py-0">
+                                                        <a href="#" th:href="@{/movie(mediaID=4999)}" 
+                                                        style="text-decoration: none;">
+                                                            <div class="card hover-blue">
+                                                                <img class="card-img-top img-fluid" src="images/poster.png" 
+                                                                alt="G-Movie-Image" />
+                                                                <div class="card-body px-0 py-0">
+                                                                    <h3 class="my-0 gold">M</h3>
+                                                                    <h6 class="mx-0 my-0">Black Panther</h6>
+                                                                </div>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col text-center my-0 py-0">
+                                                        <a href="#" th:href="@{/movie(mediaID=4998)}" 
+                                                        style="text-decoration: none;">
+                                                            <div class="card hover-blue">
+                                                                <img class="card-img-top img-fluid" src="images/poster.png" 
+                                                                alt="G-Movie-Image" />
+                                                                <div class="card-body px-0 py-0">
+                                                                    <h3 class="my-0 gold">M</h3>
+                                                                    <h6 class="mx-0 my-0">The Good Place</h6>
+                                                                </div>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col text-center my-0 py-0">
+                                                        <a href="#" th:href="@{/movie(mediaID=4997)}" 
+                                                        style="text-decoration: none;">
+                                                            <div class="card hover-blue">
+                                                                <img class="card-img-top img-fluid" src="images/poster.png" 
+                                                                alt="G-Movie-Image" />
+                                                                <div class="card-body px-0 py-0">
+                                                                    <h3 class="my-0 neon">M</h3>
+                                                                    <h6 class="mx-0 my-0">The Defiant Ones</h6>
+                                                                </div>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col text-center my-0 py-0">
+                                                        <a href="#" th:href="@{/movie(mediaID=4997)}" 
+                                                        style="text-decoration: none;">
+                                                            <div class="card hover-blue">
+                                                                <img class="card-img-top img-fluid" src="images/poster.png" 
+                                                                alt="G-Movie-Image" />
+                                                                <div class="card-body px-0 py-0">
+                                                                    <h3 class="my-0 neon">M</h3>
+                                                                    <h6 class="mx-0 my-0">Black Panther</h6>
+                                                                </div>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col text-center my-0 py-0">
+                                                        <a href="#" th:href="@{/movie(mediaID=4997)}" 
+                                                        style="text-decoration: none;">
+                                                            <div class="card hover-blue">
+                                                                <img class="card-img-top img-fluid" src="images/poster.png" 
+                                                                alt="G-Movie-Image" />
+                                                                <div class="card-body px-0 py-0">
+                                                                    <h3 class="my-0 neon">M</h3>
+                                                                    <h6 class="mx-0 my-0">Early Man</h6>
+                                                                </div>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown rounded mx-0 mt-5 pb-0 d-none d-md-block top-navbar-item">
+                        <a class="nav-link dropdown-toggle" href="#" th:href="@{/browse(tab=7)}"
+                        id="navbarDropdown2" role="button" aria-haspopup="true" aria-expanded="false" 
+                        style="height:100%;">
+                            TV
+                        </a>
+                        <div class="dropdown-menu border-0" aria-labelledby="navbarDropdown2" id="navbarDropdownBox2" 
+                        style="background-color: rgba(0,0,0,0.9) !important; color:#fff;">
+                            <div class="container-fluid">
+                                <div class="row px-0 pt-0 pb-2">
+                                    <div class="col-3 pt-3 pb-0 my-0">
+                                        <ul class="px-0 py-0" style="list-style-type: none;">
+                                            <li class="px-0 py-0">
+                                                <h6>
+                                                    <a class="text-white hover-none">New TV Tonight</a>
+                                                </h6>
+                                            </li>
+                                            <th:block th:if="${newTVTonight != null and !newTVTonight.isEmpty()}" th:each="newTv, newTvStat : ${newTVTonight}" 
+                                            th:unless="${newTvStat.index > 8}">
+                                                <li class="row px-0 py-0 mx-0 my-lg-2 my-1">
+                                                    <h3 th:if="${newTv.mudemeter.criticMudemeter >= 80}" 
+                                                     class="col-2 mx-0 my-0 px-0 py-0 gold">M</h3>
+                                                    <h3 th:if="${newTv.mudemeter.criticMudemeter >= 70 and 
+                                                    newTv.mudemeter.criticMudemeter < 80}" 
+                                                    class="col-2 mx-0 my-0 px-0 py-0 gold">M</h3>
+                                                    <h3 th:if="${newTv.mudemeter.criticMudemeter >= 60 and 
+                                                    newTv.mudemeter.criticMudemeter < 70}" 
+                                                    class="col-2 mx-0 my-0 px-0 py-0 silver">M</h3>
+                                                    <h3 th:if="${newTv.mudemeter.criticMudemeter >= 50 and 
+                                                    newTv.mudemeter.criticMudemeter < 60}" 
+                                                    class="col-2 mx-0 my-0 px-0 py-0 bronze">M</h3>
+                                                    <h3 th:if="${newTv.mudemeter.criticMudemeter > 0 and 
+                                                    newTv.mudemeter.criticMudemeter < 50}"
+                                                    class="col-2 mx-0 my-0 px-0 py-0 black">M</h3>
+                                                    <h3 class="col-2 mx-0 my-0 px-0 py-0" 
+                                                    th:if="${newTv.mudemeter.criticMudemeter == 0}"
+                                                    style="color:white; font-family: 'Roboto', sans-serif;">
+                                                        —
+                                                    </h3>
+                                                    <b th:if="${newTv.mudemeter.criticMudemeter != 0}" 
+                                                    class="my-auto col-lg-3 col-md-4 px-0" 
+                                                    th:text="${newTv.mudemeter.criticMudemeter + '%'}">100%</b>
+                                                    <b th:if="${newTv.mudemeter.criticMudemeter == 0}" 
+                                                    class="my-auto col-lg-3 col-md-4 px-0">&emsp;</b>
+                                                    <a href="#" th:href="@{/season(mediaID=${newTv.id})}" 
+                                                    class="my-auto text-white small hover-blue"
+                                                    th:text="${newTv.mediaName}">Black Lightning</a>
+                                                </li>
+                                            </th:block>
+                                            <li th:if="${newTVTonight == null or newTVTonight.isEmpty()}" class="row px-0 py-4 mx-0 my-lg-2 my-1">
+                                                <h5 class="my-0 py-0 mx-auto">Not Available!</h5>
+                                            </li>
+                                            <li th:if="${newTVTonight == null}" class="row px-0 py-0 mx-0 my-lg-2 my-1">
+                                                <h3 class="col-2 mx-0 my-0 px-0 py-0 gold">
+                                                    M
+                                                </h3>
+                                                <b class="my-auto col-lg-3 col-md-4 px-0">100%</b>
+                                                <a href="#" th:href="@{/season(mediaID=2006)}" 
+                                                class="my-auto text-white small hover-blue">
+                                                    Black Lightning
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-4 pt-3 pb-0 my-0">
+                                        <ul class="px-0 py-0" style="list-style-type: none;">
+                                            <li class="px-0 py-0">
+                                                <h6>
+                                                    <a class="text-white text-uppercase hover-none">
+                                                        Popular TV Shows on Mude
+                                                    </a>
+                                                </h6>
+                                            </li>
+                                            <th:block th:if="${popularTV != null and !popularTV.isEmpty()}" th:each="topTVC, topTVCStat : ${popularTV}" 
+                                            th:unless="${topTVCStat.index > 8}">
+                                                <li class="row px-0 py-0 mx-0 my-lg-2 my-1">
+                                                    <h3 th:if="${topTVC.mudemeter.criticMudemeter >= 80}" 
+                                                    class="col-2 mx-0 my-0 px-0 py-0 gold">M</h3>
+                                                    <h3 th:if="${topTVC.mudemeter.criticMudemeter >= 70 
+                                                    and topTVC.mudemeter.criticMudemeter < 80}" 
+                                                    class="col-2 mx-0 my-0 px-0 py-0 gold">M</h3>
+                                                    <h3 th:if="${topTVC.mudemeter.criticMudemeter >= 60 
+                                                    and topTVC.mudemeter.criticMudemeter < 70}" 
+                                                    class="col-2 mx-0 my-0 px-0 py-0 silver">M</h3>
+                                                    <h3 th:if="${topTVC.mudemeter.criticMudemeter >= 50 
+                                                    and topTVC.mudemeter.criticMudemeter < 60}" 
+                                                    class="col-2 mx-0 my-0 px-0 py-0 bronze">M</h3>
+                                                    <h3 th:if="${topTVC.mudemeter.criticMudemeter > 0 
+                                                    and topTVC.mudemeter.criticMudemeter < 50}" 
+                                                    class="col-2 mx-0 my-0 px-0 py-0 black">M</h3>
+                                                    <h3 class="col-2 mx-0 my-0 px-0 py-0" 
+                                                    th:if="${topTVC.mudemeter.criticMudemeter == 0}" 
+                                                    style="color:white; font-family: 'Roboto', sans-serif;">
+                                                        —
+                                                    </h3>
+                                                    <b th:if="${topTVC.mudemeter.criticMudemeter != 0}" 
+                                                    class="my-auto col-lg-3 col-md-4 px-0"
+                                                    th:text="${T(java.lang.Math).round(topTVC.mudemeter.criticMudemeter) + '%'}">100%</b>
+                                                    <b th:if="${topTVC.mudemeter.criticMudemeter == 0}" 
+                                                    class="my-auto col-lg-3 col-md-4 px-0">&emsp;</b>
+                                                    <a href="#" th:href="@{/season(mediaID=${topTVC.id})}" 
+                                                    class="my-auto text-white small hover-blue" 
+                                                    th:text="${topTVC.mediaName}">Black Lightning</a>
+                                                </li>
+                                            </th:block>
+                                            <li th:if="${popularTV == null or popularTV.isEmpty()}" class="row px-0 py-4 mx-0 my-lg-2 my-1">
+                                                <h6 class="my-0 py-0 mx-auto my-auto">Currently Not Available!</h6>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-3 px-0 pt-3 pb-0 my-0 text-left">
+                                        <ul class="px-0 py-0" style="list-style-type: none;">
+                                            <li class="px-0 py-0">
+                                                <h6>
+                                                    <a class="text-white text-uppercase hover-none">More</a>
+                                                </h6>
+                                            </li>
+                                            <li class="px-0 py-0 mx-0 my-lg-3 my-2">
+                                                <a href="#" th:href="@{/tv}" class="text-white small hover-blue">
+                                                    Top TV Shows
+                                                </a>
+                                            </li>
+                                            <li class="px-0 py-0 my-lg-3 my-2">
+                                                <a href="#" th:href="@{/browse(tab=7)}" 
+                                                class="text-white small hover-blue">Certified Fresh TV</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-2 pl-1 pt-3 pb-0 my-0 text-center">
+                                        <ul class="px-0 py-0" style="list-style-type: none;">
+                                            <li class="px-0 py-0">
+                                                <h6>Certified Fresh TV</h6>
+                                            </li>
+                                            <th:block th:if="${certifiedTV != null and !certifiedTV.isEmpty()}" th:each="cTV, cTVStat : ${certifiedTV}" 
+                                            th:unless="${cTVStat.index > 0}">
+                                                <li class="px-0 py-0">
+                                                    <div class="text-center mt-2">
+                                                        <a href="#" th:href="@{/season(mediaID=${cTV.id})}" 
+                                                        style="text-decoration: none;">
+                                                            <div class="card hover-blue">
+                                                                <img class="card-img-top" 
+                                                                src="images/poster.png"
+                                                                th:src="@{${T(us.mude.common.GlobalProps).FS_URI + '/' + cTV.resourcePath + '/' + T(us.mude.common.GlobalProps).POSTER}}"
+                                                                onerror="this.onerror=null; this.src='images/poster.png';" 
+                                                                alt="Card image cap" />
+                                                                <div class="card-body px-0 py-0">
+                                                                    <h3 th:if="${cTV.mudemeter.criticMudemeter >= 80}" 
+                                                                    class="my-0 gold">M</h3>
+                                                                    <h3 th:if="${cTV.mudemeter.criticMudemeter >= 70 
+                                                                    and cTV.mudemeter.criticMudemeter < 80}" 
+                                                                    class="my-0 gold">M</h3>
+                                                                    <h3 th:if="${cTV.mudemeter.criticMudemeter >= 60 
+                                                                    and cTV.mudemeter.criticMudemeter < 70}" 
+                                                                    class="my-0 silver">M</h3>
+                                                                    <h3 th:if="${cTV.mudemeter.criticMudemeter >= 50 
+                                                                    and cTV.mudemeter.criticMudemeter < 60}" 
+                                                                    class="my-0 bronze">M</h3>
+                                                                    <h3 th:if="${cTV.mudemeter.criticMudemeter} > 0 
+                                                                    and ${cTV.mudemeter.criticMudemeter} < 50" 
+                                                                    class="col-2 mx-0 my-0 px-0 py-0 black">M</h3>
+                                                                    <h3 class="col-2 mx-0 my-0 px-0 py-0" 
+                                                                    th:if="${cTV.mudemeter.criticMudemeter == 0}" 
+                                                                    style="color:white; font-family: 'Roboto', sans-serif;">
+                                                                        —
+                                                                    </h3>
+                                                                    <h6 th:text="${cTV.mediaName}" class="mx-0 my-0">
+                                                                        Black Panther
+                                                                    </h6>
+                                                                </div>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                </li>
+                                            </th:block>
+                                            <li th:if="${certified == null or certified.isEmpty()}" class="px-0 py-0">
+                                                <div class="text-center mt-2">
+                                                    <a th:href="@{/season(mediaID=2019)}" style="text-decoration: none;">
+                                                        <div class="card hover-blue">
+                                                            <img class="card-img-top" src="images/poster.png" 
+                                                            alt="G-TV-Image" />
+                                                            <div class="card-body px-0 py-0">
+                                                                <h3 class="my-0 gold">M</h3>
+                                                                <h6 class="mx-0 my-0">Black Panther</h6>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item mx-0 mt-5 mb-0 px-0 pb-5 d-none d-md-block">
+                        <a class="nav-link" href="#" th:href="@{/critics}">MUDE CRITICS</a>
+                    </li>
+                    <li class="nav-item mx-0 mr-0 mt-5 mb-0 px-0 pb-5 d-none d-md-block">
+                        <a class="nav-link" href="#" th:href="@{/about}">About</a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="collapse bg-black text-center" id="navbarSupportedContent">
+                <div class="row mx-0 my-0 px-0 py-0 signUp-label">
+                    <a class="nav-link" href="#" data-toggle="modal" data-target="#signUpModalCenter">
+                        Sign Up
+                    </a>
+                </div>
+                <div class="row mx-0 my-0 px-0 py-0 signIn-label">
+                    <a class="nav-link" href="#" data-toggle="modal" data-target="#logInModalCenter">
+                        Log In
+                    </a>
+                </div>
+                <div class="row mx-0 my-0 px-0 py-0">
+                    <a class="nav-link" href="#" data-toggle="modal" data-target="#meterModalCenter">
+                        What's the MudeMeter®?
+                    </a>
+                </div>
+                <div class="row mx-0 my-0 px-0 py-0">
+                    <a class="nav-link" href="#" th:href="@{/browse}">Movies</a>
+                </div>
+                <div class="row mx-0 my-0 px-0 py-0">
+                    <a class="nav-link" href="#" th:href="@{/tv}">TV</a>
+                </div>
+                <div class="row mx-0 my-0 px-0 py-0">
+                    <a class="nav-link" href="#" th:href="@{/critics}">Mude Critics</a>
+                </div>
+                <div class="row mx-0 my-0 px-0 py-0">
+                    <a class="nav-link" href="#" th:href="@{/about}">About</a>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid mx-0 px-0 my-0 py-0">
+            <nav class="navbar navbar-expand bg-black mx-0 my-0 px-2 py-0 d-none d-md-block">
+                <ul class="navbar-nav mx-0 my-0 py-0">
+                    <li class="nav-item my-0 py-0 upper">
+                        <a class="nav-link my-0 py-0">
+                            <p class="mx-0 my-0 py-0 text-danger text-uppercase">Mude's Hot Trends</p>
+                        </a>
+                    </li>
+                    <li class="nav-item my-0 py-0 upper">
+                        <a class="nav-link my-0 py-0" th:href="@{/movie(mediaID=2798)}">
+                            <p class="my-0 py-0 text-white trending">Black Panther</p>
+                        </a>
+                    </li>
+                    <li class="nav-item my-0 py-0 upper text-dark">
+                        <a class="nav-link my-0 py-0" th:href="@{/movie(mediaID=2914)}">
+                            <p class="my-0 py-0 text-white trending">Avengers: Infinity War</p>
+                        </a>
+                    </li>
+                    <li class="nav-item my-0 py-0 upper">
+                        <a class="nav-link my-0 py-0" th:href="@{/tvseries(mediaID=11257)}">
+                            <p class="my-0 py-0 text-white trending">Game of Thrones</p>
+                        </a>
+                    </li>
+                    <li class="nav-item my-0 py-0 upper">
+                        <a class="nav-link my-0 py-0" th:href="@{/movie(mediaID=2920)}">
+                            <p class="my-0 py-0 text-white trending">DeadPool 2</p>
+                        </a>
+                    </li>
+                    <li class="nav-item ml-auto my-0 py-0 upper">
+                        <a href="https://facebook.com" class="hover-blue ml-0 mr-2 my-0 px-0 py-0">
+                            <i class="fab fa-facebook-square fa-lg ml-0 mr-2"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item my-0 py-0 upper">
+                        <a href="https://www.instagram.com/itsmemude/" class="hover-blue mx-2 my-0 px-0 py-0">
+                            <i class="fab fa-instagram fa-lg ml-2 mr-2"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item my-0 py-0 upper">
+                        <a href="https://twitter.com/Mude19579494" class="hover-blue mx-2 my-0 px-0 py-0">
+                            <i class="fab fa-twitter fa-lg ml-2 mr-2"></i>
+                        </a>
+                    </li>  
+                    <li class="nav-item my-0 py-0 upper">
+                        <a href="https://www.pinterest.co.kr/mude0322/" class="hover-blue mx-2 my-0 px-0 py-0">
+                            <i class="fab fa-pinterest fa-lg ml-2 mr-2"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </section>
+    
+    <section id="modal-section" class="d-none" th:fragment="header-modal">
+        <!-- MudeMeter Modal -->
+        <div class="modal fade" id="meterModalCenter" tabindex="-1" role="dialog" 
+        aria-labelledby="meterModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="dialog">
+                <div class="modal-content" style="background-color: rgba(0,0,0,0.5) !important;">
+                    <div class="modal-header border-0">
+                        <h5 class="modal-title" id="meterModalLongTitle">What is the MudeMeter®?</h5>
+                        <a href="#" class="hover-dark my-0 py-0 mx-0 my-auto" data-dismiss="modal" aria-label="Close">
+                            <p class="mx-0 my-0 px-0 py-0 text-danger-light">Close</p>
+                        </a>
+                    </div>
+                    <div class="modal-body border-0 text-center">
+                        The MudeMeter Score – based on the published opinions of hundreds of film and television critics – is 
+                        a trusted measurement of movie and TV programming quality for millions of moviegoers. It represents the 
+                        percentage of professional critic reviews that are positive for a given film or television show. We share 
+                        same the Medal System for both critics and users. However the scale & the icon are different, 
+                        <b class="text-primary">M</b> for <b class="text-primary">crtics</b> and 
+                        <b class="text-danger-light">m</b> for <b class="text-danger-light">users</b>.
+                    </div>
+                    <div class="modal-body text-center border-0">
+                        <div class="mx-0 my-0 px-2 py-2">
+                            <div class="col-12 mx-0 my-0 px-0 py-0">
+                                <b class="text-danger-light d-sm-block d-none">GUARANTEED MUDE</b>
+                                <div class="row mx-0 mt-2 mb-0 px-0 py-0">
+                                    <h1 class="ml-auto neon">
+                                        M
+                                    </h1>
+                                    <h1 class="mr-auto neon" style="font-family: 'Blogger Sans Bold';">
+                                        m
+                                    </h1>
+                                </div>
+                                <p class="my-0 py-0">The MudeMeter is</p>
+                                <p>80% or higher.</p>
+                            </div>
+                        </div>
+                        <div class="row px-2 py-2">
+                            <div class="col-4 text-center">
+                                <b class="text-danger-light d-sm-block d-none">SILVER MUDE</b>
+                                <div class="row mx-0 mt-2 mb-0 px-0 py-0">
+                                    <h1 class="ml-auto silver">
+                                        M
+                                    </h1>
+                                    <h1 class="mr-auto silver" style="font-family: 'Blogger Sans Bold';">
+                                        m
+                                    </h1>
+                                </div>
+                                <p class="my-0 py-0">The MudeMeter is</p>
+                                <p>60% ~ 70%.</p>
+                            </div>
+                            <div class="col-4 text-center">
+                                <b class="text-danger-light d-sm-block d-none">GOLD MUDE</b>
+                                <div class="row mx-0 mt-2 mb-0 px-0 py-0">
+                                    <h1 class="ml-auto gold">
+                                        M
+                                    </h1>
+                                    <h1 class="mr-auto gold" style="font-family: 'Blogger Sans Bold';">
+                                        m
+                                    </h1>
+                                </div>
+                                <p class="my-0 py-0">The MudeMeter is</p>
+                                <p>70% or higher.</p>
+                            </div>
+                            <div class="col-4 text-center">
+                                <b class="text-danger-light d-sm-block d-none">BRONZE MUDE</b>
+                                <div class="row mx-0 mt-2 mb-0 px-0 py-0">
+                                    <h1 class="ml-auto bronze">
+                                        M
+                                    </h1>
+                                    <h1 class="mr-auto bronze" style="font-family: 'Blogger Sans Bold';">
+                                        m
+                                    </h1>
+                                </div>
+                                <p class="my-0 py-0">The MudeMeter is</p>
+                                <p> 50% ~ 60%.</p>
+                            </div>
+                        </div>
+                        <div class="row px-0 py-0">
+                            <div class="col-6 text-center">
+                                <b class="text-danger-light d-sm-block d-none">BURNT MUDE</b>
+                                <div class="row mx-0 mt-2 mb-0 px-0 py-0">
+                                    <h1 class="ml-auto black">
+                                        M
+                                    </h1>
+                                    <h1 class="mr-auto black" style="font-family: 'Blogger Sans Bold';">
+                                        m
+                                    </h1>
+                                </div>
+                                <p class="my-0 py-0">The MudeMeter is</p>
+                                <p>under 50%.</p>
+                            </div>
+                            <div class="col-6 text-center">
+                                <b class="text-danger-light d-sm-block d-none text-uppercase">Not Applicable</b>
+                                <h3 class="mt-2">
+                                    <h3 class="my-0 py-0" style="text-indent: 0.2em; color:white; 
+                                    font-family: 'Roboto', sans-serif;">
+                                        —
+                                    </h3>
+                                     &nbsp;
+                                </h3>
+                                <p class="my-0 py-0">The MudeMeter is</p>
+                                <p>not yet evaluated.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0">
+                        <div class="col text-right px-0">
+                            <a href="/about" class="hover-blue mr-auto">Learn More ></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Log In Modal -->
+        <div class="modal fade" id="logInModalCenter" tabindex="-1" role="dialog" aria-labelledby="logInModalCenterTitle" 
+        aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="dialog">
+                <div class="modal-content" style="background-color: rgba(0,0,0,0.5) !important;">
+                    <div class="modal-header border-0">
+                        <h5 class="modal-title" id="logInModalLongTitle">Log In</h5>
+                        <a href="#" class="hover-dark my-0 py-0 mx-0 my-auto" data-dismiss="modal" aria-label="Close">
+                            <p class="mx-0 my-0 px-0 py-0 text-danger-light">Close</p>
+                        </a>
+                    </div>
+                    <div class="modal-body text-uppercase border-0">
+                        <form class="needs-validation" novalidate>
+                            <div class="form-group">
+                                <label for="logInEmail">Email address</label>
+                                <input type="email" class="form-control" id="logInEmail" aria-describedby="emailHelp" 
+                                placeholder="Enter Email" required>
+                                <small id="emailHelp" class="form-text text-muted d-none">
+                                    We'll never share your email with anyone else.
+                                </small>
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
+                                <div class="invalid-feedback">
+                                    Please type your email address.
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="logInPassword">Password</label>
+                                <input type="password" class="form-control" id="logInPassword" placeholder="Password" required>
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
+                                <div class="invalid-feedback">
+                                    Please type your password.
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <a class="btn btn-outline-light" href="#" data-dismiss="modal" 
+                                id="logInButton" onclick="login()">
+                                    Log In
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer border-0">
+                        <div class="container">
+                            <div class="row my-0 py-0">
+                                <a href="#" data-dismiss="modal" data-toggle="modal" 
+                                data-target="#forgotModalCenter" class="mx-0 text-danger-light hover-dark">
+                                    <b>Forgot password?</b>
+                                </a>
+                                <a href="#" data-dismiss="modal" data-toggle="modal" 
+                                data-target="#reSendModalCenter" class="ml-auto text-white hover-dark">
+                                    <b>Resend Verification Email</b>
+                                </a>
+                            </div>
+                            <div class="row my-0 py-0">
+                                <a class="mr-auto d-xl-none d-block">Don't have account?</a>
+                                <a href="#" class="text-danger-light hover-dark d-xl-none d-block" 
+                                data-dismiss="modal" data-toggle="modal" data-target="#signUpModalCenter">
+                                    <b>Sign Up Here</b>
+                                </a>
+                            </div>
+                            <div class="row my-0 py-0">
+                                <a class="mr-auto d-none d-xl-block">Don't have account?</a>
+                                <a href="#" class="text-danger-light hover-dark d-none d-xl-block" 
+                                data-dismiss="modal" data-toggle="modal" data-target="#signUpModalCenter">
+                                    <b>Sign Up Here</b>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Sign Up Modal -->
+        <div class="modal fade" id="signUpModalCenter" tabindex="-1" role="dialog" 
+        aria-labelledby="signUpModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="dialog">
+                <div class="modal-content" 
+                style="background-color: rgba(0,0,0,0.5) !important;">
+                    <div class="modal-header border-0">
+                        <h5 class="modal-title" id="signUpModalLongTitle">Sign Up</h5>
+                        <a href="#" class="hover-dark my-0 py-0 mx-0 my-auto" 
+                        data-dismiss="modal" aria-label="Close">
+                            <p class="mx-0 my-0 px-0 py-0 text-danger-light">Close</p>
+                        </a>
+                    </div>
+                    <div class="modal-body text-uppercase border-0">
+                        <form class="needs-validation" novalidate>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="signUpFirst">First Name</label>
+                                    <input type="input" class="form-control" id="signUpFirst" 
+                                    placeholder="First Name" required>
+                                    <div class="valid-feedback">
+                                        Looks good!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Please type your first name.
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="signUpLast">Last Name</label>
+                                    <input type="input" class="form-control" id="signUpLast" 
+                                    placeholder="Last Name" required>
+                                    <div class="valid-feedback">
+                                        Looks good!
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        Please type your last name.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="signUpEmail">Email address</label>
+                                <input type="email" class="form-control" id="signUpEmail" 
+                                aria-describedby="emailHelp2" 
+                                placeholder="Enter email" required>
+                                <small id="emailHelp2" class="form-text text-muted">
+                                    We'll never share your email with anyone else.
+                                </small>
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
+                                <div class="invalid-feedback">
+                                    Please type your email address.
+                                </div>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="signUpPassword">Password</label>
+                                <input type="password" class="form-control" id="signUpPassword" 
+                                placeholder="Password" required>
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
+                                <div class="invalid-feedback">
+                                    Please type your password.
+                                </div>
+                            </div>
+                            <div class="text-center mt-3">
+                                <p class="text-white">
+                                    By clicking "Sign up", I agree to the
+                                    <a href="#" th:href="@{/about(tab=2)}" class="text-danger-light hover-dark">
+                                        Terms of Service
+                                    </a> and
+                                    <a href="#" th:href="@{/about(tab=2)}" class="text-danger-light hover-dark">
+                                        Privacy Policy
+                                    </a>.
+                                </p>
+                            </div>
+                            <div class="text-center">
+                                <a class="btn btn-outline-light" href="#" onclick="signup()" data-dismiss="modal" 
+                                id="signUpButton">Sign Up</a>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer border-0">
+                        <a class="ml-auto">Already have account?</a>
+                        <a href="#" class="mr-auto text-danger-light hover-dark" data-dismiss="modal" 
+                        data-toggle="modal" data-target="#logInModalCenter">
+                            <b>Log In here</b>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Forgot Modal -->
+        <div class="modal fade" id="forgotModalCenter" tabindex="-1" role="dialog" aria-labelledby="forgotModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm" role="dialog">
+                <div class="modal-content" style="background-color: rgba(0,0,0,0.5) !important;">
+                    <div class="modal-header border-0">
+                        <h5 class="modal-title" id="forgotLongTitle">Forgot Password?</h5>
+                        <a href="#" class="hover-dark my-0 py-0 mx-0 my-auto" data-dismiss="modal" aria-label="Close">
+                            <p class="mx-0 my-0 px-0 py-0 text-danger-light">Close</p>
+                        </a>
+                    </div>
+                    <div class="modal-body text-uppercase border-0">
+                        <form class="needs-validation" novalidate>
+                            <div class="form-group">
+                                <label for="forgotEmail">Email address</label>
+                                <input type="email" class="form-control" id="forgotEmail" aria-describedby="emailHelp2" placeholder="Enter email" required>
+                                <small id="emailHelp2" class="form-text text-muted">
+                                    Provide the email you used for signing up.
+                                </small>
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
+                                <div class="invalid-feedback">
+                                    Please type your email address.
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <a class="btn btn-outline-light" href="#" onclick="forgot()" data-dismiss="modal" id="forgotButton">Send</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resend Modal -->
+        <div class="modal fade" id="reSendModalCenter" tabindex="-1" role="dialog" aria-labelledby="reSendModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm" role="dialog">
+                <div class="modal-content" style="background-color: rgba(0,0,0,0.5) !important;">
+                    <div class="modal-header border-0">
+                        <h5 class="modal-title" id="reSendLongTitle">Resend Verification</h5>
+                        <a href="#" class="hover-dark my-0 py-0 mx-0 my-auto" data-dismiss="modal" aria-label="Close">
+                            <p class="mx-0 my-0 px-0 py-0 text-danger-light">Close</p>
+                        </a>
+                    </div>
+                    <div class="modal-body text-uppercase border-0">
+                        <form class="needs-validation" novalidate>
+                            <div class="form-group">
+                                <label for="reSendEmail">Email address</label>
+                                <input type="email" class="form-control" id="reSendEmail" aria-describedby="emailHelp2" placeholder="Enter email" required>
+                                <small id="emailHelp2" class="form-text text-muted">
+                                    Provide the email you used for signing up.
+                                </small>
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
+                                <div class="invalid-feedback">
+                                    Please type your email address.
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <a class="btn btn-outline-light" href="#" onclick="reSend()" data-dismiss="modal" id="reSendButton">Send</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Success Modal -->
+        <div class="modal fade" id="successModalCenter" tabindex="-1" role="dialog" 
+        aria-labelledby="successModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="dialog">
+                <div class="modal-content" style="background-color: rgba(0,0,0,0.8) !important;">
+                    <div class="modal-header border-0">
+                        <a href="#" class="hover-dark my-0 py-0 ml-auto mr-0 my-auto" data-dismiss="modal" aria-label="Close">
+                            <p class="mx-0 my-0 px-0 py-0 text-danger-light">Close</p>
+                        </a>
+                    </div>
+                    <div class="modal-body text-uppercase border-0">
+                        <div class="mx-0 my-0 px-0 py-2 text-center">
+                            <i class="far fa-check-circle fa-10x text-success"></i>
+                        </div>
+                        <div class="mx-0 my-0 px-0 py-2 text-center">
+                            <h5>Successful!</h5>
+                        </div>
+                        <div class="mx-0 my-0 px-0 py-0 text-center">
+                            <span class="text-muted">You're ready to enjoy Mude®.</span>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0">
+                        <div class="container">
+                            <div class="row">
+                                <a href="#" class="btn btn-outline-light btn-lg mx-auto" data-dismiss="modal">
+                                    <b>OK</b>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fail Modal -->
+        <div class="modal fade" id="failModalCenter" tabindex="-1" role="dialog" 
+        aria-labelledby="failModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="dialog">
+                <div class="modal-content" style="background-color: rgba(0,0,0,0.8) !important;">
+                    <div class="modal-header border-0">
+                        <a href="#" class="hover-dark my-0 py-0 ml-auto mr-0 my-auto" data-dismiss="modal" aria-label="Close">
+                            <p class="mx-0 my-0 px-0 py-0 text-danger-light">Close</p>
+                        </a>
+                    </div>
+                    <div class="modal-body text-uppercase border-0">
+                        <div class="mx-0 my-0 px-0 py-2 text-center">
+                            <i class="far fa-times-circle fa-10x text-danger-light"></i>
+                        </div>
+                        <div class="mx-0 my-0 px-0 py-2 text-center">
+                            <h5>Failed...</h5>
+                        </div>
+                        <div class="mx-0 my-0 px-0 py-0 text-center">
+                            <span class="text-muted">Change things up and try submitting again.</span>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0">
+                        <div class="container">
+                            <div class="row">
+                                <a href="#" class="btn btn-outline-light btn-lg mx-auto" data-dismiss="modal">
+                                    <b>OK</b>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cover Modal -->
+        <div class="modal" style="background-color:transparent;" id="cover-modal">
+            <div class="container-fluid mx-0 my-0 px-0 py-0">
+                <div class="mx-0 my-0 px-0 py-0" style="height: 100vh;"></div>
+            </div>
+        </div>
+    </section>
+
+    <section th:fragment="video-modal">
+        <!-- Video Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <button type="button" class="close text-right ml-auto" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <div class="modal-body">
+                        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <!-- 16:9 aspect ratio -->
+                                    <div class="embed-responsive embed-responsive-16by9">
+                                        <iframe class="embed-responsive-item video" src="" frameborder="0" seamless="seamless" allowFullScreen></iframe>
+                                    </div>
+                                </div>
+                            </div>
+                            <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev" style="margin-top:20% !important; height: 25% !important; cursor: pointer;">
+                                <span class="carousel-control-prev-icon" aria-hidden="true" style="position: absolute !important; margin-left: -150% !important; width:25% !important; height:50% !important;"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next" style="margin-top:20% !important; height: 25% !important; cursor: pointer;">
+                                <span class="carousel-control-next-icon" aria-hidden="true" style="position: absolute !important; margin-left: 150% !important; width:25% !important; height:50% !important;"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="load-page-box" th:fragment="loader">
+        <div class="modal" style="background-color:black;" id="load-page">
+            <div class="container-fluid mx-0 my-0 px-0 py-0" id="load-page-text">
+                <div class="row mx-0 my-0 px-0 py-0" style="height: 100vh;">
+                    <div class="mx-auto my-auto">
+                        <img src="images/logo.png" style="margin-left: 15%; width: 70%;" alt="Logo-Image" />
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid mx-0 my-0 px-0 py-0" id="load-page-bounce">
+                <div class="row mx-0 my-0 px-0 py-0" style="height: 100vh; display:none;">
+                    <div class="mx-auto my-auto spinner">
+                        <div class="bounce1"></div>
+                        <div class="bounce2"></div>
+                        <div class="bounce3"></div>
+                        <div class="bounce4"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="d-none">
+        <div class="container-fluid px-0 py-0 mt-md-0 mt-sm-5 mt-5 bg-dark">
+            <div class="mx-0 my-0 px-0 pt-4 pb-0 bg-dark">
+                <div class="row mx-0 my-0 px-0 py-0 bg-danger header-label">
+                    <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:2%;"></div>
+                    <h4 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark">
+                        Coming Soon to theaters
+                        <i class="fas fa-question-circle question-icon d-none d-md-inline-block" 
+                        data-toggle="tooltip" data-placement="right" title="Movies and 
+                        TV shows are Certified Picks with a steady MudeMeter of 75% or higher from Top Critics."></i>
+                    </h4>
+                </div>
+            </div>
+            <div th:if="${comingSoon != null}" class="main owl-carousel owl-theme mx-0 mt-3 mb-0 px-0 pt-3 pb-0 bg-black"
+            style="z-index:0;">
+                <th:block th:if="${comingSoon != null}" th:each="cs, csStat : ${comingSoon}"
+                th:unless="${csStat.index > 2}">
+                    <div class="item">
+                        <a class="mx-0 my-0 px-0 py-0 hover-blue" href="#" th:href="@{/movie(mediaID=${cs.id})}">
+                            <div class="card px-0 py-0 mx-0 my-0">
+                                <img class="card-img-top rounded-0" src="images/poster.png"
+                                th:src="@{${T(us.mude.common.GlobalProps).FS_URI + '/' + cs.resourcePath + '/' + T(us.mude.common.GlobalProps).POSTER}}"
+                                style="width:300px;" onerror="this.onerror=null; this.src='images/poster.png';" alt="Card image cap" />
+                                <div class="card-img-overlay mt-1">
+                                    <h5 class="card-title mt-5 py-0" th:text="${cs.mediaName}">Black Panther</h5>
+                                    <div class="row mx-0 my-0 px-0 py-0">
+                                        <p class="card-text text-uppercase ml-0 mr-1 my-0 py-0 text-white">
+                                            Runtime:
+                                        </p>
+                                        <p th:if="${cs.runtime == 0}" class="card-text text-uppercase ml-1 mr-0 my-0 py-0 text-white">
+                                            NA
+                                        </p>
+                                        <p th:if="${cs.runtime != 0}" th:text="${#strings.toString(cs.runtime) + ' ' + 'MIN'}"
+                                        class="card-text text-uppercase ml-1 mr-0 my-0 py-0 text-white">
+                                            3 HR 5 MIN
+                                        </p>
+                                    </div>
+                                    <div class="row mx-0 my-0 px-0 py-0">
+                                        <p class="card-text text-uppercase ml-0 mr-1 my-0 py-0 text-white">
+                                            Rating:
+                                        </p>
+                                        <p th:text="${cs.filmRating}" class="card-text text-uppercase
+                                        ml-1 mr-0 my-0 py-0 text-white">
+                                            PG13
+                                        </p>
+                                    </div>
+                                    <div class="row mx-0 my-0 px-0 py-0">
+                                        <p class="card-text text-uppercase ml-0 mr-1 my-0 py-0 text-white">
+                                            Releases:
+                                        </p>
+                                        <p class="card-text ml-1 mr-0 my-0 py-0 text-white">
+                                            [[${cs.parseDate(cs.releaseDate.theatre)}]]
+                                        </p>
+                                    </div>
+                                    <p th:text="${cs.desc}" class="card-text py-0 mt-2 text-white description">
+                                        After the death of his father, T'Challa returns home to the African nation of Wakanda 
+                                        to take his rightful place as king.
+                                    </p>
+                                    <p class="card-text py-0 mt-4">
+                                        <h6>
+                                            <span th:unless="${cs.releaseDate.comingSoon}" class="badge badge-danger badge-pill px-3 py-3">
+                                                In Theaters
+                                            </span>
+                                            <span th:if="${cs.releaseDate.comingSoon}" class="badge badge-danger badge-pill px-3 py-3">
+                                                Coming Soon
+                                            </span>
+                                        </h6>
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </th:block>
+                <div class="item">
+                    <div class="card px-0 py-5 mx-0 my-0 text-center" style="width:300px;">
+                        <h5>Not Finding what you're looking for?</h5>
+                        <div class="mx-0 my-0 px-0 py-0">
+                            <a href="#" th:href="@{/browse(tab=2)}" 
+                            class="btn btn-outline-light rounded mx-auto mt-5 mb-0 px-5 text-uppercase" 
+                            id="guaranteedButton">View All Upcomings</a>
+                        </div>
+                    </div>
+                </div>
+                <th:block th:if="${comingSoon != null}" th:each="cs, csStat : ${comingSoon}"
+                th:unless="${csStat.index > 6}">
+                    <div th:if="${csStat.index > 2}" class="item">
+                        <a class="mx-0 my-0 px-0 py-0 hover-blue" href="#" th:href="@{/movie(mediaID=${cs.id})}">
+                            <div class="card px-0 py-0 mx-0 my-0">
+                                <img class="card-img-top rounded-0" src="images/poster.png"
+                                th:src="@{${T(us.mude.common.GlobalProps).FS_URI + '/' + cs.resourcePath + '/' + T(us.mude.common.GlobalProps).POSTER}}" 
+                                style="width:300px;" onerror="this.onerror=null; this.src='images/poster.png';" alt="Card image cap" />
+                                <div class="card-img-overlay mt-1">
+                                    <h5 class="card-title mt-5 py-0" th:text="${cs.mediaName}">Black Panther</h5>
+                                    <div class="row mx-0 my-0 px-0 py-0">
+                                        <p class="card-text text-uppercase ml-0 mr-1 my-0 py-0 text-white">
+                                            Runtime:
+                                        </p>
+                                        <p th:if="${cs.runtime == 0}" class="card-text text-uppercase ml-1 mr-0 my-0 py-0 text-white">
+                                            NA
+                                        </p>
+                                        <p th:if="${cs.runtime != 0}" th:text="${#strings.toString(cs.runtime) + ' ' + 'MIN'}" 
+                                        class="card-text text-uppercase ml-1 mr-0 my-0 py-0 text-white">
+                                            3 HR 5 MIN
+                                        </p>
+                                    </div>
+                                    <div class="row mx-0 my-0 px-0 py-0">
+                                        <p class="card-text text-uppercase ml-0 mr-1 my-0 py-0 text-white">
+                                            Rating:
+                                        </p>
+                                        <p th:text="${cs.filmRating}" class="card-text text-uppercase
+                                                                        ml-1 mr-0 my-0 py-0 text-white">
+                                            PG13
+                                        </p>
+                                    </div>
+                                    <div class="row mx-0 my-0 px-0 py-0">
+                                        <p class="card-text text-uppercase ml-0 mr-1 my-0 py-0 text-white">
+                                            Releases:
+                                        </p>
+                                        <p class="card-text ml-1 mr-0 my-0 py-0 text-white">
+                                            [[${cs.parseDate(cs.releaseDate.theatre)}]]
+                                        </p>
+                                    </div>
+                                    <p th:text="${cs.desc}" class="card-text py-0 mt-2 text-white description">
+                                        After the death of his father, 
+                                        T'Challa returns home to the African nation of Wakanda to 
+                                        take his rightful place as king.
+                                    </p>
+                                    <p class="card-text py-0 mt-4">
+                                        <h6>
+                                            <span th:unless="${cs.releaseDate.comingSoon}" class="badge badge-danger badge-pill px-3 py-3">
+                                                In Theaters
+                                            </span>
+                                            <span th:if="${cs.releaseDate.comingSoon}" class="badge badge-danger badge-pill px-3 py-3">
+                                                Coming Soon
+                                            </span>
+                                        </h6>
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </th:block>
+            </div>
+            <div th:if="${comingSoon == null}" class="main owl-carousel owl-theme mx-0 mt-3 mb-0 px-0 pt-3 pb-0 bg-black"
+            style="z-index:0;">
+                <div class="item">
+                    <a class="mx-0 my-0 px-0 py-0 hover-blue" th:href="@{/movie(mediaID=4996)}">
+                        <div class="card px-0 py-0 mx-0 my-0">
+                            <img class="card-img-top rounded-0" src="images/poster.png" alt="Card image cap" style="width:300px;">
+                            <div class="card-img-overlay mt-1">
+                                <h6 class="card-title mt-5 py-0">Avengers: Infinity War</h6>
+                                <div class="row mx-0 my-0 px-0 py-0">
+                                    <p class="card-text text-uppercase ml-0 mr-1 mt-1 py-0 text-white">
+                                        156 MIN
+                                    </p>
+                                    <p class="card-text text-uppercase mx-1 mt-1 py-0 text-muted">
+                                        |
+                                    </p>
+                                    <p class="card-text text-uppercase ml-1 mr-0 mt-1 py-0 text-white">
+                                        PG 13
+                                    </p>
+                                </div>
+                                <div class="row mx-0 my-0 px-0 py-0">
+                                    <p class="card-text ml-0 mr-1 mt-1 py-0 text-white">
+                                        Opening
+                                    </p>
+                                    <p class="card-text ml-1 mr-0 mt-1 py-0 text-white">
+                                        April 27
+                                    </p>
+                                </div>
+                                <p class="card-text py-0 text-white">
+                                    An unprecedented cinematic journey ten years in the making and 
+                                    spanning the entire Marvel Cinematic Universe, Marvel Studios'
+                                    "Avengers: Infinity War" brings to the screen the ultimate, deadliest 
+                                    showdown of all time.
+                                </p>
+                                <p class="card-text py-0 mt-4">
+                                    <h6>
+                                        <span class="badge badge-danger pl-2 pr-1 py-2">
+                                            Coming Soon
+                                        </span>
+                                    </h6>
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="item">
+                    <a class="mx-0 my-0 px-0 py-0 hover-blue" th:href="@{/movie(mediaID=4995)}">
+                        <div class="card px-0 py-0 mx-0 my-0">
+                            <img class="card-img-top rounded-0" src="images/poster.png" alt="Card image cap" style="width:300px;">
+                            <div class="card-img-overlay mt-1">
+                                <h6 class="card-title mt-5 py-0">DISOBEDIENCE</h6>
+                                <div class="row mx-0 my-0 px-0 py-0">
+                                    <p class="card-text text-uppercase ml-0 mr-1 mt-1 py-0 text-white">
+                                        114 MIN
+                                    </p>
+                                    <p class="card-text text-uppercase mx-1 mt-1 py-0 text-muted">
+                                        |
+                                    </p>
+                                    <p class="card-text text-uppercase ml-1 mr-0 mt-1 py-0 text-white">
+                                        R
+                                    </p>
+                                </div>
+                                <div class="row mx-0 my-0 px-0 py-0">
+                                    <p class="card-text ml-0 mr-1 mt-1 py-0 text-white">
+                                        Opening
+                                    </p>
+                                    <p class="card-text ml-1 mr-0 mt-1 py-0 text-white">
+                                        April 23
+                                    </p>
+                                </div>
+                                <p class="card-text py-0 text-white">
+                                    From Sebastián Lelio, the director of the Academy Award-winning A Fantastic Woman, 
+                                    the film follows a woman as she returns to the community that shunned her decades 
+                                    earlier for an attraction to a childhood friend.
+                                </p>
+                                <p class="card-text py-0 mt-4">
+                                    <h6>
+                                        <span class="badge badge-danger pl-2 pr-1 py-2">
+                                            Coming Soon
+                                        </span>
+                                    </h6>
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="item">
+                    <a class="mx-0 my-0 px-0 py-0 hover-blue" th:href="@{/movie(mediaID=4994)}">
+                        <div class="card px-0 py-0 mx-0 my-0">
+                            <img class="card-img-top rounded-0" src="images/poster.png" alt="Card image cap" style="width:300px;">
+                            <div class="card-img-overlay mt-1">
+                                <h6 class="card-title mt-5 py-0">LET THE SUNSHINE IN (UN BEAU SOLEIL INTÉRIEUR)</h6>
+                                <div class="row mx-0 my-0 px-0 py-0">
+                                    <p class="card-text text-uppercase ml-0 mr-1 mt-1 py-0 text-white">
+                                        96 MIN
+                                    </p>
+                                    <p class="card-text text-uppercase mx-1 mt-1 py-0 text-muted">
+                                        |
+                                    </p>
+                                    <p class="card-text text-uppercase ml-1 mr-0 mt-1 py-0 text-white">
+                                        NR
+                                    </p>
+                                </div>
+                                <div class="row mx-0 my-0 px-0 py-0">
+                                    <p class="card-text ml-0 mr-1 mt-1 py-0 text-white">
+                                        Released
+                                    </p>
+                                    <p class="card-text ml-1 mr-0 mt-1 py-0 text-white">
+                                        March 1
+                                    </p>
+                                </div>
+                                <p class="card-text py-0 text-white">
+                                    Juliette Binoche delivers a luminous performance in the deliciously witty, 
+                                    sensuously romantic new film from acclaimed director
+                                    Claire Denis (White Material). Isabelle (Binoche) is a divorced Parisian painter 
+                                    searching for another shot at love, but
+                                    refusing to settle for the parade of all-too-flawed men who drift in and out of her life.
+                                </p>
+                                <p class="card-text py-0 mt-4">
+                                    <h6>
+                                        <span class="badge badge-danger pl-2 pr-1 py-2">
+                                            Coming Soon
+                                        </span>
+                                    </h6>
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="item">
+                    <div class="card px-0 py-5 mx-0 my-0 text-center" style="width:300px;">
+                        <h5>Not Finding what you're looking for?</h5>
+                        <div class="mx-0 my-0 px-0 py-0">
+                            <a href="#" th:href="@{/browse(tab=2)}" 
+                            class="btn btn-outline-light rounded mx-auto mt-5 mb-0 px-5 text-uppercase" 
+                            id="guaranteedButton">View All Upcomings</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="item">
+                    <a class="mx-0 my-0 px-0 py-0 hover-blue" th:href="@{/movie(mediaID=3434)}">
+                        <div class="card px-0 py-0 mx-0 my-0">
+                            <img class="card-img-top  rounded-0" src="images/poster.png" alt="Card image cap" style="width:300px;">
+                            <div class="card-img-overlay mt-1">
+                                <h6 class="card-title mt-5 py-0">Black Panther</h6>
+                                <div class="row mx-0 my-0 px-0 py-0">
+                                    <p class="card-text text-uppercase ml-0 mr-1 mt-1 py-0 text-white">
+                                        185 MIN
+                                    </p>
+                                    <p class="card-text text-uppercase mx-1 mt-1 py-0 text-muted">
+                                        |
+                                    </p>
+                                    <p class="card-text text-uppercase ml-1 mr-0 mt-1 py-0 text-white">
+                                        PG 13
+                                    </p>
+                                </div>
+                                <div class="row mx-0 my-0 px-0 py-0">
+                                    <p class="card-text ml-0 mr-1 mt-1 py-0 text-white">
+                                        Released
+                                    </p>
+                                    <p class="card-text ml-1 mr-0 mt-1 py-0 text-white">
+                                        March 23
+                                    </p>
+                                </div>
+                                <p class="card-text py-0 text-white">
+                                    After the death of his father, T'Challa returns home to the 
+                                    African nation of Wakanda to take his rightful place as king.
+                                </p>
+                                <p class="card-text py-0 mt-4">
+                                    <h6>
+                                        <span class="badge badge-danger pl-2 pr-1 py-2">Coming Soon</span>
+                                    </h6>
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="item">
+                    <a class="mx-0 my-0 px-0 py-0 hover-blue" th:href="@{/movie(mediaID=2493)}">
+                        <div class="card px-0 py-0 mx-0 my-0">
+                            <img class="card-img-top rounded-0" src="images/poster.png" alt="Card image cap" style="width:300px;">
+                            <div class="card-img-overlay mt-1">
+                                <h6 class="card-title mt-5 py-0">THE HOUSE OF TOMORROW</h6>
+                                <div class="row mx-0 my-0 px-0 py-0">
+                                    <p class="card-text text-uppercase ml-0 mr-1 mt-1 py-0 text-white">
+                                        85 MIN
+                                    </p>
+                                    <p class="card-text text-uppercase mx-1 mt-1 py-0 text-muted">
+                                        |
+                                    </p>
+                                    <p class="card-text text-uppercase ml-1 mr-0 mt-1 py-0 text-white">
+                                        NR
+                                    </p>
+                                </div>
+                                <div class="row mx-0 my-0 px-0 py-0">
+                                    <p class="card-text ml-0 mr-1 mt-1 py-0 text-white">
+                                        Released
+                                    </p>
+                                    <p class="card-text ml-1 mr-0 mt-1 py-0 text-white">
+                                        March 2
+                                    </p>
+                                </div>
+                                <p class="card-text py-0 text-white">
+                                    16-year-old Sebastian Prendergast has spent most of his life with 
+                                    his Nana in their geodesic dome home tourist attraction
+                                    where she raises him on the futurist teachings of her former mentor 
+                                    Buckminster Fuller in hopes that one day Sebastian will
+                                    carry Fuller's torch and make the world a better place.
+                                </p>
+                                <p class="card-text py-0 mt-4">
+                                    <h6>
+                                        <span class="badge badge-danger pl-2 pr-1 py-2">
+                                            Coming Soon
+                                        </span>
+                                    </h6>
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+    </section>
+
+    <section class="d-none">
+        <div class="container-fluid mx-0 my-0 px-0 pt-4 pb-0 bg-dark">
+            <div class="mx-0 my-0 px-0 py-0 bg-dark">
+                <div class="row mx-0 my-0 px-0 py-0 bg-danger header-label">
+                    <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:2%;"></div>
+                    <h4 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark">
+                        Top Chart
+                    </h4>
+                </div>
+            </div>
+            <div class="row mt-5 ml-1 mr-1">
+                <div class="col-lg-4 col-md-6 mb-md-3 mb-sm-4 mb-4">
+                    <div class="row py-0">
+                        <h6 class="mx-auto">Top Movies</h6>
+                    </div>
+                    <div class="row pb-1">
+                        &nbsp;
+                    </div>
+                    <div th:if="${topMovie != null}" class="mx-3 px-0 py-0">
+                        <th:block th:if="${topMovie != null}" th:each="tMovie, tMovieStat : ${topMovie}" 
+                        th:unless="${tMovieStat.index > 5}">
+                            <a href="#" th:href="@{/movie(mediaID=${tMovie.id})}" style="text-decoration: none;">
+                                <div th:class="${tMovieStat.last} ? 'row my-0 pt-1 border-white hover-table' 
+                                : 'row my-0 pt-1 border-white hover-table border-bottom'"
+                                th:classappend="${tMovieStat.index == 0} ? 'border-top' : ''" 
+                                class="row my-0 pt-1 border-white hover-table border-bottom">
+                                    <div class="col-3 px-0 py-0 text-left">
+                                        <h3 th:if="${tMovie.mudemeter.criticMudemeter >= 80}" 
+                                        class="my-0 gold">M</h3>
+                                        <h3 th:if="${tMovie.mudemeter.criticMudemeter >= 70 
+                                        and tMovie.mudemeter.criticMudemeter < 80}" 
+                                        class="my-0 gold">M</h3>
+                                        <h3 th:if="${tMovie.mudemeter.criticMudemeter >= 60 
+                                        and tMovie.mudemeter.criticMudemeter < 70}" 
+                                        class="my-0 silver">M</h3>
+                                        <h3 th:if="${tMovie.mudemeter.criticMudemeter >= 50 
+                                        and tMovie.mudemeter.criticMudemeter < 60}" 
+                                        class="my-0 bronze">M</h3>
+                                        <h3 th:if="${tMovie.mudemeter.criticMudemeter} > 0 
+                                        and ${tMovie.mudemeter.criticMudemeter} < 50" 
+                                        class="col-2 mx-0 my-0 px-0 py-0 black">M</h3>
+                                        <h3 class="col-2 mx-0 my-0 px-0 py-0" 
+                                        th:if="${tMovie.mudemeter.criticMudemeter == 0}" 
+                                        style="color:white; font-family: 'Roboto', sans-serif;">
+                                            —
+                                        </h3>
+                                    </div>
+                                    <div th:text="${tMovie.mediaName}"class="col-6 px-0 py-0 text-center text-truncate">
+                                        Annihilation
+                                    </div>
+                                    <div class="col-3 px-0 py-0 text-right">
+                                         [[${tMovie.parseDate(tMovie.releaseDate.theatre)}]]
+                                    </div>
+                                </div>
+                            </a>
+                        </th:block>
+                    </div>
+                    <div th:if="${topMovie == null}" class="mx-3 px-0 py-0">
+                        <a th:href="@{/movie(mediaID=4083)}" style="text-decoration: none;">
+                            <div class="row my-0 pt-1 border-white border-bottom border-top hover-table">
+                                <div class="col-3 px-0 py-0 text-left">
+                                    <h3 class="my-0 neon">
+                                        M
+                                    </h3>
+                                </div>
+                                <div class="col-6 px-0 py-0 text-center">
+                                    Annihilation
+                                </div>
+                                <div class="col-3 px-0 py-0 text-right">
+                                    Feb 25
+                                </div>
+                            </div>
+                        </a>
+                        <a th:href="@{/movie(mediaID=4082)}" style="text-decoration: none;">
+                            <div class="row my-0 pt-1 border-white border-bottom hover-table">
+                                <div class="col-3 px-0 py-0 text-left">
+                                    <h3 class="my-0 neon">
+                                        M
+                                    </h3>
+                                </div>
+                                <div class="col-6 px-0 py-0 text-center">
+                                    Black Panther
+                                </div>
+                                <div class="col-3 px-0 py-0 text-right">
+                                    Feb 16
+                                </div>
+                            </div>
+                        </a>
+                        <a th:href="@{/movie(mediaID=4023)}" style="text-decoration: none;">
+                            <div class="row my-0 pt-1 border-white border-bottom hover-table">
+                                <div class="col-3 px-0 py-0 text-left">
+                                    <h3 class="my-0 gold">
+                                        M
+                                    </h3>
+                                </div>
+                                <div class="col-6 px-0 py-0 text-center">
+                                    Game Night
+                                </div>
+                                <div class="col-3 px-0 py-0 text-right">
+                                    Feb 23
+                                </div>
+                            </div>
+                        </a>
+                        <a th:href="@{/movie(mediaID=4090)}" style="text-decoration: none;">
+                            <div class="row my-0 pt-1 border-white border-bottom hover-table">
+                                <div class="col-3 px-0 py-0 text-left">
+                                    <h3 class="my-0 gold">
+                                        M
+                                    </h3>
+                                </div>
+                                <div class="col-6 px-0 py-0 text-center">
+                                    Every Day
+                                </div>
+                                <div class="col-3 px-0 py-0 text-right">
+                                    Feb 23
+                                </div>
+                            </div>
+                        </a>
+                        <a th:href="@{/movie(mediaID=4091)}" style="text-decoration: none;">
+                            <div class="row my-0 pt-1 hover-table">
+                                <div class="col-3 px-0 py-0 text-left">
+                                    <h3 class="my-0 gold">
+                                        M
+                                    </h3>
+                                </div>
+                                <div class="col-6 px-0 py-0 text-center text-truncate">
+                                    The Greatest Showman
+                                </div>
+                                <div class="col-3 px-0 py-0 text-right">
+                                    Jan 16
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col text-right px-0">
+                        <a href="#" th:href="@{/browse(tab=5)}" class="animated">
+                            <div class="infoText-container">
+                                View All
+                                <b class="infoText">></b>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-md-3 mb-sm-4 mb-4">
+                    <div class="row py-0">
+                        <h6 class="mx-auto">Top TV Shows</h6>
+                    </div>
+                    <div class="row pb-1">
+                        &nbsp;
+                    </div>
+                    <div th:if="${topTVSeason != null}" class="mx-3 px-0 py-0">
+                        <th:block th:if="${topTVSeason != null}" th:each="topTV, topTVStat : ${topTVSeason}" 
+                        th:unless="${topTVStat.index > 5}">
+                            <a href="#" th:href="@{/season(mediaID=${topTV.id})}" style="text-decoration: none;">
+                                <div th:class="${topTVStat.last} ? 'row my-0 pt-1 border-white hover-table' 
+                                : 'row my-0 pt-1 border-white hover-table border-bottom'"
+                                th:classappend="${topTVStat.index == 0} ? 'border-top' : ''" 
+                                class="row my-0 pt-1 border-white hover-table border-bottom">
+                                    <div class="col-3 px-0 py-0 text-left">
+                                        <h3 th:if="${topTV.mudemeter.criticMudemeter >= 80}" 
+                                        class="my-0 gold">M</h3>
+                                        <h3 th:if="${topTV.mudemeter.criticMudemeter >= 70 
+                                        and topTV.mudemeter.criticMudemeter < 80}" 
+                                        class="my-0 gold">M</h3>
+                                        <h3 th:if="${topTV.mudemeter.criticMudemeter >= 60 
+                                        and topTV.mudemeter.criticMudemeter < 70}" 
+                                        class="my-0 silver">M</h3>
+                                        <h3 th:if="${topTV.mudemeter.criticMudemeter >= 50 
+                                        and topTV.mudemeter.criticMudemeter < 60}" 
+                                        class="my-0 bronze">M</h3>
+                                        <h3 th:if="${topTV.mudemeter.criticMudemeter} > 0 
+                                        and ${topTV.mudemeter.criticMudemeter} < 50" 
+                                        class="col-2 mx-0 my-0 px-0 py-0 black">M</h3>
+                                        <h3 class="col-2 mx-0 my-0 px-0 py-0" 
+                                        th:if="${topTV.mudemeter.criticMudemeter == 0}" 
+                                        style="color:white; font-family: 'Roboto', sans-serif;">
+                                            —
+                                        </h3>
+                                    </div>
+                                    <div th:text="${topTV.mediaName}"class="col-6 px-0 py-0 text-center text-truncate">
+                                        Annihilation
+                                    </div>
+                                    <div class="col-3 px-0 py-0 text-right">
+                                         [[${topTV.parseDate(topTV.releaseDate.theatre)}]]
+                                    </div>
+                                </div>
+                            </a>
+                        </th:block>
+                    </div>
+                    <div th:if="${topTVSeason == null}" class="mx-3 px-0 py-0">
+                        <a th:href="@{/movie(mediaID=4092)}" style="text-decoration: none;">
+                            <div class="row my-0 pt-1 border-white border-bottom border-top hover-table">
+                                <div class="col-3 px-0 py-0 text-left">
+                                    <h3 class="my-0 gold">
+                                        M
+                                    </h3>
+                                </div>
+                                <div class="col-6 px-0 py-0 text-center">
+                                    Black Panther
+                                </div>
+                                <div class="col-3 px-0 py-0 text-right">
+                                    $201.8M
+                                </div>
+                            </div>
+                        </a>
+                        <a th:href="@{/movie(mediaID=4093)}" style="text-decoration: none;">
+                            <div class="row my-0 pt-1 border-white border-bottom hover-table">
+                                <div class="col-3 px-0 py-0 text-left">
+                                    <h3 class="my-0 silver">
+                                        M
+                                    </h3>
+                                </div>
+                                <div class="col-6 px-0 py-0 text-center">
+                                    Peter Rabbit
+                                </div>
+                                <div class="col-3 px-0 py-0 text-right">
+                                    $17.6M
+                                </div>
+                            </div>
+                        </a>
+                        <a th:href="@{/movie(mediaID=4094)}" style="text-decoration: none;">
+                            <div class="row my-0 pt-1 border-white border-bottom hover-table">
+                                <div class="col-3 px-0 py-0 text-left">
+                                    <h3 class="my-0 bronze">
+                                        M
+                                    </h3>
+                                </div>
+                                <div class="col-6 px-0 py-0 text-center">
+                                    Fifty Shades Freed
+                                </div>
+                                <div class="col-3 px-0 py-0 text-right">
+                                    $17.4M
+                                </div>
+                            </div>
+                        </a>
+                        <a th:href="@{/movie(mediaID=4095)}" style="text-decoration: none;">
+                            <div class="row my-0 pt-1 border-white border-bottom hover-table">
+                                <div class="col-3 px-0 py-0 text-left">
+                                    <h3 class="my-0 bronze">
+                                        M
+                                    </h3>
+                                </div>
+                                <div class="col-6 px-0 py-0 text-center text-truncate">
+                                    Jumanji: Welcome to the Jungle
+                                </div>
+                                <div class="col-3 px-0 py-0 text-right">
+                                    $8M
+                                </div>
+                            </div>
+                        </a>
+                        <a th:href="@{/movie(mediaID=4096)}" style="text-decoration: none;">
+                            <div class="row my-0 pt-1 hover-table">
+                                <div class="col-3 px-0 py-0 text-left">
+                                    <h3 class="my-0 black">
+                                        M
+                                    </h3>
+                                </div>
+                                <div class="col-6 px-0 py-0 text-center">
+                                    The 15:17 to Paris
+                                </div>
+                                <div class="col-3 px-0 py-0 text-right">
+                                    $7.7M
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col text-right px-0">
+                        <a href="#" th:href="@{/browse(tab=6)}"
+                        class="mr-auto hover-blue">View All ></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-md-3 mb-sm-4 mb-4">
+                    <div class="row py-0">
+                        <h6 class="mx-auto">Top Box Office</h6>
+                    </div>
+                    <div class="row pb-1">
+                        &nbsp;
+                    </div>
+                    <div th:if="${topBoxOffice != null}" class="mx-3 px-0 py-0">
+                        <th:block th:if="${topBoxOffice != null}" th:each="topBox, topBoxStat : ${topBoxOffice}" 
+                        th:unless="${topBoxStat.index > 5}">
+                            <a href="#" th:href="@{/movie(mediaID=${topBox.id})}" style="text-decoration: none;">
+                                <div th:class="${topBoxStat.last} ? 'row my-0 pt-1 border-white hover-table' 
+                                : 'row my-0 pt-1 border-white hover-table border-bottom'"
+                                th:classappend="${topBoxStat.index == 0} ? 'border-top' : ''" 
+                                class="row my-0 pt-1 border-white hover-table border-bottom">
+                                    <div class="col-3 px-0 py-0 text-left">
+                                        <h3 th:if="${topBox.mudemeter.criticMudemeter >= 80}" 
+                                        class="my-0 gold">M</h3>
+                                        <h3 th:if="${topBox.mudemeter.criticMudemeter >= 70 
+                                        and topBox.mudemeter.criticMudemeter < 80}" 
+                                        class="my-0 gold">M</h3>
+                                        <h3 th:if="${topBox.mudemeter.criticMudemeter >= 60 
+                                        and topBox.mudemeter.criticMudemeter < 70}" 
+                                        class="my-0 silver">M</h3>
+                                        <h3 th:if="${topBox.mudemeter.criticMudemeter >= 50 
+                                        and topBox.mudemeter.criticMudemeter < 60}" 
+                                        class="my-0 bronze">M</h3>
+                                        <h3 th:if="${topBox.mudemeter.criticMudemeter} > 0 
+                                        and ${topBox.mudemeter.criticMudemeter} < 50" 
+                                        class="col-2 mx-0 my-0 px-0 py-0 black">M</h3>
+                                        <h3 class="col-2 mx-0 my-0 px-0 py-0" 
+                                        th:if="${topBox.mudemeter.criticMudemeter == 0}" 
+                                        style="color:white; font-family: 'Roboto', sans-serif;">
+                                            —
+                                        </h3>
+                                    </div>
+                                    <div th:text="${topBox.mediaName}" class="col-6 px-0 py-0 text-center text-truncate">
+                                        Annihilation
+                                    </div>
+                                    <div class="col-3 px-0 py-0 text-right">
+                                         [[${topBox.parseDate(topBox.releaseDate.theatre)}]]
+                                    </div>
+                                </div>
+                            </a>
+                        </th:block>
+                    </div>
+                    <div th:if="${topBoxOffice == null}" class="mx-3 px-0 py-0">
+                        <a th:href="@{/movie(mediaID=4097)}" style="text-decoration: none;">
+                            <div class="row my-0 pt-1 border-white border-bottom border-top hover-table">
+                                <div class="col-3 px-0 py-0 text-left">
+                                    <h3 class="my-0 gold">
+                                        M
+                                    </h3>
+                                </div>
+                                <div class="col-6 px-0 py-0 text-center">
+                                    Death Wish
+                                </div>
+                                <div class="col-3 px-0 py-0 text-right">
+                                    Mar 2
+                                </div>
+                            </div>
+                        </a>
+                        <a th:href="@{/movie(mediaID=4098)}" style="text-decoration: none;">
+                            <div class="row my-0 pt-1 border-white border-bottom hover-table">
+                                <div class="col-3 px-0 py-0 text-left">
+                                    <h3 class="my-0 silver">
+                                        M
+                                    </h3>
+                                </div>
+                                <div class="col-6 px-0 py-0 text-center">
+                                    Thor: Ragnarok
+                                </div>
+                                <div class="col-3 px-0 py-0 text-right">
+                                    Mar 5
+                                </div>
+                            </div>
+                        </a>
+                        <a th:href="@{/movie(mediaID=4099)}" style="text-decoration: none;">
+                            <div class="row my-0 pt-1 border-white border-bottom hover-table">
+                                <div class="col-3 px-0 py-0 text-left">
+                                    <h3 class="my-0 bronze">
+                                        M
+                                    </h3>
+                                </div>
+                                <div class="col-6 px-0 py-0 text-center">
+                                    Divorce
+                                </div>
+                                <div class="col-3 px-0 py-0 text-right">
+                                    Mar 3
+                                </div>
+                            </div>
+                        </a>
+                        <a th:href="@{/movie(mediaID=5000)}" style="text-decoration: none;">
+                            <div class="row my-0 pt-1 border-white border-bottom hover-table">
+                                <div class="col-3 px-0 py-0 text-left">
+                                    <h3 class="my-0 bronze">
+                                        M
+                                    </h3>
+                                </div>
+                                <div class="col-6 px-0 py-0 text-center">
+                                    Black Panther
+                                </div>
+                                <div class="col-3 px-0 py-0 text-right">
+                                    Feb 16
+                                </div>
+                            </div>
+                        </a>
+                        <a th:href="@{/movie(mediaID=5001)}" style="text-decoration: none;">
+                            <div class="row my-0 pt-1 hover-table">
+                                <div class="col-3 px-0 py-0 text-left">
+                                    <h3 class="my-0 gold">
+                                        M
+                                    </h3>
+                                </div>
+                                <div class="col-6 px-0 py-0 text-center">
+                                    Victoria
+                                </div>
+                                <div class="col-3 px-0 py-0 text-right">
+                                    Mar 2
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col text-right px-0">
+                        <a href="#" th:href="@{/browse(tab=1)}"
+                        class="mr-auto hover-blue">View All ></a>
+                    </div>
+                </div>
+                <!-- Visible Only On MD -->
+                <div class="col-lg-4 col-md-6 mb-md-3 d-none d-md-block d-lg-none">
+                    <div class="row pt-0 pb-1">
+                        <h6 class="mx-auto">Most Popular TV on Mude</h6>
+                    </div>
+                    <div class="row pb-1">
+                        &nbsp;
+                    </div>
+                    <div th:if="${popularTV != null}" class="mx-3 px-0 py-0">
+                        <th:block th:if="${popularTV != null}" th:each="popTV, popTVStat : ${popularTV}" 
+                        th:unless="${popTVStat.index > 5}">
+                            <a href="#" th:href="@{/season(mediaID=${popTV.id})}" 
+                            style="text-decoration: none;">
+                                <div th:class="${popTVStat.last} ? 
+                                'row my-0 pt-1 border-white hover-table' 
+                                : 'row my-0 pt-1 border-white hover-table border-bottom'"
+                                th:classappend="${popTVStat.index == 0} ? 'border-top' : ''" 
+                                class="row my-0 pt-1 border-white hover-table border-bottom">
+                                    <div class="col-3 px-0 py-0 text-left">
+                                        <h3 th:if="${popTV.mudemeter.criticMudemeter >= 80}" 
+                                        class="my-0 gold">M</h3>
+                                        <h3 th:if="${popTV.mudemeter.criticMudemeter >= 70 
+                                        and popTV.mudemeter.criticMudemeter < 80}" 
+                                        class="my-0 gold">M</h3>
+                                        <h3 th:if="${popTV.mudemeter.criticMudemeter >= 60 
+                                        and popTV.mudemeter.criticMudemeter < 70}" 
+                                        class="my-0 silver">M</h3>
+                                        <h3 th:if="${popTV.mudemeter.criticMudemeter >= 50 
+                                        and popTV.mudemeter.criticMudemeter < 60}" 
+                                        class="my-0 bronze">M</h3>
+                                        <h3 th:if="${popTV.mudemeter.criticMudemeter} > 0 
+                                        and ${popTV.mudemeter.criticMudemeter} < 50" 
+                                        class="col-2 mx-0 my-0 px-0 py-0 black">M</h3>
+                                        <h3 class="col-2 mx-0 my-0 px-0 py-0" 
+                                        th:if="${popTV.mudemeter.criticMudemeter == 0}" 
+                                        style="color:white; font-family: 'Roboto', sans-serif;">
+                                            —
+                                        </h3>
+                                    </div>
+                                    <div th:text="${popTV.mediaName}"class="col-6 px-0 py-0 text-center text-truncate">
+                                        Annihilation
+                                    </div>
+                                    <div class="col-3 px-0 py-0 text-right">
+                                         [[${popTV.parseDate(popTV.releaseDate.theatre)}]]
+                                    </div>
+                                </div>
+                            </a>
+                        </th:block>
+                    </div>
+                    <div th:if="${popularTV == null}" class="mx-3 px-0 py-0">
+                        <a th:href="@{/season(mediaID=2020)}" style="text-decoration: none;">
+                            <div class="row my-0 pt-1 border-white border-bottom border-top hover-table">
+                                <div class="col-3 px-0 py-0 text-left">
+                                    <h3 class="my-0 gold">
+                                        M
+                                    </h3>
+                                </div>
+                                <div class="col-9 px-0 py-0 text-center">
+                                    Red Sparrow
+                                </div>
+                            </div>
+                        </a>
+                        <a th:href="@{/season(mediaID=2021)}" style="text-decoration: none;">
+                            <div class="row my-0 pt-1 hover-table">
+                                <div class="col-1 px-0 py-0 text-left">
+                                    <h5 class="my-0 py-0" style="text-indent: 0.2em; color:white; font-family: 'Roboto', sans-serif;">
+                                        —
+                                    </h5>
+                                </div>
+                                <div class="col-2 px-0 py-0 text-left">
+                                    <h3 class="my-0 py-0">
+                                        &nbsp;
+                                    </h3>
+                                </div>
+                                <div class="col-9 px-0 py-0 text-center">
+                                    Death Wish
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col text-right px-0">
+                        <a href="#" th:href="@{/browse(tab=8)}"
+                        class="mr-auto hover-blue">
+                            View All ></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-lg-5 mx-1">
+                <!-- Hidden on MD -->
+                <div class="col-lg-4 col-md-6 d-lg-block d-md-none d-sm-block mb-sm-4 mb-4">
+                    <div class="row py-0">
+                        <h6 class="mx-auto">Most Popular TV on Mude</h6>
+                    </div>
+                    <div class="row pb-1">
+                        &nbsp;
+                    </div>
+                    <div th:if="${popularTV != null}" class="mx-3 px-0 py-0">
+                        <th:block th:if="${popularTV != null}" th:each="popTV, popTVStat : ${popularTV}" 
+                        th:unless="${popTVStat.index > 5}">
+                            <a href="#" th:href="@{/season(mediaID=${popTV.id})}" 
+                            style="text-decoration: none;">
+                                <div th:class="${popTVStat.last} ? 
+                                'row my-0 pt-1 border-white hover-table' 
+                                : 'row my-0 pt-1 border-white hover-table border-bottom'"
+                                th:classappend="${popTVStat.index == 0} ? 'border-top' : ''" 
+                                class="row my-0 pt-1 border-white hover-table border-bottom">
+                                    <div class="col-3 px-0 py-0 text-left">
+                                        <h3 th:if="${popTV.mudemeter.criticMudemeter >= 80}" 
+                                        class="my-0 gold">M</h3>
+                                        <h3 th:if="${popTV.mudemeter.criticMudemeter >= 70 
+                                        and popTV.mudemeter.criticMudemeter < 80}" 
+                                        class="my-0 gold">M</h3>
+                                        <h3 th:if="${popTV.mudemeter.criticMudemeter >= 60 
+                                        and popTV.mudemeter.criticMudemeter < 70}" 
+                                        class="my-0 silver">M</h3>
+                                        <h3 th:if="${popTV.mudemeter.criticMudemeter >= 50 
+                                        and popTV.mudemeter.criticMudemeter < 60}" 
+                                        class="my-0 bronze">M</h3>
+                                        <h3 th:if="${popTV.mudemeter.criticMudemeter} > 0 
+                                        and ${popTV.mudemeter.criticMudemeter} < 50" 
+                                        class="col-2 mx-0 my-0 px-0 py-0 black">M</h3>
+                                        <h3 class="col-2 mx-0 my-0 px-0 py-0" 
+                                        th:if="${popTV.mudemeter.criticMudemeter == 0}" 
+                                        style="color:white; font-family: 'Roboto', sans-serif;">
+                                            —
+                                        </h3>
+                                    </div>
+                                    <div th:text="${popTV.mediaName}"class="col-6 px-0 py-0 text-center text-truncate">
+                                        Annihilation
+                                    </div>
+                                    <div class="col-3 px-0 py-0 text-right">
+                                         [[${popTV.parseDate(popTV.releaseDate.theatre)}]]
+                                    </div>
+                                </div>
+                            </a>
+                        </th:block>
+                    </div>
+                    <div th:if="${popularTV == null}" class="mx-3 px-0 py-0">
+                        <a th:href="@{/season(mediaID=2022)}" style="text-decoration: none;">
+                            <div class="row my-0 pt-1 border-white border-bottom border-top hover-table">
+                                <div class="col-3 px-0 py-0 text-left">
+                                    <h3 class="my-0 gold">
+                                        M
+                                    </h3>
+                                </div>
+                                <div class="col-9 px-0 py-0 text-center">
+                                    Red Sparrow
+                                </div>
+                            </div>
+                        </a>
+                        <a th:href="@{/season(mediaID=2023)}" style="text-decoration: none;">
+                            <div class="row my-0 pt-1 hover-table">
+                                <div class="col-1 px-0 py-0 text-left">
+                                    <h5 class="my-0 py-0" style="text-indent: 0.2em; color:white; font-family: 'Roboto', sans-serif;">
+                                        —
+                                    </h5>
+                                </div>
+                                <div class="col-2 px-0 py-0 text-left">
+                                    <h3 class="my-0 py-0">
+                                        &nbsp;
+                                    </h3>
+                                </div>
+                                <div class="col-9 px-0 py-0 text-center">
+                                    Death Wish
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col text-right px-0">
+                        <a href="#" th:href="@{/browse(tab=8)}" 
+                        class="mr-auto hover-blue">View All ></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-sm-4 mb-4">
+                    <div class="row py-0">
+                        <h6 class="mx-auto">New TV tonight</h6>
+                    </div>
+                    <div class="row pb-1">
+                        &nbsp;
+                    </div>
+                    <div th:if="${newTVTonight != null and !newTVTonight.isEmpty()}" class="mx-3 px-0 py-0">
+                        <th:block th:each="newTV, newTVStat : ${newTVTonight}" 
+                        th:unless="${newTVStat.index > 5}">
+                            <a href="#" th:href="@{/season(mediaID=${newTV.id})}" 
+                            style="text-decoration: none;">
+                                <div th:class="${newTVStat.last} ? 
+                                'row my-0 pt-1 border-white hover-table' 
+                                : 'row my-0 pt-1 border-white hover-table border-bottom'"
+                                th:classappend="${newTVStat.index == 0} ? 'border-top' : ''" 
+                                class="row my-0 pt-1 border-white hover-table border-bottom">
+                                    <div class="col-3 px-0 py-0 text-left">
+                                        <h3 th:if="${newTV.mudemeter.criticMudemeter >= 80}" 
+                                        class="my-0 gold">M</h3>
+                                        <h3 th:if="${newTV.mudemeter.criticMudemeter >= 70 
+                                        and newTV.mudemeter.criticMudemeter < 80}" 
+                                        class="my-0 gold">M</h3>
+                                        <h3 th:if="${newTV.mudemeter.criticMudemeter >= 60 
+                                        and newTV.mudemeter.criticMudemeter < 70}" 
+                                        class="my-0 silver">M</h3>
+                                        <h3 th:if="${newTV.mudemeter.criticMudemeter >= 50 
+                                        and newTV.mudemeter.criticMudemeter < 60}" 
+                                        class="my-0 bronze">M</h3>
+                                        <h3 th:if="${newTV.mudemeter.criticMudemeter} > 0 
+                                        and ${newTV.mudemeter.criticMudemeter} < 50" 
+                                        class="col-2 mx-0 my-0 px-0 py-0 black">M</h3>
+                                        <h3 class="col-2 mx-0 my-0 px-0 py-0" 
+                                        th:if="${newTV.mudemeter.criticMudemeter == 0}" 
+                                        style="color:white; font-family: 'Roboto', sans-serif;">
+                                            —
+                                        </h3>
+                                    </div>
+                                    <div th:text="${newTV.mediaName}"class="col-6 px-0 py-0 text-center text-truncate">
+                                        Annihilation
+                                    </div>
+                                    <div class="col-3 px-0 py-0 text-right">
+                                         [[${newTV.parseDate(newTV.releaseDate.theatre)}]]
+                                    </div>
+                                </div>
+                            </a>
+                        </th:block>
+                    </div>
+                    <div th:if="${newTVTonight == null or newTVTonight.isEmpty()}" class="row mx-3 px-0 py-0" style="height:50%;">
+                       <h6 class="my-0 py-0 mx-auto my-auto">Currently Not Available!</h6>
+                    </div>
+                    <div th:if="${newTVTonight != null and !newTVTonight.isEmpty()}" class="col text-right px-0">
+                        <a href="#" th:href="@{/browse(tab=9)}"
+                        class="mr-auto hover-blue">View All ></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="row py-0">
+                        <h6 class="mx-auto">Opening This Week</h6>
+                    </div>
+                    <div class="row pb-1">
+                        &nbsp;
+                    </div>
+                    <div th:if="${openThisWeek != null}" class="mx-3 px-0 py-0">
+                        <th:block th:if="${openThisWeek != null}" th:each="openTW, openTWStat : ${openThisWeek}" 
+                        th:unless="${openTWStat.index > 5}">
+                            <a href="#" th:href="@{/movie(mediaID=${openTW.id})}" 
+                            style="text-decoration: none;">
+                                <div th:class="${openTWStat.last} ? 
+                                'row my-0 pt-1 border-white hover-table' 
+                                : 'row my-0 pt-1 border-white hover-table border-bottom'"
+                                th:classappend="${openTWStat.index == 0} ? 'border-top' : ''" 
+                                class="row my-0 pt-1 border-white hover-table border-bottom">
+                                    <div class="col-3 px-0 py-0 text-left">
+                                        <h3 th:if="${openTW.mudemeter.criticMudemeter >= 80}" 
+                                        class="my-0 gold">M</h3>
+                                        <h3 th:if="${openTW.mudemeter.criticMudemeter >= 70 
+                                        and openTW.mudemeter.criticMudemeter < 80}" 
+                                        class="my-0 gold">M</h3>
+                                        <h3 th:if="${openTW.mudemeter.criticMudemeter >= 60 
+                                        and openTW.mudemeter.criticMudemeter < 70}" 
+                                        class="my-0 silver">M</h3>
+                                        <h3 th:if="${openTW.mudemeter.criticMudemeter >= 50 
+                                        and openTW.mudemeter.criticMudemeter < 60}" 
+                                        class="my-0 bronze">M</h3>
+                                        <h3 th:if="${openTW.mudemeter.criticMudemeter} > 0 
+                                        and ${openTW.mudemeter.criticMudemeter} < 50" 
+                                        class="col-2 mx-0 my-0 px-0 py-0 black">M</h3>
+                                        <h3 class="col-2 mx-0 my-0 px-0 py-0" 
+                                        th:if="${openTW.mudemeter.criticMudemeter == 0}" 
+                                        style="color:white; font-family: 'Roboto', sans-serif;">
+                                            —
+                                        </h3>
+                                    </div>
+                                    <div th:text="${openTW.mediaName}"class="col-6 px-0 py-0 text-center text-truncate">
+                                        Annihilation
+                                    </div>
+                                    <div class="col-3 px-0 py-0 text-right">
+                                         [[${openTW.parseDate(openTW.releaseDate.theatre)}]]
+                                    </div>
+                                </div>
+                            </a>
+                        </th:block>
+                    </div>
+                    <div th:if="${openThisWeek == null}" class="mx-3 px-0 py-0">
+                        <a th:href="@{/season(mediaID=2040)}" style="text-decoration: none;">
+                            <div class="row my-0 pt-1 border-white border-bottom border-top hover-table">
+                                <div class="col-3 px-0 py-0 text-left">
+                                    <h3 class="my-0 gold">
+                                        M
+                                    </h3>
+                                </div>
+                                <div class="col-9 px-0 py-0 text-center">
+                                    Daddy's Home 2 
+                                </div>
+                            </div>
+                        </a>
+                        <a th:href="@{/season(mediaID=2041)}" style="text-decoration: none;">
+                            <div class="row my-0 pt-1 border-white border-bottom hover-table">
+                                <div class="col-1 px-0 py-0 text-left">
+                                    <h5 class="my-0 py-0" style="text-indent: 0.2em; color:white; font-family: 'Roboto', sans-serif;">
+                                        —
+                                    </h5>
+                                </div>
+                                <div class="col-2 px-0 py-0 text-left">
+                                    <h3 class="my-0 py-0">
+                                        &nbsp;
+                                    </h3>
+                                </div>
+                                <div class="col-9 px-0 py-0 text-center">
+                                    The Florida Project
+                                </div>
+                            </div>
+                        </a>
+                        <a th:href="@{/season(mediaID=2042)}" style="text-decoration: none;">
+                            <div class="row my-0 pt-1 border-white border-bottom hover-table">
+                                <div class="col-1 px-0 py-0 text-left">
+                                    <h5 class="my-0 py-0" style="text-indent: 0.2em; color:white; font-family: 'Roboto', sans-serif;">
+                                        —
+                                    </h5>
+                                </div>
+                                <div class="col-2 px-0 py-0 text-left">
+                                    <h3 class="my-0 py-0">
+                                        &nbsp;
+                                    </h3>
+                                </div>
+                                <div class="col-9 px-0 py-0 text-center">
+                                    Counterpart
+                                </div>
+                            </div>
+                        </a>
+                        <a th:href="@{/season(mediaID=2043)}" style="text-decoration: none;">
+                            <div class="row my-0 pt-1 border-white border-bottom hover-table">
+                                <div class="col-3 px-0 py-0 text-left">
+                                    <h3 class="my-0 bronze">
+                                        M
+                                    </h3>
+                                </div>
+                                <div class="col-9 px-0 py-0 text-center text-truncate">
+                                    The Man Who Invented The Time Machine
+                                </div>
+                            </div>
+                        </a>
+                        <a th:href="@{/season(mediaID=2044)}" style="text-decoration: none;">
+                            <div class="row my-0 pt-1 hover-table">
+                                <div class="col-3 px-0 py-0 text-left">
+                                    <h3 class="my-0 black">
+                                        M
+                                    </h3>
+                                </div>
+                                <div class="col-9 px-0 py-0 text-center">
+                                    Black Panther
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col text-right px-0">
+                        <a href="#" th:href="@{/browse(tab=0)}"
+                        class="mr-auto hover-blue">View All ></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="d-none">
+        <div class="container-fluid mx-0 my-0 px-0 py-0 bg-dark" id="i-t-box">
+            <div class="mx-0 my-0 px-0 pt-2 pb-0 bg-dark">
+                <div class="row mx-0 my-0 px-0 py-0 bg-danger header-label">
+                    <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:2%;"></div>
+                    <h4 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark">
+                        Trailers & Videos
+                    </h4>
+                </div>
+            </div>
+            <div th:if="${topBoxOffice == null}" class="row mt-5 ml-1 mr-1 px-md-0 px-sm-3">
+                <div class="col-lg-4 col-md-6 mb-md-3 mb-sm-4 mb-4 px-md-2 px-sm-3">
+                    <a class="mx-0 my-0 px-0 py-0 hover-none trailer-box video-btn" data-index="0" style="cursor: pointer;">
+                        <div class="card">
+                            <img class="card-img-top" src="images/tr2.png" alt="Card image cap">
+                            <div class="card-img-overlay text-right mx-0 my-0 px-0 py-0">
+                                <div class="row mx-0 my-0 px-0 py-0 h-100 w-100">
+                                    <span class="badge badge-danger rounded-0 py-2 mr-auto mt-auto text-uppercase d-md-inline-block d-sm-none d-inline-block">Easter Egg</span>
+                                    <span class="badge badge-danger rounded-0 py-2 mr-auto mt-auto text-uppercase d-md-none d-sm-inline-block d-none" style="font-size:1.2rem;">Easter Egg</span>
+                                    <i class="fas fa-play fa-7x ml-auto mt-auto px-3 py-3 d-md-block d-sm-none d-none" style="opacity:0.7;"></i>
+                                    <i class="fas fa-play fa-10x ml-auto mt-auto px-3 py-3 d-md-none d-sm-block d-none" style="opacity:0.7;"></i>
+                                    <i class="fas fa-play fa-5x ml-auto mt-auto px-3 py-3 d-sm-none d-block" style="opacity:0.7;"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Hidden Under MD -->
+                        <div class="mx-0 my-0 px-0 py-0 d-md-block d-none">
+                            <p class="card-text text-light text-uppercase mx-0 my-0 px-2 py-2">
+                                <em>Mission: Impossible - Fallout</em>
+                                <br /> Is Tom Cruise's helicopter stunt his craziest yet?
+                            </p>
+                        </div>
+                        <!-- Visible Under MD -->
+                        <div class="mx-0 my-0 px-0 py-0 d-md-none d-sm-block d-block bg-black">
+                            <p class="card-text text-light text-uppercase mx-0 my-0 px-2 py-2">
+                                <em>Mission: Impossible - Fallout</em>
+                                <br /> Is Tom Cruise's helicopter stunt his craziest yet?
+                            </p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-md-3 mb-sm-4 mb-4 px-md-2 px-sm-3">
+                    <a class="mx-0 my-0 px-0 py-0 hover-none trailer-box" href="https://www.youtube.com/">
+                        <div class="card">
+                            <img class="card-img-top" src="images/tr1.png" alt="Card image cap">
+                            <div class="card-img-overlay text-right mx-0 my-0 px-0 py-0">
+                                <div class="row mx-0 my-0 px-0 py-0 h-100 w-100">
+                                    <span class="badge badge-danger rounded-0 py-2 mr-auto mt-auto text-uppercase d-md-inline-block d-sm-none d-inline-block">Trailer</span>
+                                    <span class="badge badge-danger rounded-0 py-2 mr-auto mt-auto text-uppercase d-md-none d-sm-inline-block d-none" style="font-size:1.2rem;">Trailer</span>
+                                    <i class="fas fa-play fa-7x ml-auto mt-auto px-3 py-3 d-md-block d-sm-none d-none" style="opacity:0.7;"></i>
+                                    <i class="fas fa-play fa-10x ml-auto mt-auto px-3 py-3 d-md-none d-sm-block d-none" style="opacity:0.7;"></i>
+                                    <i class="fas fa-play fa-5x ml-auto mt-auto px-3 py-3 d-sm-none d-block" style="opacity:0.7;"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Hidden Under MD -->
+                        <div class="mx-0 my-0 px-0 py-0 d-md-block d-none">
+                            <p class="card-text text-light text-uppercase mx-0 my-0 px-2 py-2">
+                                <em>Deadpool 2</em>
+                                <br /> The big reveal of Cable; creator Rob Liefeld reacts
+                            </p>
+                        </div>
+                        <!-- Visible Under MD -->
+                        <div class="mx-0 my-0 px-0 py-0 d-md-none d-sm-block d-block bg-black">
+                            <p class="card-text text-light text-uppercase mx-0 my-0 px-2 py-2">
+                                <em>Deadpool 2</em>
+                                <br /> The big reveal of Cable; creator Rob Liefeld reacts
+                            </p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-md-3 mb-sm-4 mb-4 px-md-2 px-sm-3">
+                    <a class="mx-0 my-0 px-0 py-0 hover-none trailer-box" href="https://www.youtube.com/">
+                        <div class="card">
+                            <img class="card-img-top" src="images/tr4.png" alt="Card image cap">
+                            <div class="card-img-overlay text-right mx-0 my-0 px-0 py-0">
+                                <div class="row mx-0 my-0 px-0 py-0 h-100 w-100">
+                                    <span class="badge badge-danger rounded-0 py-2 mr-auto mt-auto text-uppercase d-md-inline-block d-sm-none d-inline-block">Trailer</span>
+                                    <span class="badge badge-danger rounded-0 py-2 mr-auto mt-auto text-uppercase d-md-none d-sm-inline-block d-none" style="font-size:1.2rem;">Trailer</span>
+                                    <i class="fas fa-play fa-7x ml-auto mt-auto px-3 py-3 d-md-block d-sm-none d-none" style="opacity:0.7;"></i>
+                                    <i class="fas fa-play fa-10x ml-auto mt-auto px-3 py-3 d-md-none d-sm-block d-none" style="opacity:0.7;"></i>
+                                    <i class="fas fa-play fa-5x ml-auto mt-auto px-3 py-3 d-sm-none d-block" style="opacity:0.7;"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Hidden Under MD -->
+                        <div class="mx-0 my-0 px-0 py-0 d-md-block d-none">
+                            <p class="card-text text-light text-uppercase mx-0 my-0 px-2 py-2">
+                                <em>Jurassic World</em>
+                                <br /> The internet reacts to the Tom Hardy teaser
+                            </p>
+                        </div>
+                        <!-- Visible Under MD -->
+                        <div class="mx-0 my-0 px-0 py-0 d-md-none d-sm-block d-block bg-black">
+                            <p class="card-text text-light text-uppercase mx-0 my-0 px-2 py-2">
+                                <em>Jurassic World</em>
+                                <br /> The internet reacts to the Tom Hardy teaser
+                            </p>
+                        </div>
+                    </a>
+                </div>
+                <!-- Only Visible on MD -->
+                <div class="col-lg-4 col-md-6 mb-md-3 d-none px-md-2 d-md-block d-lg-none">
+                    <div class="mx-0 my-0 px-0 py-0 text-center">
+                        <a class="mx-0 my-0 px-0 py-0">
+                            <img id="ad5" src="images/ad-3.png" style="width:70%;">
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div th:if="${topBoxOffice == null}" class="row mt-lg-5 ml-1 mr-1 px-md-0 px-sm-3">
+                <!-- Hidden on MD -->
+                <div class="col-lg-4 col-md-6 d-lg-block d-md-none d-sm-block mb-sm-4 mb-4 px-md-2 px-sm-5">
+                    <div class="mx-0 my-0 px-md-0 px-sm-3 py-0 text-center">
+                        <div class="mx-0 my-4 px-md-0 px-sm-5 py-0 text-center">
+                            <a class="mx-0 my-0 px-0 py-0">
+                                <img id="ad3" src="images/ad-3.png" style="width:70%;">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-sm-4 mb-4 px-md-2 px-sm-3">
+                    <a class="mx-0 my-0 px-0 py-0 hover-none trailer-box" href="https://www.youtube.com/">
+                        <div class="card">
+                            <img class="card-img-top" src="images/tr2.png" alt="Card image cap">
+                            <div class="card-img-overlay text-right mx-0 my-0 px-0 py-0">
+                                <div class="row mx-0 my-0 px-0 py-0 h-100 w-100">
+                                    <span class="badge badge-danger rounded-0 py-2 mr-auto mt-auto text-uppercase d-md-inline-block d-sm-none d-inline-block">Trailer</span>
+                                    <span class="badge badge-danger rounded-0 py-2 mr-auto mt-auto text-uppercase d-md-none d-sm-inline-block d-none" style="font-size:1.2rem;">Trailer</span>
+                                    <i class="fas fa-play fa-7x ml-auto mt-auto px-3 py-3 d-md-block d-sm-none d-none" style="opacity:0.7;"></i>
+                                    <i class="fas fa-play fa-10x ml-auto mt-auto px-3 py-3 d-md-none d-sm-block d-none" style="opacity:0.7;"></i>
+                                    <i class="fas fa-play fa-5x ml-auto mt-auto px-3 py-3 d-sm-none d-block" style="opacity:0.7;"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Hidden Under MD -->
+                        <div class="mx-0 my-0 px-0 py-0 d-md-block d-none">
+                            <p class="card-text text-light text-uppercase mx-0 my-0 px-2 py-2">
+                                <em>Deadpool 2</em>
+                                <br /> Unless the context is clear (as with the “Notifications” example,
+                            </p>
+                        </div>
+                        <!-- Visible Under MD -->
+                        <div class="mx-0 my-0 px-0 py-0 d-md-none d-sm-block d-block bg-black">
+                            <p class="card-text text-light text-uppercase mx-0 my-0 px-2 py-2">
+                                <em>Deadpool 2</em>
+                                <br /> Unless the context is clear (as with the “Notifications” example,
+                            </p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-sm-4 mb-4 px-md-2 px-sm-3">
+                    <a class="mx-0 my-0 px-0 py-0 hover-none trailer-box" href="https://www.youtube.com/">
+                        <div class="card">
+                            <img class="card-img-top" src="images/tr3.png" alt="Card image cap">
+                            <div class="card-img-overlay text-right mx-0 my-0 px-0 py-0">
+                                <div class="row mx-0 my-0 px-0 py-0 h-100 w-100">
+                                    <span class="badge badge-danger rounded-0 py-2 mr-auto mt-auto text-uppercase d-md-inline-block d-sm-none d-inline-block">Trailer</span>
+                                    <span class="badge badge-danger rounded-0 py-2 mr-auto mt-auto text-uppercase d-md-none d-sm-inline-block d-none" style="font-size:1.2rem;">Trailer</span>
+                                    <i class="fas fa-play fa-7x ml-auto mt-auto px-3 py-3 d-md-block d-sm-none d-none" style="opacity:0.7;"></i>
+                                    <i class="fas fa-play fa-10x ml-auto mt-auto px-3 py-3 d-md-none d-sm-block d-none" style="opacity:0.7;"></i>
+                                    <i class="fas fa-play fa-5x ml-auto mt-auto px-3 py-3 d-sm-none d-block" style="opacity:0.7;"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Hidden Under MD -->
+                        <div class="mx-0 my-0 px-0 py-0 d-md-block d-none">
+                            <p class="card-text text-light text-uppercase mx-0 my-0 px-2 py-2">
+                                <em>Venom</em>
+                                <br /> A raptor stalks a family bedroom and more in this new look
+                            </p>
+                        </div>
+                        <!-- Visible Under MD -->
+                        <div class="mx-0 my-0 px-0 py-0 d-md-none d-sm-block d-block bg-black">
+                            <p class="card-text text-light text-uppercase mx-0 my-0 px-2 py-2">
+                                <em>Venom</em>
+                                <br /> A raptor stalks a family bedroom and more in this new look
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div th:if="${topBoxOffice != null}" class="row mt-5 ml-1 mr-1 px-md-0 px-sm-3">
+                <th:block th:if="${topBoxOffice != null}" th:each="ct, ctStat : ${topBoxOffice}" th:unless="${ctStat.index > 2}">
+                    <div class="col-lg-4 col-md-6 mb-md-3 mb-sm-4 mb-4 px-md-2 px-sm-3">
+                        <a class="mx-0 my-0 px-0 py-0 hover-none trailer-box video-btn active" style="cursor: pointer;" 
+                        data-src="https://www.youtube.com/embed/xjDjIWPwcPU" data-toggle="modal" data-index="0" th:data-index="${ctStat.index}"
+                        data-target="#myModal" th:data-src="${ct.trailers != null and !ct.trailers.isEmpty()} ? ${ct.trailers[0]} : 'https://www.youtube.com/embed/xjDjIWPwcPU'">
+                            <div class="card">
+                                <img class="card-img-top img-fluid" src="images/poster.png" th:src="@{${T(us.mude.common.GlobalProps).FS_URI} + '/' + ${ct.resourcePath} + '/' + ${T(us.mude.common.GlobalProps).BANNER}}"
+                                onerror="this.onerror=null; this.src='images/poster.png';" alt="Card image cap">
+                                <div class="card-img-overlay text-right mx-0 my-0 px-0 py-0">
+                                    <div class="row mx-0 my-0 px-0 py-0 h-100 w-100">
+                                        <span class="badge badge-danger rounded-0 py-2 mr-auto mt-auto text-uppercase d-md-inline-block d-sm-none d-inline-block" th:text="${ctStat.index == 0 ? 'Easter Egg' : 'Trailer'}">Easter Egg</span>
+                                        <span class="badge badge-danger rounded-0 py-2 mr-auto mt-auto text-uppercase d-md-none d-sm-inline-block d-none" style="font-size:1.2rem;" th:text="${ctStat.index == 0 ? 'Easter Egg' : 'Trailer'}">Easter Egg</span>
+                                        <i class="fas fa-play fa-7x ml-auto mt-auto px-3 py-3 d-md-block d-sm-none d-none" style="opacity:0.7;"></i>
+                                        <i class="fas fa-play fa-10x ml-auto mt-auto px-3 py-3 d-md-none d-sm-block d-none" style="opacity:0.7;"></i>
+                                        <i class="fas fa-play fa-5x ml-auto mt-auto px-3 py-3 d-sm-none d-block" style="opacity:0.7;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Hidden Under MD -->
+                            <div class="mx-0 my-0 px-0 py-0 d-md-block d-none">
+                                <p class="card-text text-light text-uppercase mx-0 my-0 px-2 py-2">
+                                    <em th:text="${ct.mediaName}">Mission: Impossible - Fallout</em>
+                                    <br /> 
+                                    <span th:text="${ct.desc}" class="trailer-desc">Is Tom Cruise's helicopter stunt his craziest yet?</span>
+                                </p>
+                            </div>
+                            <!-- Visible Under MD -->
+                            <div class="mx-0 my-0 px-0 py-0 d-md-none d-sm-block d-block bg-black">
+                                <p class="card-text text-light text-uppercase mx-0 my-0 px-2 py-2">
+                                    <em>Mission: Impossible - Fallout</em>
+                                    <br /> 
+                                    <span th:text="${ct.desc}" class="trailer-desc">Is Tom Cruise's helicopter stunt his craziest yet?</span>
+                                </p>
+                            </div>
+                        </a>
+                    </div>
+                </th:block>    
+                <!-- Only Visible on MD -->
+                <div class="col-lg-4 col-md-6 mb-md-3 d-none px-md-2 d-md-block d-lg-none">
+                    <div class="mx-0 my-0 px-0 py-0 text-center">
+                        <a class="mx-0 my-0 px-0 py-0">
+                            <img id="ad5" src="images/ad-3.png" style="width:70%;">
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div th:if="${topBoxOffice != null}" class="row mt-lg-5 ml-1 mr-1 px-md-0 px-sm-3">
+                <!-- Hidden on MD -->
+                <div class="col-lg-4 col-md-6 d-lg-block d-md-none d-sm-block mb-sm-4 mb-4 px-md-2 px-sm-5">
+                    <div class="mx-0 my-0 px-md-0 px-sm-3 py-0 text-center">
+                        <div class="mx-0 my-0 px-md-0 px-sm-5 py-0 text-center">
+                            <a class="mx-0 my-0 px-0 py-0">
+                                <img id="ad3" src="images/ad-3.png" style="width:70%;">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <th:block th:if="${topBoxOffice != null}" th:each="ct, ctStat : ${topBoxOffice}">
+                    <div th:if="${ctStat.index > 2}" class="col-lg-4 col-md-6 mb-md-3 mb-sm-4 mb-4 px-md-2 px-sm-3">
+                        <a class="mx-0 my-0 px-0 py-0 hover-none trailer-box video-btn active" style="cursor: pointer;" 
+                        data-toggle="modal" data-src="https://www.youtube.com/embed/xjDjIWPwcPU" data-index="0" th:data-index="${ctStat.index}"
+                            data-target="#myModal" th:data-src="${ct.trailers != null and !ct.trailers.isEmpty()} ? ${ct.trailers[0]} : 'https://www.youtube.com/embed/xjDjIWPwcPU'">
+                            <div class="card">
+                                <img class="card-img-top img-fluid" src="images/poster.png" th:src="@{${T(us.mude.common.GlobalProps).FS_URI} + '/' + ${ct.resourcePath} + '/' + ${T(us.mude.common.GlobalProps).BANNER}}"
+                                    onerror="this.onerror=null; this.src='images/poster.png';" alt="Card image cap">
+                                <div class="card-img-overlay text-right mx-0 my-0 px-0 py-0">
+                                    <div class="row mx-0 my-0 px-0 py-0 h-100 w-100">
+                                        <span class="badge badge-danger rounded-0 py-2 mr-auto mt-auto text-uppercase d-md-inline-block d-sm-none d-inline-block"
+                                            th:text="${ctStat.index == 0 ? 'Easter Egg' : 'Trailer'}">Easter Egg</span>
+                                        <span class="badge badge-danger rounded-0 py-2 mr-auto mt-auto text-uppercase d-md-none d-sm-inline-block d-none" style="font-size:1.2rem;"
+                                            th:text="${ctStat.index == 0 ? 'Easter Egg' : 'Trailer'}">Easter Egg</span>
+                                        <i class="fas fa-play fa-7x ml-auto mt-auto px-3 py-3 d-md-block d-sm-none d-none" style="opacity:0.7;"></i>
+                                        <i class="fas fa-play fa-10x ml-auto mt-auto px-3 py-3 d-md-none d-sm-block d-none" style="opacity:0.7;"></i>
+                                        <i class="fas fa-play fa-5x ml-auto mt-auto px-3 py-3 d-sm-none d-block" style="opacity:0.7;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Hidden Under MD -->
+                            <div class="mx-0 my-0 px-0 py-0 d-md-block d-none">
+                                <p class="card-text text-light text-uppercase mx-0 my-0 px-2 py-2">
+                                    <em th:text="${ct.mediaName}">Mission: Impossible - Fallout</em>
+                                    <br />
+                                    <span th:text="${ct.desc}" class="trailer-desc">Is Tom Cruise's helicopter stunt his craziest yet?</span>
+                                </p>
+                            </div>
+                            <!-- Visible Under MD -->
+                            <div class="mx-0 my-0 px-0 py-0 d-md-none d-sm-block d-block bg-black">
+                                <p class="card-text text-light text-uppercase mx-0 my-0 px-2 py-2">
+                                    <em>Mission: Impossible - Fallout</em>
+                                    <br />
+                                    <span th:text="${ct.desc}" class="trailer-desc">Is Tom Cruise's helicopter stunt his craziest yet?</span>
+                                </p>
+                            </div>
+                        </a>
+                    </div>
+                </th:block>
+            </div>
+            <div class="col text-right px-0 mt-2 pb-1">
+                <a href="#" th:href="@{/trailers}" class="mr-3 hover-blue">View All Videos ></a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="d-none" th:fragment="footer">
+        <div class="container-fluid">
+            <div class="px-0 py-3 bg-black">
+                <div class="text-center">
+                    <a class="mx-0 my-0 px-0 py-0">
+                        <img class="img-fluid" id="ad4" src="images/ad-1.png">
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid bg-black">
+            <div class="row bg-dark pt-2 pb-0">
+                <div class="col-md-4 text-center text-md-left mt-md-2 pt-md-1">
+                    <div class="row mx-0 my-0 px-0 pt-1 pb-0">
+                        <a href="https://fb.me/itsmemude" class="hover-blue ml-0 mr-2 my-0 px-0 py-0">
+                            <i class="fab fa-facebook-square fa-2x ml-0 mr-2"></i>
+                        </a>
+                        <a href="https://www.instagram.com/itsmemude/" class="hover-blue mx-2 my-0 px-0 py-0">
+                            <i class="fab fa-instagram fa-2x ml-2 mr-2"></i>
+                        </a>
+                        <a href="https://twitter.com/Mude19579494" class="hover-blue mx-2 my-0 px-0 py-0">
+                            <i class="fab fa-twitter fa-2x ml-2 mr-2"></i>
+                        </a>
+                        <a href="https://www.pinterest.co.kr/mude0322/" class="hover-blue mx-2 my-0 px-0 py-0">
+                            <i class="fab fa-pinterest fa-2x ml-2 mr-2"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-4 navbar-brand text-center mt-md-2 pt-md-1 mx-auto">
+                    Mude
+                </div>
+                <div class="col-md-4 text-center text-md-right mt-md-2 pt-md-1 mb-sm-2 mb-2">
+                    <a href="#" th:href="@{/about(tab=2)}" class="mr-2 hover-blue">Terms of Service</a>
+                    <a href="#" th:href="@{/about(tab=1)}" class="mr-2 hover-blue">Contact Us</a>
+                    <a href="#" th:href="@{/about(tab=3)}" class="mr-2 hover-blue">Help</a>
+                    <a href="#" th:href="@{/about(tab=0)}" class="hover-blue">About</a>
+                    <p class="text-light text-muted my-2">Copyright &copy; MUDE. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="jquery/jquery-3.3.1.min.js"></script>  
+    <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="owlcarousel/owl.carousel.min.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        $(function () {
+            $(".main .description").each(function () {
+                if ($(this).text().length > 150)
+                    $(this).text(trimString($(this).text(), 150));
+            });
+            $(".trailer-desc").each(function () {
+                if ($(this).text().length > 50)
+                    $(this).text(trimString($(this).text(), 50));
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+.trailer:hover .trailer-text{
+    max-height: 250px !important;
+}
+
+/* .trailer:hover img.franchise-logo {
+    transform: none !important;
+    -webkit-filter: none !important;
+    -moz-filter: none !important;
+    -o-filter: none !important;
+    -ms-filter: none !important;
+    filter: none !important;
+} */

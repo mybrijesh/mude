@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Page not found | Mude</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="shortcut icon" href="images/logo-white.ico">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="fontawesome/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <section class="px-0" th:replace="index :: header"></section>
+    <div th:replace="index :: header-modal"></div>
+    <section th:replace="index :: loader"></section>
+
+    <section class="d-none">
+        <div class="container-fluid px-0 py-0 mt-md-0 mt-sm-5 mt-5 bg-dark">
+            <div class="row mx-0 my-0 px-0 pt-4 pb-0 bg-dark">
+                <div class="col-7 mx-0 my-0 px-0 pt-4 pb-5">
+                    <h1 class="mx-0 my-0 px-0 py-0 text-right error-title" style="font-size:12rem;">
+                        Oop<span class="text-danger">s!</span>
+                    </h1>
+                    <div class="ml-5 mr-0 my-1 pl-5 pr-0 py-0">
+                        <p class="ml-5 my-0 pl-5 py-0 text-danger-light" style="font-size:3rem;">We can't seem to find the page you're looking for.</p>
+                    </div>
+                    <div class="ml-5 mr-0 my-4 pl-5 pr-0 py-0">
+                        <h6 class="ml-5 my-0 pl-5 py-0" style="font-size:1.5rem;">Error code: 404</h6>
+                    </div>
+                    <div class="ml-5 mr-0 mt-5 mb-0 pl-5 pr-0 py-0">
+                        <p class="ml-5 my-0 pl-5 py-0" style="font-size:1.3rem;">
+                            <b>
+                                Here are some helpful links instead:
+                            </b>
+                        </p>
+                    </div>
+                    <div class="ml-5 mr-0 my-2 pl-5 pr-0 py-0" style="font-size:1.25rem;">
+                        <a class="ml-5 my-0 pl-5 py-0 text-danger-light hover-dark" href="/">Home</a>
+                    </div>
+                    <div class="ml-5 mr-0 my-2 pl-5 pr-0 py-0" style="font-size:1.25rem;">
+                        <a class="ml-5 my-0 pl-5 py-0 text-danger-light hover-dark" href="/">Movies & DVD</a>
+                    </div>
+                    <div class="ml-5 mr-0 my-2 pl-5 pr-0 py-0" style="font-size:1.25rem;">
+                        <a class="ml-5 my-0 pl-5 py-0 text-danger-light hover-dark" href="/">TV Shows</a>
+                    </div>
+                    <div class="ml-5 mr-0 my-2 pl-5 pr-0 py-0" style="font-size:1.25rem;">
+                        <a class="ml-5 my-0 pl-5 py-0 text-danger-light hover-dark" href="/">Mude Critics</a>
+                    </div>
+                    <div class="ml-5 mr-0 my-2 pl-5 pr-0 py-0" style="font-size:1.25rem;">
+                        <a class="ml-5 my-0 pl-5 py-0 text-danger-light hover-dark" href="/">About</a>
+                    </div>
+                    <div class="ml-5 mr-0 mt-5 mb-0 pl-5 pr-0 py-0" style="font-size:1.25rem;">
+                        <h6 class="ml-5 my-0 pl-5 py-0" href="/">Here is a <span class="text-danger">rocket</span> for you.</h6>
+                        <h6 class="ml-5 my-0 pl-5 py-0" href="/">Maybe you can find it on the <span class="text-danger">Moon!</span></h6>
+                    </div>
+                </div>
+                <div class="col-5 mx-0 my-0 px-0 pt-4 pb-5 text-center">
+                    <img src="images/rocket.gif" class="img-fluid pl-0 pr-5" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="px-0 d-none" th:replace="index :: footer">
+    </footer>
+
+    <script src="jquery/jquery-3.3.1.min.js"></script>
+    <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="owlcarousel/owl.carousel.min.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        $(function () {
+            $("#top-logo").attr("href", "/");
+        });
+    </script>
+</body>
+</html>

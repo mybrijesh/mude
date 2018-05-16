@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>TV Series | Mude</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<link rel="shortcut icon" href="images/logo-white.ico">
+	<link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" href="fontawesome/css/fontawesome-all.min.css">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="owlcarousel/owl.carousel.min.css">
+	<link rel="stylesheet" href="owlcarousel/owl.theme.default.min.css">
+	<link rel="stylesheet" href="css/details.css">
+</head>
+<body>
+	<section class="px-0" th:replace="index :: header"></section>
+	<div th:replace="index :: header-modal"></div>
+	<div th:replace="index :: video-modal"></div>
+	<section th:replace="index :: loader"></section>
+
+	<div class="modal fade" id="photoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-body">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div class="mx-0 my-0 px-0 py-0 w-100">
+						<img id="image" src="">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<section class="d-none">
+		<div class="container-fluid px-0 py-0 mt-md-0 mt-5 bg-dark">
+			<div class="row mx-0 my-0 px-0 py-2 bg-dark d-md-block d-none">
+				<a class="mx-2 my-0 px-0 py-0 text-danger-light hover-dark text-uppercase" href="#" th:href="@{/}">Home</a>
+				&gt;
+				<th:block th:if="${currentTVSeries != null and currentTVSeries.parent != null}">
+					<th:block th:if="${currentTVSeries.parent.parent != null}">
+						<th:block th:if="${currentTVSeries.parent.parent.parent != null}">
+							<a class="mx-2 my-0 px-0 py-0 text-danger-light hover-dark text-uppercase" href="#" th:href="@{${'/' + #strings.toLowerCase(#strings.toString(currentTVSeries.parent.parent.parent.mediaType)) + '?mediaID=' + currentTVSeries.parent.parent.parent.id}}"
+							 th:text="${currentTVSeries.parent.parent.parent.mediaName}">
+								Marvel Cinematic Universe
+							</a>
+							&gt;
+						</th:block>
+						<a class="mx-2 my-0 px-0 py-0 text-danger-light hover-dark text-uppercase" href="#" th:href="@{${'/' + #strings.toLowerCase(#strings.toString(currentTVSeries.parent.parent.mediaType)) + '?mediaID=' + currentTVSeries.parent.parent.id}}"
+						 th:text="${currentTVSeries.parent.parent.mediaName}">
+							Marvel Cinematic Universe
+						</a>
+						&gt;
+					</th:block>
+					<a class="mx-2 my-0 px-0 py-0 text-danger-light hover-dark text-uppercase" href="#" th:href="@{${'/' + #strings.toLowerCase(#strings.toString(currentTVSeries.parent.mediaType)) + '?mediaID=' + currentTVSeries.parent.id}}"
+					 th:text="${currentTVSeries.parent.mediaName}">
+						Marvel Cinematic Universe
+					</a>
+					&gt;
+				</th:block>
+				<a class="mx-2 my-0 px-0 py-0 text-uppercase hover-none">
+					[[${currentTVSeries.mediaName}]]</a>
+			</div>
+
+			<div class="col-12 mx-0 my-0 px-0 py-0" style="overflow: hidden !important;" id="top-image">
+				<a class="mx-0 my-0 px-0 py-0 hover-none trailer-link video-btn" data-toggle="modal" data-src="https://www.youtube.com/embed/xjDjIWPwcPU"
+				 data-target="#myModal" th:data-src="${currentTVSeries.trailers != null and !currentTVSeries.trailers.isEmpty()} ? ${currentTVSeries.trailers[0]} : 'https://www.youtube.com/embed/xjDjIWPwcPU'"
+				 style="cursor: pointer;" data-index="0">
+					<div class="card trailer">
+						<img class="card-img-top" src="images/banner.png" th:src="@{${T(us.mude.common.GlobalProps).FS_URI + 
+											'/' + currentTVSeries.resourcePath + '/' + T(us.mude.common.GlobalProps).BANNER}}" onerror="this.onerror=null; this.src='images/banner.png';"
+						 alt="Card image cap">
+						<div class="card-img-overlay text-right mx-0 my-0 px-0 py-0">
+							<div class="row mx-0 my-0 px-0 py-0 h-100 w-100">
+								<div class="mr-auto mt-auto px-3 py-3 text-left">
+									<h4 class="mb-3">
+										<span class="badge badge-danger px-3 py-2" style="opacity:0.8; font-family:'Lovelo Black';">Trailer</span>
+									</h4>
+									<h2 class="my-0 py-0">
+										[[${currentTVSeries.mediaName}]]
+									</h2>
+									<h2 class="my-0 py-0">
+										<small>
+											([[${#strings.substring(currentTVSeries.releaseDate.theatre, 0, 4)}]])
+										</small>
+									</h2>
+									<div class="col-9 mx-0 my-0 px-0 py-0 trailer-text" id="trailer-info-box">
+										<p class="my-0 py-xl-4 py-3 text-uppercase d-sm-block d-none" th:text="${currentTVSeries.desc}">
+											After the death of his father, T'Challa returns home to the African nation of Wakanda to take his rightful place as king.
+										</p>
+										<h1 class="my-0 py-xl-2 py-1" style="font-family:'Lovelo Black';">
+											<span class="badge badge-danger pl-3 pr-4 py-2 my-sm-0 mt-3 mb-0" style="opacity:0.8;">
+												Click to Play
+											</span>
+										</h1>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</a>
+			</div>
+			<th:block th:if="${currentTVSeries.parent != null}">
+				<th:block th:if="${currentTVSeries.parent.mediaType == T(us.mude.common.MediaType).FRANCHISE}">
+					<div class="row mx-0 my-2 px-lg-3 px-3 py-1 bg-black rounded franchise-box">
+						<p class="mt-3 text-uppercase d-sm-block d-none">Part of the Franchise:
+							<b>
+								<em class="text-danger-light" th:text="${currentTVSeries.parent.mediaName}">Marvel Cinematic Universe</em>
+							</b>
+						</p>
+						<p class="my-0 py-2 text-uppercase d-sm-none d-block mx-auto small">View the Franchise:
+							<a href="#" th:href="@{${'/' + #strings.toLowerCase(#strings.toString(currentTVSeries.parent.mediaType)) + '?mediaID=' + currentTVSeries.parent.id}}" class="mx-0 my-0 px-0 py-0 hover-dark">
+								<b>
+									<em class="text-danger-light" th:text="${currentTVSeries.parent.mediaName}">Marvel Cinematic Universe</em>
+								</b>
+							</a>
+						</p>
+						<a class="btn btn-outline-light ml-auto my-auto d-sm-block d-none viewCollectionButton" href="#" th:href="@{${'/' + #strings.toLowerCase(#strings.toString(currentTVSeries.parent.mediaType)) + '?mediaID=' + currentTVSeries.parent.id}}">View Franchise</a>
+					</div>
+				</th:block>
+				<th:block th:if="${currentTVSeries.parent.mediaType != T(us.mude.common.MediaType).FRANCHISE}">
+					<th:block th:if="${currentTVSeries.parent.parent != null}">
+						<th:block th:if="${currentTVSeries.parent.parent.mediaType == T(us.mude.common.MediaType).FRANCHISE}">
+							<div class="row mx-0 my-2 px-lg-3 px-3 py-1 bg-black rounded franchise-box">
+								<p class="mt-3 text-uppercase d-sm-block d-none">Part of the Franchise:
+									<b>
+										<em class="text-danger-light" th:text="${currentTVSeries.parent.parent.mediaName}">Marvel Cinematic Universe</em>
+									</b>
+								</p>
+								<p class="my-0 py-2 text-uppercase d-sm-none d-block mx-auto small">View the Franchise:
+									<a href="#" th:href="@{${'/' + #strings.toLowerCase(#strings.toString(currentTVSeries.parent.parent.mediaType)) + '?mediaID=' + currentTVSeries.parent.parent.id}}" class="mx-0 my-0 px-0 py-0 hover-dark">
+										<b>
+											<em class="text-danger-light" th:text="${currentTVSeries.parent.parent.mediaName}">Marvel Cinematic Universe</em>
+										</b>
+									</a>
+								</p>
+								<a class="btn btn-outline-light ml-auto my-auto d-sm-block d-none viewCollectionButton" href="#" 
+								th:href="@{${'/' + #strings.toLowerCase(#strings.toString(currentTVSeries.parent.parent.mediaType)) + '?mediaID=' + currentTVSeries.parent.parent.id}}">View Franchise</a>
+							</div>
+						</th:block>
+						<th:block th:if="${currentTVSeries.parent.parent.mediaType != T(us.mude.common.MediaType).FRANCHISE}">
+							<th:block th:if="${currentTVSeries.parent.parent.parent != null}">
+								<th:block th:if="${currentTVSeries.parent.parent.parent.mediaType == T(us.mude.common.MediaType).FRANCHISE}">
+									<div class="row mx-0 my-2 px-lg-3 px-3 py-1 bg-black rounded franchise-box">
+										<p class="mt-3 text-uppercase d-sm-block d-none">Part of the Franchise:
+											<b>
+												<em class="text-danger-light" th:text="${currentTVSeries.parent.parent.parent.mediaName}">Marvel Cinematic Universe</em>
+											</b>
+										</p>
+										<p class="my-0 py-2 text-uppercase d-sm-none d-block mx-auto small">View the Franchise:
+											<a href="#" th:href="@${{'/' + #strings.toLowerCase(#strings.toString(currentTVSeries.parent.parent.parent.mediaType)) + '?mediaID=' + currentTVSeries.parent.parent.parent.id}}" class="mx-0 my-0 px-0 py-0 hover-dark">
+												<b>
+													<em class="text-danger-light" th:text="${currentTVSeries.parent.parent.parent.mediaName}">Marvel Cinematic Universe</em>
+												</b>
+											</a>
+										</p>
+										<a class="btn btn-outline-light ml-auto my-auto d-sm-block d-none viewCollectionButton" href="#" th:href="@{${'/' + #strings.toLowerCase(#strings.toString(currentTVSeries.parent.parent.parent.mediaType)) + '?mediaID=' + currentTVSeries.parent.parent.parent.id}}">View Franchise</a>
+									</div>
+								</th:block>
+							</th:block>
+						</th:block>
+					</th:block>
+				</th:block>
+			</th:block>
+		</div>
+	</section>
+
+	<section class="d-none">
+		<div class="container-fluid mx-0 my-0 px-0 py-0 bg-dark">
+			<div class="row mx-0 my-0 px-0 py-0">
+				<div class="col-lg-9 col-12 mx-0 my-0 px-3 pt-1 pb-2">
+					<div class="row mx-0 my-2 px-0 py-0" id="poster-meter-box">
+						<div class="col-xl-3 col-lg-4 col-md-3 col-4 mx-0 my-0 pl-0 pr-2 py-0">
+							<a class="hover-none mx-0 my-0 px-0 py-0">
+								<img src="images/poster.png" style="width: 100%;" th:src="@{${T(us.mude.common.GlobalProps).FS_URI + 
+								'/' + currentTVSeries.resourcePath + '/' + T(us.mude.common.GlobalProps).POSTER}}" onerror="this.onerror=null; this.src='images/poster.png';"
+								 alt="Trailer-Image" id="poster" />
+							</a>
+						</div>
+						<div class="col-xl-9 col-lg-8 col-md-9 col-8 mx-0 my-0 pl-2 pr-0 py-0">
+							<div class="row mx-0 my-0 px-0 py-0 bg-black-light meter-box">
+								<div class="col-xl-8 col-lg-6 col-md-8 col-6 mx-0 my-auto px-0 py-0 border-right border-dark">
+									<div class="row mx-0 my-0 px-0 py-2">
+										<div class="col-xl-6 col-lg-12 col-md-6 col-12 mx-0 my-0 px-0 py-0 text-center">
+											<h5 class="my-0 d-md-block d-none">MudeMeter
+												<i class="fas fa-question-circle" data-toggle="tooltip" data-placement="left" title="The percentage of Mudemeter critics who have given this media a 
+																						positive review."></i>
+											</h5>
+											<p class="my-0 py-0 d-md-none d-block text-uppercase">MudeMeter
+												<i class="fas fa-question-circle my-0 py-0 d-sm-inline d-none" data-toggle="tooltip" data-placement="left" title="The percentage 
+																						of Mudemeter 
+																						critics who have given this media a positive review."></i>
+											</p>
+											<div th:if="${currentTVSeries != null}" class="row mx-0 my-0 px-0 py-md-2 py-3" id="mudemeter">
+												<h1 th:if="${currentTVSeries.mudemeter.criticMudemeter >= 80}" class="ml-auto my-0 py-0 neon">M</h1>
+												<h1 th:if="${currentTVSeries.mudemeter.criticMudemeter >= 70 
+																						and currentTVSeries.mudemeter.criticMudemeter < 80.00}" class="ml-auto my-0 py-0 gold">M</h1>
+												<h1 th:if="${currentTVSeries.mudemeter.criticMudemeter >= 60 
+																						and currentTVSeries.mudemeter.criticMudemeter < 70}" class="ml-auto my-0 py-0 silver">M</h1>
+												<h1 th:if="${currentTVSeries.mudemeter.criticMudemeter >= 50 
+																						and currentTVSeries.mudemeter.criticMudemeter < 60}" class="ml-auto my-0 py-0 bronze">M</h1>
+												<h1 th:if="${currentTVSeries.mudemeter.criticMudemeter < 50 
+																						and currentTVSeries.mudemeter.criticMudemeter > 0}" class="ml-auto my-0 py-0 black">M</h1>
+												<h2 th:if="${currentTVSeries.mudemeter.criticMudemeter == 0}" class="mx-auto my-0 py-0" style="color:white; font-family: 'Roboto', sans-serif;">
+													Not Available
+												</h2>
+												<h3 th:if="${currentTVSeries.mudemeter.criticMudemeter != 0}" th:text="${T(java.lang.Math).round(currentTVSeries.mudemeter.criticMudemeter) 
+																							+ '%'}" class="ml-1 mr-auto my-auto py-0 c-mudemeter">98%</h3>
+											</div>
+											<div th:if="${currentTVSeries == null}" class="row mx-0 my-0 px-0 py-md-2 py-3 mudemeter">
+												<h1 class="ml-auto my-0 py-0 gold">M</h1>
+												<h3 class="ml-1 mr-auto my-auto py-0">98%</h3>
+											</div>
+											<div th:if="${currentTVSeries != null}" class="mx-0 my-0 px-0 py-1 d-md-block d-none">
+												<p class="my-md-2 my-0">Average Score:
+													<b th:if="${currentTVSeries.mudemeter.criticAvgScore != 0}" class="text-danger-light c-score">
+														[[${#strings.toString(T(java.lang.Math).round(currentTVSeries.mudemeter.criticAvgScore * 10) / 10.0) + " / 5"}]]
+													</b>
+													<b th:if="${currentTVSeries.mudemeter.criticAvgScore == 0}" class="text-danger-light">
+														No Score
+													</b>
+												</p>
+											</div>
+											<div th:if="${currentTVSeries == null}" class="mx-0 my-0 px-0 py-1 d-md-block d-none">
+												<p class="my-md-2 my-0">Average Score:
+													<b class="text-danger-light">8.2/10</b>
+												</p>
+											</div>
+										</div>
+										<div class="col-xl-6 col-lg-12 col-6 mx-0 my-0 px-0 py-0 d-xl-block d-lg-none d-md-block d-none text-center" style="overflow:scroll;">
+											<div class="row mx-0 my-0 px-0 py-2 text-uppercase">
+											</div>
+											<div class="progress mx-3 mt-3 mb-2 px-0 py-0" style="height:30%; 
+																						border-radius:25px;">
+												<div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" aria-valuenow="98" aria-valuemin="0"
+												 aria-valuemax="100" style="width: 98%;" th:style="'width: ' + ${T(java.lang.Math).round(currentTVSeries.mudemeter.criticMudemeter) + '%;'}"></div>
+											</div>
+											<div class="mx-0 my-0 px-2 py-0">
+												<p class="my-0 py-0" id="consensus-big">
+													<b>Series Info</b>:
+													<span th:text="${currentTVSeries.desc}" class="series-desc">An action-adventure series based on the Marvel 
+													Comics secret-intelligence organization headed by Agent Phil Coulson.</span>
+												</p>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-xl-4 col-lg-6 col-md-4 col-6 mx-0 my-auto px-0 py-0 text-center border-left border-dark">
+									<div class="row mx-0 my-0 px-0 py-2">
+										<div class="col-12 mx-0 my-0 px-0 py-0 text-center">
+											<h5 class="my-0 d-md-block d-none">User Score
+												<i class="fas fa-question-circle" data-toggle="tooltip" data-placement="left" title="The percentage of users who have reviewed this movie with 3.5 stars 
+																							or higher."></i>
+											</h5>
+											<p class="my-0 py-0 d-md-none d-block text-uppercase d-md-none d-block">User Score
+												<i class="fas fa-question-circle my-0 py-0 d-sm-inline d-none" data-toggle="tooltip" data-placement="left" title="The percentage 
+																							of users who have reviewed this movie with 3.5 stars or higher."></i>
+											</p>
+											<div th:if="${currentTVSeries != null}" class="row mx-0 my-0 px-0 py-md-2 py-3" id="user-score">
+												<h1 th:if="${currentTVSeries.mudemeter.audienceMudemeter >= 80}" class="ml-auto my-0 py-0 neon">M</h1>
+												<h1 th:if="${currentTVSeries.mudemeter.audienceMudemeter >= 70 
+																							and currentTVSeries.mudemeter.audienceMudemeter < 80.00}" class="ml-auto my-0 py-0 gold">M</h1>
+												<h1 th:if="${currentTVSeries.mudemeter.audienceMudemeter >= 60 
+																							and currentTVSeries.mudemeter.audienceMudemeter < 70}" class="ml-auto my-0 py-0 silver">M</h1>
+												<h1 th:if="${currentTVSeries.mudemeter.audienceMudemeter >= 50 
+																							and currentTVSeries.mudemeter.audienceMudemeter < 60}" class="ml-auto my-0 py-0 bronze">M</h1>
+												<h1 th:if="${currentTVSeries.mudemeter.audienceMudemeter < 50 
+																							and currentTVSeries.mudemeter.audienceMudemeter > 0}" class="ml-auto my-0 py-0 black">M</h1>
+												<h2 th:if="${currentTVSeries.mudemeter.audienceMudemeter == 0}" class="mx-auto my-0 py-0" style="color:white; font-family: 'Roboto', sans-serif;">
+													Not Available
+												</h2>
+												<h3 th:if="${currentTVSeries.mudemeter.audienceMudemeter != 0}" th:text="${T(java.lang.Math).round(currentTVSeries.mudemeter.audienceMudemeter) 
+																								+ '%'}" class="ml-1 mr-auto my-auto py-0 a-mudemeter">98%</h3>
+											</div>
+											<div th:if="${currentTVSeries == null}" class="row mx-0 my-0 px-0 py-md-2 py-3 mudemeter">
+												<h1 class="ml-auto my-0 py-0 gold">M</h1>
+												<h3 class="ml-1 mr-auto my-auto py-0">98%</h3>
+											</div>
+											<div th:if="${currentTVSeries != null}" class="mx-0 my-0 px-0 py-1 d-md-block d-none">
+												<p class="my-md-2 my-0">Average Score:
+													<b th:if="${currentTVSeries.mudemeter.audienceAvgScore != 0}" class="text-danger-light a-score">
+														[[${#strings.toString(T(java.lang.Math).round(currentTVSeries.mudemeter.audienceAvgScore * 10) / 10.0) + " /5"}]]
+													</b>
+													<b th:if="${currentTVSeries.mudemeter.audienceAvgScore == 0}" class="text-danger-light">
+														No Score
+													</b>
+												</p>
+											</div>
+											<div th:if="${currentTVSeries == null}" class="mx-0 my-0 px-0 py-1 d-md-block d-none">
+												<p class="my-md-2 my-0">Average Score:
+													<b class="text-danger-light">8.2/10</b>
+												</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="mx-0 my-0 px-0 py-2 bg-black-light d-md-none d-block meter-box">
+								<div class="mx-0 my-0 px-1 py-0">
+									<p class="my-0 py-0 xs-text text-center" id="consensus-small">
+										<b>Series Info</b>:
+										<span th:text="${currentTVSeries.desc}" class="series-desc">An action-adventure series based on the Marvel Comics 
+										secret-intelligence organization headed by Agent Phil Coulson./span>
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Advertisement -->
+				<div class="col-lg-3 mx-0 my-0 px-3 pt-1 pb-2 d-lg-block d-none">
+					<div class="mx-0 my-0 px-0 py-0 text-center">
+						<div class="mx-0 my-4 px-0 py-0 text-center">
+							<a class="mx-0 my-0 px-0 py-0">
+								<img id="ad3" src="images/ad-3.png" style="width:100%;">
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="d-none">
+		<div class="container-fluid mx-0 my-0 px-0 py-0 bg-black">
+			<div class="mx-0 my-0 px-0 pt-2 pb-0 bg-black">
+				<div class="row mx-0 mt-md-4 mt-0 mb-0 px-0 py-0 bg-light">
+					<div class="mx-0 my-0 px-0 py-0 bg-light header-label-left" style="width:2%;"></div>
+					<h4 class="mx-0 my-0 px-2 py-0 text-danger text-uppercase bg-black">
+						Seasons
+					</h4>
+				</div>
+			</div>
+
+			<div th:if="${currentTVSeries.submedia == null or currentTVSeries.submedia.isEmpty()}" class="mx-0 mt-3 mb-0 px-0 pt-3 pb-3 text-center">
+				<h4 class="my-0 py-0">Not Yet Available!</h4>
+			</div>
+	
+			<div th:if="${currentTVSeries.submedia != null and !currentTVSeries.submedia.isEmpty()}" class="row mx-0 mt-3 mb-0 px-0 pt-3 pb-0 bg-black">
+				<th:block th:each="tr, trStat : ${currentTVSeries.submedia}">
+					<div class="col-lg-4 col-md-6 col-12 mx-0 my-0 px-2 py-2 season-item">
+						<div class="col-12 mx-0 my-0 px-0 py-2" style="min-height:100% !important;">
+							<div class="row mx-0 my-0 px-0 py-0">
+								<div class="col-4 mx-0 my-0 px-2 py-0 text-right">
+									<a class="hover-none mx-0 my-0 px-0 py-0" href="#" th:href="@{/season(mediaID=${tr.id})}">
+										<img src="images/poster.png" style="width: 100%;" th:src="@{${T(us.mude.common.GlobalProps).FS_URI + '/' + tr.resourcePath
+										+ '/' + T(us.mude.common.GlobalProps).POSTER}}" onerror="this.onerror=null; this.src='images/poster.png';" alt="Trailer-Image"
+										class="img-fluid rounded" />
+									</a>
+								</div>
+								<div class="col-8 mx-0 my-0 pl-2 pr-0 py-0">
+									<a class="text-uppercase hover-dark" href="#" th:href="@{/season(mediaID=${tr.id})}">
+										<b class="text-white">
+											<span class="season-title" th:text="${tr.mediaName}">Marvel's Agents of S.H.I.E.L.D.:</span>
+											<span class="text-danger-light season-number" style="white-space: nowrap;" 
+											th:text="${tr.mediaName}">Season 5</span>
+										</b>
+									</a>
+									<!-- <div class="row mx-0 my-0 px-0 py-md-2 py-sm-4 py-2">
+										<div class="col-lg-5 col-md-6 col-5 row mx-0 my-0 px-2 py-0">
+											<h2 th:if="${tr.mudemeter.criticMudemeter >= 80}" 
+											class="my-0 gold">M</h2>
+											<h2 th:if="${tr.mudemeter.criticMudemeter >= 70 
+											and tr.mudemeter.criticMudemeter < 80}" 
+											class="my-0 gold">M</h2>
+											<h2 th:if="${tr.mudemeter.criticMudemeter >= 60 
+											and tr.mudemeter.criticMudemeter < 70}" 
+											class="my-0 silver">M</h2>
+											<h2 th:if="${tr.mudemeter.criticMudemeter >= 50 
+											and tr.mudemeter.criticMudemeter < 60}" 
+											class="my-0 bronze">M</h2>
+											<h2 th:if="${tr.mudemeter.criticMudemeter > 0 and 
+											tr.mudemeter.criticMudemeter < 50}" 
+											class="my-0 black">M</h2>
+											<h2 class="col-2 mx-0 my-0 px-0 py-0" 
+											th:if="${tr.mudemeter.criticMudemeter == 0}" 
+											style="color:white; font-family: 'Roboto', sans-serif;">
+												—
+											</h2>
+											<h5 th:if="${tr.mudemeter.criticMudemeter != 0}" th:text="${T(java.lang.Math).round(tr.mudemeter.criticMudemeter)
+											+ '%'}" class="ml-xl-2 ml-0 mr-0 my-auto">91%</h5>
+											<h5 th:if="${tr.mudemeter.criticMudemeter == 0}"
+											class="ml-xl-2 ml-0 mr-0 my-auto">NA</h5>
+										</div>
+										<div class="col-lg-7 col-md-6 col-7 mx-0 my-0 px-2 py-0">
+											<div class="progress mx-0 my-0 px-0 py-0" style="height:100%; border-radius:5px;">
+												<div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" aria-valuenow="98" aria-valuemin="0"
+												 aria-valuemax="100" style="width: 98%;" th:style="'width: ' + ${T(java.lang.Math).round(tr.mudemeter.criticMudemeter) + '%;'}"></div>
+											</div>
+										</div>
+									</div> -->
+									<div class="col-12 mx-0 my-0 px-0 pt-2 pb-0">
+										<!-- <p class="my-lg-2 my-0 py-0 c-c-box">Critics Consensus:&#8195;
+											<th:block th:if="${tr.reviews != null}" th:each="review, reviewStat : ${tr.reviews}"
+											 th:unless="${reviewStat.index > 0}">
+											 	<th:block th:if="${review != null}">
+													<span th:text="${review.ratingType == T(us.mude.common.RatingType).CRITIC ? review.comment : 'Not Available'}" class="series-desc">
+														Critic's comment
+													</span>
+												</th:block>
+												<th:block th:if="${review == null or review.comment == null or review.comment == ''}">
+													<span class="series-desc">
+														Not Available
+													</span>
+												</th:block>
+											</th:block>
+											<th:block th:if="${tr.reviews == null}">
+												<span>
+													Not Available
+												</span>
+											</th:block>
+										</p> -->
+										<p class="my-lg-2 my-0 py-0">
+											<span>[[${#strings.substring(tr.releaseDate.theatre, 0, 4)}]]</span>,&#8195;
+											<span th:text="${tr.from}">ABC</span>,&#8195;
+											<span th:text="${tr.submedia != null ? #lists.size(tr.submedia) : '0'}">17</span>&#8195;
+											<span>episodes</span>
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</th:block>
+			</div>
+			<th:block th:if="${currentTVSeries.submedia != null}">
+				<div th:if="${!currentTVSeries.submedia.isEmpty() and #lists.size(currentTVSeries.submedia) > 6}" class="col text-right px-2 my-sm-0 mt-2 mb-0">
+					<a style="cursor: pointer;" class="mr-auto text-danger-light hover-dark season-button">
+						<b>View All Seasons
+							<span>([[${#lists.size(currentTVSeries.submedia)}]])</span>
+						</b>
+					</a>
+				</div>
+			</th:block>
+		</div>
+	</section>
+
+	<section class="d-none">
+		<div class="container-fluid mx-0 my-0 px-0 py-0 bg-dark" id="video-box">
+			<div class="mx-0 my-0 px-0 pt-4 pb-0 bg-dark">
+				<div class="row mx-0 mt-md-4 mt-0 px-0 py-0 bg-danger header-label">
+					<div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:2%;"></div>
+					<h4 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark">
+						Videos
+					</h4>
+				</div>
+			</div>
+
+			<div th:if="${currentTVSeries.trailers == null or currentTVSeries.trailers.isEmpty()}" class="mx-0 mt-3 mb-0 px-0 pt-3 pb-0 text-center">
+				<h4 class="my-0 py-0">Not Yet Available!</h4>
+			</div>
+	
+			<div th:if="${currentTVSeries.trailers != null and !currentTVSeries.trailers.isEmpty()}" class="details owl-carousel owl-theme mx-0 mt-3 mb-0 px-0 pt-3 pb-0" style="z-index:0;">
+				<th:block th:each="tr, trStat : ${currentTVSeries.trailers}">
+					<div class="item">
+						<a class="mx-0 my-0 px-0 py-0 hover-blue video-btn active" style="cursor: pointer;" data-toggle="modal" 
+						data-src="https://www.youtube.com/embed/xjDjIWPwcPU" data-target="#myModal"
+						th:data-src="${tr}" data-index="0" th:data-index="${trStat.index}">
+							<div class="card px-0 py-0 mx-0 my-0">
+								<img class="card-img-top rounded-0" src="images/poster.png" 
+								th:src="@{${T(us.mude.common.GlobalProps).FS_URI} + '/' + ${currentTVSeries.resourcePath} + '/photos/'
+								+ ${trStat.index + 1} + '.jpg'}" onerror="this.onerror=null; this.src='images/poster.png';" alt="Card image cap">
+								<div class="card-img-overlay mx-0 my-0 px-1 py-1 text-right">
+									<h6 class="ml-auto mr-0 my-0 px-0 py-0">
+										<span class="badge-pill badge-dark py-1 px-2" th:text="${trStat.index == 0 ? 'First Look' : 'Must C'}" style="opacity:0.7 !important;">01:56</span>
+									</h6>
+								</div>
+								<div class="card-img-overlay text-right mx-0 my-0 px-0 py-0">
+									<div class="row mx-0 my-0 px-0 py-0 h-100 w-100">
+										<i class="fas fa-play fa-4x ml-auto mt-auto px-3 py-3" style="opacity:0.7;"></i>
+									</div>
+								</div>
+							</div>
+						</a>
+						<div class="mx-0 my-0 px-0 py-0">
+							<span style="font-size: 1.3rem;" class="mx-0 my-0">
+								<span th:text="${currentTVSeries.mediaName}">Doctor Strange</span>: Trailer
+								<span th:text="${trStat.index + 1}">2</span>
+							</span>
+						</div>
+					</div>
+				</th:block>
+			</div>
+			<div th:if="${currentTVSeries.trailers != null and !currentTVSeries.trailers.isEmpty()}" class="col text-right px-2 my-sm-0 mt-3 mb-0">
+				<a href="#" th:href="@{/trailers}" class="mr-auto text-danger-light hover-dark">
+					<b>View All Videos</b>
+				</a>
+			</div>
+		</div>
+	</section>
+
+	<section class="d-none">
+		<div class="container-fluid mx-0 my-0 px-0 py-0 bg-dark">
+			<div class="mx-0 my-0 px-0 pt-4 pb-0 bg-dark">
+				<div class="row mx-0 mt-md-4 mt-0 mb-0 px-0 py-0 bg-danger header-label">
+					<div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:2%;"></div>
+					<h4 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark">
+						Photos
+					</h4>
+				</div>
+			</div>
+	
+			<div class="mx-0 mt-3 mb-0 px-0 pt-3 pb-0 text-center" id="no-photo" style="display: none;">
+				<h4 class="my-0 py-0">Not Yet Available!</h4>
+			</div>
+			
+			<div class="mx-0 mt-3 mb-0 px-1 pt-3 pb-0" id="photo-container" style="z-index:0;">
+				<th:block th:each="i : ${#numbers.sequence(5, 0, -1)}">
+					<div class="item">
+						<a class="mx-0 my-0 px-0 py-0 hover-blue img-btn" style="cursor: pointer;" data-toggle="modal" data-src="images/banner.jpg"
+						 data-target="#photoModal" th:data-src="${T(us.mude.common.GlobalProps).FS_URI} + '/' + ${currentTVSeries.resourcePath} + '/photos/' + ${i + 1} + '.jpg'">
+							<div class="card px-0 py-0 mx-0 my-0">
+								<img class="card-img-top rounded-0" src="images/banner.jpg" th:src="@{${T(us.mude.common.GlobalProps).FS_URI} + '/' + ${currentTVSeries.resourcePath} + '/photos/' +
+								${i + 1} + '.jpg'}" onerror="this.parentNode.parentNode.parentNode.style.display='none';">
+							</div>
+						</a>
+					</div>
+				</th:block>
+			</div>
+			<div class="col text-right px-2 my-sm-0 mt-3 mb-0 photo-button" style="display: none;">
+				<a class="mr-auto text-danger-light hover-dark" style="cursor: pointer;">
+					<b>View All Photos</b>
+				</a>
+			</div>
+		</div>
+	</section>
+
+	<section class="d-none">
+		<div class="container-fluid mx-0 my-0 px-0 py-0 bg-dark">
+			<div class="mx-0 my-0 px-0 pt-4 pb-0 bg-dark">
+				<div class="row mx-0 mt-md-4 mt-0 mb-0 px-0 py-0 bg-danger header-label">
+					<div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:2%;"></div>
+					<h4 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark d-md-block d-none">
+						Series Details
+					</h4>
+					<h5 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark d-md-none d-block">
+						Series Details
+					</h5>
+				</div>
+			</div>
+	
+			<div class="row mx-0 my-0 px-2 pt-lg-5 pt-3 pb-0">
+				<div class="col-3 mx-0 my-0 px-2 py-1 text-right">
+					<b>Creators</b>
+				</div>
+				<div class="col-9 mx-0 my-0 px-2 py-1 creator-info">
+					<th:block th:if="${currentTVSeries.casts != null}" th:each="d, dStat : ${currentTVSeries.casts}">
+						<a th:if="${d.artistType == T(us.mude.common.ArtistType).CREATOR}" href="#" th:href="@{/artist(artistID=${d.artist.id})}"
+						 class="text-danger-light hover-dark">
+							[[${d.artist.name.firstName + " " + d.artist.name.lastName}]]
+						</a>
+						<span th:if="${d.artistType == T(us.mude.common.ArtistType).CREATOR}">&#8195;</span>
+					</th:block>
+				</div>
+				
+				<div class="col-3 mx-0 my-0 px-2 py-1 text-right">
+					<b>Starring</b>
+				</div>
+				<div class="col-9 mx-0 my-0 px-2 py-1">
+					<th:block th:if="${currentTVSeries.casts != null}" th:each="d, dStat : ${currentTVSeries.casts}" th:unless="${dStat.index > 3}">
+						<a th:if="${d.artistType == T(us.mude.common.ArtistType).OTHER}"
+						 href="#" th:href="@{/artist(artistID=${d.artist.id})}" class="text-danger-light hover-dark">
+							[[${d.artist.name.firstName + " " + d.artist.name.lastName}]]
+						</a>
+						<span th:if="${d.artistType == T(us.mude.common.ArtistType).OTHER}">&#8195;</span>
+					</th:block> 
+				</div>
+			</div>
+	
+			<div class="row mx-0 my-0 px-2 pt-0 pb-lg-5 pb-3">
+				<div class="col-3 mx-0 my-0 px-2 py-1 text-right">
+					<b>TV Network</b>
+				</div>
+				<div th:text="${currentTVSeries.from}" class="col-9 mx-0 my-0 px-2 py-1">
+					 ABC
+				</div>
+	
+				<div class="col-3 mx-0 my-0 px-2 py-1 text-right">
+					<b>Genre</b>
+				</div>
+				<div class="col-9 mx-0 my-0 px-2 py-1">
+					<th:block th:each="g, gStat : ${currentTVSeries.genre}">
+						<a th:text="${g}" class="text-danger-light">Action & Adventure</a>
+						<span th:unless="${gStat.last}">&#8195;</span>
+					</th:block>
+				</div>
+	
+				<div class="col-3 mx-0 my-0 px-2 py-1 text-right">
+					<b>Executive Producers</b>
+				</div>
+				<div class="col-9 mx-0 my-0 px-2 py-1 producer-info">
+					<th:block th:if="${currentTVSeries.casts != null}" th:each="d, dStat : ${currentTVSeries.casts}" th:unless="${dStat.index > 3}">
+						<a th:if="${d.artistType == T(us.mude.common.ArtistType).PRODUCER}" href="#" th:href="@{/artist(artistID=${d.artist.id})}" class="text-danger-light hover-dark">
+							[[${d.artist.name.firstName + " " + d.artist.name.lastName}]]
+						</a>
+						<span th:if="${d.artistType == T(us.mude.common.ArtistType).PRODUCER}">&#8195;</span>
+					</th:block>
+				</div>
+	
+				<div class="col-3 mx-0 my-0 px-2 py-1 text-right">
+					<b>Written By</b>
+				</div>
+				<div class="col-9 mx-0 my-0 px-2 py-1 writer-info">
+					<th:block th:if="${currentTVSeries.casts != null}" th:each="d, dStat : ${currentTVSeries.casts}">
+						<a th:if="${d.artistType == T(us.mude.common.ArtistType).WRITER}" href="#" th:href="@{/artist(artistID=${d.artist.id})}"
+						 class="text-danger-light hover-dark">
+							[[${d.artist.name.firstName + " " + d.artist.name.lastName}]]
+						</a>
+						<span th:if="${d.artistType == T(us.mude.common.ArtistType).WRITER}">&#8195;</span>
+					</th:block>
+				</div>
+	
+				<div class="col-3 mx-0 my-0 px-2 py-1 text-right">
+					<b>Premiere Date</b>
+				</div>
+				<div class="col-9 mx-0 my-0 px-2 py-1">
+					<th:block th:if="${currentTVSeries.releaseDate != null}">
+						<th:block th:if="${currentTVSeries.releaseDate.theatre != null}">
+							[[${currentTVSeries.parseDate(currentTVSeries.releaseDate.theatre) + ', ' + #strings.substring(currentTVSeries.releaseDate.theatre, 0, 4)}]]
+						</th:block>
+					</th:block>
+					<th:block th:if="${currentTVSeries.releaseDate == null or currentTVSeries.releaseDate.theatre == null}">
+						Not Available
+					</th:block>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="d-none">
+		<div class="container-fluid mx-0 my-0 px-0 py-0 bg-dark" id="cast-box">
+			<div class="mx-0 my-0 px-0 pt-4 pb-0 bg-dark">
+				<div class="row mx-0 mt-md-4 mt-0 mb-0 px-0 py-0 bg-danger header-label">
+					<div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:2%;"></div>
+					<h4 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark d-md-block d-none">
+						Cast
+					</h4>
+					<h6 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark d-md-none d-block">
+						Cast
+					</h6>
+				</div>
+			</div>
+	
+			<div th:if="${currentTVSeries.casts == null or currentTVSeries.casts.isEmpty()}" class="mx-0 mt-3 mb-0 px-0 pt-3 pb-3 text-center"
+			 id="no-artist" style="display: none;">
+				<h4 class="my-0 py-0">Not Yet Available!</h4>
+			</div>
+			
+			<div th:if="${currentTVSeries.casts != null and !currentTVSeries.casts.isEmpty()}" class="details owl-carousel owl-theme mx-0 mt-3 mb-0 px-1 pt-3 pb-3"
+			 style="z-index:0;">
+				<th:block th:each="d, dStat : ${currentTVSeries.casts}" th:unless="${dStat.index > 8}">
+					<div class="item">
+						<a class="mx-0 my-0 px-0 py-0 hover-none" href="#" th:href="@{/artist(artistID=${d.artist.id})}">
+							<div class="card px-0 py-0 mx-0 my-0">
+								<img class="card-img-top rounded-0" src="images/critics.gif" th:src="@{${T(us.mude.common.GlobalProps).FS_URI} + '/' + ${d.artist.resourcePath} + '/photos/0.jpg'}"
+								 onerror="this.onerror=null; this.src='images/critics.gif';" alt="Card image cap" style="min-height: 100%;">
+							</div>
+							<div class="mx-0 my-0 px-2 py-2">
+								<h6 class="mx-0 my-0 text-danger-light">[[${d.artist.name.firstName + " " + d.artist.name.lastName}]]</h6>
+								<b th:if="${d.artistRole != null and d.artistRole != ''}" class="text-light">as
+									<span th:text="${d.artistRole}">Kylo Ren</span>
+								</b>
+							</div>
+						</a>
+					</div>
+				</th:block>
+			</div>
+		</div>
+	</section>
+
+	<footer class="px-0 d-none" th:replace="index :: footer">
+	</footer>
+
+	<script src="jquery/jquery-3.3.1.min.js"></script>
+	<script src="bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="owlcarousel/owl.carousel.min.js"></script>
+	<script src="js/index.js"></script>
+	<script src="js/main.js"></script>
+	<script src="js/details.js"></script>
+	<script src="js/tvseries.js"></script>
+	<script>
+		$(function () {
+			$(".series-desc").each(function () {
+				$(this).text($(this).text().split(".")[0] + ".");
+			});
+			$(".season-title").each(function () {
+				$(this).text($(this).text().split("Season")[0]);
+			});
+			$(".season-number").each(function () {
+				if ($(this).text().indexOf("Season") >= 0)
+					$(this).text("Season" + $(this).text().split("Season")[1]);
+				else {
+					$(this).remove();
+				}	
+			});
+
+			if ($(".creator-info").children().length <= 0) {
+				var str = "<span>Not Available</span>";
+				var html = $.parseHTML(str);
+				$(".creator-info").append(html);
+			}
+
+			if ($(".producer-info").children().length <= 0) {
+				var str = "<span>Not Available</span>";
+				var html = $.parseHTML(str);
+				$(".producer-info").append(html);
+			}
+
+			if ($(".writer-info").children().length <= 0) {
+				var str = "<span>Not Available</span>";
+				var html = $.parseHTML(str);
+				$(".writer-info").append(html);
+			}
+
+			// if ($(".c-c-box").children().length <= 0) {
+			// 	var str = "<span>Not Available</span>";
+			// 	var html = $.parseHTML(str);
+			// 	$(".c-c-box").append(html);
+			// }
+			// if ($(".s-meter-box").children().length <= 0) {
+			// 	var str = "<span>Not Available</span>";
+			// 	var html = $.parseHTML(str);
+			// 	$(".s-meter-box").append(html);
+			// }
+			setTimeout(function () {
+				$("#photo-container").find(":hidden").remove();
+				if ($("#photo-container").children().hasClass('item')) {
+					$("#photo-container").addClass("photos owl-carousel owl-theme");
+					$('.photos').owlCarousel({
+						margin: 10,
+						autoWidth: false,
+						nav: true,
+						items: 4,
+						responsive: {
+							0: {
+								items: 1
+							},
+							500: {
+								items: 2
+							},
+							1000: {
+								items: 4
+							}
+						}
+					});
+					if ($("#photo-container .item").length > 5)
+						$(".photo-button").show();
+				}
+				else {
+					$("#no-photo").show();
+					$("#photo-container").hide();
+					$(".photo-button").hide();
+				}
+			}, 1000);
+		});
+	</script>
+</body>
+</html>

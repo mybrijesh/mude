@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Top Movies & TV Shows | Mude</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="shortcut icon" href="images/logo-white.ico">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="fontawesome/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/browse.css">
+    <link rel="stylesheet" href="nouislider/nouislider.min.css">
+    <script type="text/javascript">
+        var filterParam = "/browse/comingsoon";
+        var sortby = "RELEASE_DATE";
+        var genre = "";
+    </script>
+</head>
+<body>
+    <section class="px-0" th:replace="index :: header"></section>
+    <div th:replace="index :: header-modal"></div>
+    <section th:replace="index :: loader"></section>
+    
+    <section class="mt-md-0 mt-sm-4 mt-3 d-none">
+        <div class="container-fluid px-0 pt-md-0 pt-sm-4 pt-4 pb-0">
+            <div class="row mx-0 my-0 pt-4 pb-0 bg-dark">
+                <div class="col-md-3 d-md-block d-sm-none d-none col-py-0">
+                    <div class="col-12 mx-0 my-0 px-0 py-0">
+                        <div class="col-12 mx-0 my-0 px-0 py-2">
+                            <h6 class="ml-lg-3 ml-md-2 my-1 px-0 py-0 text-danger">
+                                Movies
+                            </h6>
+                        </div>
+                        <div class="col-12 mx-0 my-0 px-0 py-2 list bat movie-coming-soon" style="cursor: pointer;">
+                            <p class="ml-lg-5 ml-md-3 my-0 px-0 py-0">Coming Soon</p>
+                        </div>
+                        <div class="col-12 mx-0 my-0 px-0 py-2 list bat top-box-office" style="cursor: pointer;">
+                            <p class="ml-lg-5 ml-md-3 my-0 px-0 py-0">Top Box Office</p>
+                        </div>
+                        <div class="col-12 mx-0 my-0 px-0 py-2 list bat active opening-this-week" style="cursor: pointer;">
+                            <p class="ml-lg-5 ml-md-3 px-0 my-0 py-0">Opening This Week</p>
+                        </div>
+                        <div class="col-12 mx-0 my-0 px-0 py-2 list bat c-movie" style="cursor: pointer;">
+                            <p class="ml-lg-5 ml-md-3 my-0 px-0 py-0">Certified Movies</p>
+                        </div>
+                        <div class="col-12 mx-0 my-0 px-0 py-2 list bat h-rate-m" style="cursor: pointer;">
+                            <p class="ml-lg-5 ml-md-3 my-0 px-0 py-0">Highest Rated Movies</p>
+                        </div>
+                        <div class="col-12 mx-0 my-0 px-0 py-2 list bat popular-m" style="cursor: pointer;">
+                            <p class="ml-lg-5 ml-md-3 my-0 px-0 py-0">Popular Movies</p>
+                        </div>
+                        <div class="col-12 mx-0 my-0 px-0 py-2 list bat a-winner-m" style="cursor: pointer;">
+                            <p class="ml-lg-5 ml-md-3 my-0 px-0 py-0">Award Winner</p>
+                        </div>
+                        <div class="col-12 mx-0 my-0 px-0 py-2">
+                            <h6 class="ml-lg-3 ml-md-2 my-1 px-0 py-0 text-danger">
+                                TV
+                            </h6>
+                        </div>
+                        <div class="col-12 mx-0 my-0 px-0 py-2 list bat new-tv-tonight" style="cursor: pointer;">
+                            <p class="ml-lg-5 ml-md-3 px-0 my-0 py-0">New TV Tonight</p>
+                        </div>
+                        <div class="col-12 mx-0 my-0 px-0 py-2 list bat c-tv" style="cursor: pointer;">
+                            <p class="ml-lg-5 ml-md-3 my-0 px-0 py-0">Certified TV</p>
+                        </div>
+                        <div class="col-12 mx-0 my-0 px-0 py-2 list bat h-rate-tv" style="cursor: pointer;">
+                            <p class="ml-lg-5 ml-md-3 my-0 px-0 py-0">Highest Rated TV</p>
+                        </div>
+                        <div class="col-12 mx-0 my-0 px-0 py-2 list bat popular-tv" style="cursor: pointer;">
+                            <p class="ml-lg-5 ml-md-3 my-0 px-0 py-0">Popular TV on Mude</p>
+                        </div>
+                    </div>
+        
+                    <div class="col-12 px-0 py-0 mx-0 mt-3 mb-0">
+                        <div class="px-0">
+                            <div class="text-center">
+                                <a href="#" class="mx-0 my-0 px-0 py-0">
+                                    <img id="ad3" src="images/ad-3.png" style="width: 80%;">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="col-12 px-0 py-0 mx-0 mt-3 mb-3">
+                        <div class="px-0">
+                            <div class="row mx-0 my-0 px-0 pt-1 pb-0">
+                                <h1 class="mx-auto my-0 neon">M</h1>
+                            </div>
+                            <div class="col-12 mx-0 my-1 px-1 py-0 text-center">
+                                <h5 class="gold guaranteed mb-0 pb-0">Guaranteed</h5>
+                                <h5 class="gold guaranteed my-0 py-0">Picks</h5>
+                            </div>
+                            <div class="col-12 mx-0 mt-3 mb-0 px-2 py-2 text-center small">
+                                Movies and TV shows are Guaranteed Picks with a steady MudeMeter of 75% or higher after a set amount of reviews (80 for wide-release
+                                movies, 40 for limited-release movies, 20 for TV shows), including 5 reviews from Top Critics.
+                            </div>
+                            <div class="col-12 mx-0 mt-1 mb-0 px-2 py-2 text-center small">
+                                <a class="nav-link my-0 py-0" href="#" data-toggle="modal" data-target="#meterModalCenter">
+                                    <p class="text-white my-0 py-0 text-danger-light hover-dark">What's the MudeMeter®?</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-9 col-sm-12 py-0">
+                    <div class="col-12 mx-0 my-0 px-0 py-0">
+                        <div class="row my-0 px-3 py-2 bg-black d-md-none d-flex">
+                            <h6 class="mx-0 my-auto px-0 py-0 text-danger"><b>Filter</b></h6>
+                            <div class="dropdown ml-auto" id="filter-dropdown">
+                                <button class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                    Sort & View
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right scrollable-menu mx-0 mt-2 mb-0 px-3 py-0" aria-labelledby="dropdownMenuButton" id="dropdownMenuButtonBox">
+                                    <div class="col-12 mx-0 my-0 px-0 py-0">
+                                        <div class="col-12 mx-0 my-0 px-0 py-2">
+                                            <h6 class="ml-lg-3 ml-md-2 my-1 px-0 py-0 text-danger">
+                                                <small>In Theaters</small>
+                                            </h6>
+                                        </div>
+                                        <div class="col-12 mx-0 my-0 px-0 py-2 list bat active opening-this-week" style="cursor: pointer;">
+                                            <p class="ml-lg-5 ml-md-3 px-0 my-0 py-0">Opening This Week</p>
+                                        </div>
+                                        <div class="col-12 mx-0 my-0 px-0 py-2 list bat top-box-office" style="cursor: pointer;">
+                                            <p class="ml-lg-5 ml-md-3 my-0 px-0 py-0">Top Box Office</p>
+                                        </div>
+                                        <div class="col-12 mx-0 my-0 px-0 py-2 list bat movie-coming-soon" style="cursor: pointer;">
+                                            <p class="ml-lg-5 ml-md-3 my-0 px-0 py-0">Coming Soon</p>
+                                        </div>
+                                        <div class="col-12 mx-0 my-0 px-0 py-2 list bat guaranteed-movie-picks" style="cursor: pointer;">
+                                            <p class="ml-lg-5 ml-md-3 my-0 px-0 py-0">Guaranteed Movie Picks</p>
+                                        </div>
+                                        <div class="col-12 mx-0 my-0 px-0 py-2">
+                                            <h6 class="ml-lg-3 ml-md-2 my-1 px-0 py-0 text-danger">
+                                                <small>DVD & STREAMING MOVIES</small>
+                                            </h6>
+                                        </div>
+                                        <div class="col-12 mx-0 my-0 px-0 py-2 list bat browse-all" style="cursor: pointer;">
+                                            <p class="ml-lg-5 ml-md-3 px-0 my-0 py-0">Browse All</p>
+                                        </div>
+                                        <div class="col-12 mx-0 my-0 px-0 py-2 list bat top-dvd-streaming" style="cursor: pointer;">
+                                            <p class="ml-lg-5 ml-md-3 my-0 px-0 py-0">Top DVD & Streaming</p>
+                                        </div>
+                                        <div class="col-12 mx-0 my-0 px-0 py-2 list bat new-relesases" style="cursor: pointer;">
+                                            <p class="ml-lg-5 ml-md-3 my-0 px-0 py-0">New Releases</p>
+                                        </div>
+                                        <div class="col-12 mx-0 my-0 px-0 py-2 list bat dvd-coming-soon" style="cursor: pointer;">
+                                            <p class="ml-lg-5 ml-md-3 my-0 px-0 py-0">Coming Soon</p>
+                                        </div>
+                                        <div class="col-12 mx-0 my-0 px-0 py-2 list bat guaranteed-dvd-picks" style="cursor: pointer;">
+                                            <p class="ml-lg-5 ml-md-3 my-0 px-0 py-0">Guaranteed DVD Picks</p>
+                                        </div>
+                                        <div class="col-12 mx-0 my-0 px-0 py-2">
+                                            <h6 class="ml-lg-3 ml-md-2 my-1 px-0 py-0 text-danger">
+                                                <small>TV</small>
+                                            </h6>
+                                        </div>
+                                        <div class="col-12 mx-0 my-0 px-0 py-2 list bat new-tv-tonight" style="cursor: pointer;">
+                                            <p class="ml-lg-5 ml-md-3 px-0 my-0 py-0">New TV Tonight</p>
+                                        </div>
+                                        <div class="col-12 mx-0 my-0 px-0 py-2 list bat most-popular" style="cursor: pointer;">
+                                            <p class="ml-lg-5 ml-md-3 my-0 px-0 py-0">Most Popular TV on Mude</p>
+                                        </div>
+                                        <div class="col-12 mx-0 my-0 px-0 py-2 list bat guaranteed-tv-picks" style="cursor: pointer;">
+                                            <p class="ml-lg-5 ml-md-3 my-0 px-0 py-0">Guaranteed TV Picks</p>
+                                        </div>
+                                    </div>
+                                    <div class="border mx-0 my-1 px-0 py-0" style="opacity:0.2;"></div>
+                                    <div class="col-12 mx-0 my-0 px-0 py-0">
+                                        <div class="row mx-0 my-0 px-0 py-2">
+                                            <h6 class="ml-lg-3 ml-md-2 mr-auto my-1 px-0 py-0 text-danger">
+                                                <small>Mudemeter</small>
+                                            </h6>
+                                            <b class="my-auto py-0">
+                                                <span class="my-0" id="small-min-first">0%</span> -----
+                                                <span class="my-0" id="small-max-first">100%</span>
+                                            </b>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mx-0 my-0 px-0 py-2"> 
+                                        <div class="mx-3 my-0 px-0 py-0" id="small-drag-first"></div>
+                                    </div>
+                                    <div class="form-check my-2">
+                                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                                        <label class="form-check-label text-white" for="exampleCheck1">Guaranteed Picks Only</label>
+                                    </div>
+                                    <div class="col-12 mx-0 my-0 px-0 py-0">
+                                        <div class="row mx-0 my-0 px-0 py-2">
+                                            <h6 class="ml-lg-3 ml-md-2 mr-auto my-1 px-0 py-0 text-danger">
+                                                <small>Audience Score</small>
+                                            </h6>
+                                            <b class="my-auto py-0">
+                                                <span class="my-0" id="small-min-second">0%</span> -----
+                                                <span class="my-0" id="small-max-second">100%</span>
+                                            </b>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mx-0 my-0 px-0 py-2">
+                                        <div class="mx-3 my-0 px-0 py-0" id="small-drag-second"></div>
+                                    </div>
+                                    <div class="col-12 mx-0 my-0 px-0 py-2">
+                                        <div class="row mx-0 my-0 px-0 py-2">
+                                            <h6 class="ml-lg-3 ml-md-2 mr-auto my-1 px-0 py-0 text-danger">
+                                                <small>Genre</small>
+                                            </h6>
+                                            <p class="my-0 py-0">
+                                                <a href="#" class="mx-0 my-0 px-0 py-0 hover-blue">
+                                                    <b>Select All</b>
+                                                </a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mx-0 my-0 px-0 py-0">
+                                        <div class="row mx-0 my-0 px-0 py-1">
+                                            <div class="form-check col-6">
+                                                <input type="checkbox" class="form-check-input" id="action">
+                                                <label class="form-check-label text-white" for="action">Action</label>
+                                            </div>
+                                            <div class="form-check col-6">
+                                                <input type="checkbox" class="form-check-input" id="animation">
+                                                <label class="form-check-label text-white" for="animation">Animation</label>
+                                            </div>
+                                        </div>
+                                        <div class="row mx-0 my-0 px-0 py-1">
+                                            <div class="form-check col-6">
+                                                <input type="checkbox" class="form-check-input" id="art">
+                                                <label class="form-check-label text-white" for="art">Art &amp; Foreign</label>
+                                            </div>
+                                            <div class="form-check col-6">
+                                                <input type="checkbox" class="form-check-input" id="classics">
+                                                <label class="form-check-label text-white" for="classics">Classics</label>
+                                            </div>
+                                        </div>
+                                        <div class="row mx-0 my-0 px-0 py-1">
+                                            <div class="form-check col-6">
+                                                <input type="checkbox" class="form-check-input" id="comedy" >
+                                                <label class="form-check-label text-white" for="comedy">Comedy</label>
+                                            </div>
+                                            <div class="form-check col-6">
+                                                <input type="checkbox" class="form-check-input" id="documentary" >
+                                                <label class="form-check-label text-white" for="documentary">Documentary</label>
+                                            </div>
+                                        </div>
+                                        <div class="row mx-0 my-0 px-0 py-1">
+                                            <div class="form-check col-6">
+                                                <input type="checkbox" class="form-check-input" id="drama" >
+                                                <label class="form-check-label text-white" for="drama">Drama</label>
+                                            </div>
+                                            <div class="form-check col-6">
+                                                <input type="checkbox" class="form-check-input" id="horror" >
+                                                <label class="form-check-label text-white" for="horror">Horror</label>
+                                            </div>
+                                        </div>
+                                        <div class="row mx-0 my-0 px-0 py-1">
+                                            <div class="form-check col-6">
+                                                <input type="checkbox" class="form-check-input" id="kids" >
+                                                <label class="form-check-label text-white" for="kids">Kids & Family</label>
+                                            </div>
+                                            <div class="form-check col-6">
+                                                <input type="checkbox" class="form-check-input" id="mystery" >
+                                                <label class="form-check-label text-white" for="mystery">Mystery</label>
+                                            </div>
+                                        </div>
+                                        <div class="row mx-0 my-0 px-0 py-1">
+                                            <div class="form-check col-6">
+                                                <input type="checkbox" class="form-check-input" id="romance" >
+                                                <label class="form-check-label text-white" for="romance">Romance</label>
+                                            </div>
+                                            <div class="form-check col-6">
+                                                <input type="checkbox" class="form-check-input" id="scifi" >
+                                                <label class="form-check-label text-white" for="scifi">Sci-fi & Fantasy</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 mx-0 my-0 px-0 py-2">
+                                        <h6 class="ml-lg-3 ml-md-2 mr-auto my-1 px-0 py-0 text-danger">
+                                            <small>Sort By</small>
+                                        </h6>
+                                    </div>
+                                    <div class="col-12 mx-0 my-0 px-0 py-2">
+                                         <div class="btn-group mx-0 my-0 px-0 py-0 col-sm-10 col-12" role="group" aria-label="sort-by">
+                                            <button type="button" class="btn btn-outline-light rounded-0 col-4 release-button active px-0" onclick="window.sortby='RELEASE_DATE'; genre_checkbox_changed(0);">
+                                                Release Date</button>
+                                            <button type="button" class="btn btn-outline-light rounded-0 col-4 meter-button px-0" onclick="window.sortby='BOX_OFFICE'; genre_checkbox_changed(0);">
+                                                Mudemeter</button>
+                                            <button type="button" class="btn btn-outline-light rounded-0 col-4 popular-button px-0" onclick="window.sortby='POPULARITY'; genre_checkbox_changed(0);">
+                                                Popularity</button>
+                                           <!--  <button type="button" class="btn btn-outline-light rounded-0 col-4 popular-button px-0" onclick="window.sortby='POPULARITY'; genre_checkbox_changed(0);">
+                                                Box Office</button> -->
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mx-0 my-2 px-0 py-5 text-center">
+                                        <h5 class="d-none"><a class="btn btn-dark" href="#" style="width:100%;">Click to Apply</a></h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mx-0 my-md-0 mt-sm-2 mt-2 mb-0 px-0 py-2">
+                            <h5 class="ml-md-0 ml-sm-1 ml-1 mr-auto my-0 px-0 py-0" id="text-opening">
+                                Opening This Week
+                            </h5>
+                            <h5 class="ml-md-0 ml-sm-1 ml-1 mr-auto my-0 px-0 py-0 d-none" id="text-top-box">
+                                Top Box Office
+                            </h5>
+                            <h5 class="ml-md-0 ml-sm-1 ml-1 mr-auto my-0 px-0 py-0 d-none" id="text-coming-movie">
+                                Coming Soon
+                            </h5>
+                            <h5 class="ml-md-0 ml-sm-1 ml-1 mr-auto my-0 px-0 py-0 d-none" id="text-moive-picks">
+                                Guaranteed Movie Picks
+                            </h5>
+                            <h5 class="ml-md-0 ml-sm-1 ml-1 mr-auto my-0 px-0 py-0 d-none" id="text-browse">
+                                Browse All
+                            </h5>
+                            <h5 class="ml-md-0 ml-sm-1 ml-1 mr-auto my-0 px-0 py-0 d-none" id="text-top-dvd">
+                                Top Dvd & Streaming
+                            </h5>
+                            <h5 class="ml-md-0 ml-sm-1 ml-1 mr-auto my-0 px-0 py-0 d-none" id="text-new-releases">
+                                New Releases
+                            </h5>
+                            <h5 class="ml-md-0 ml-sm-1 ml-1 mr-auto my-0 px-0 py-0 d-none" id="text-coming-dvd">
+                                Coming Soon
+                            </h5>
+                            <h5 class="ml-md-0 ml-sm-1 ml-1 mr-auto my-0 px-0 py-0 d-none" id="text-dvd-picks">
+                                Guaranteed Movie Picks
+                            </h5>
+                            <h5 class="ml-md-0 ml-sm-1 ml-1 mr-auto my-0 px-0 py-0 d-none" id="text-new-tv">
+                                New TV Tonight
+                            </h5>
+                            <h5 class="ml-md-0 ml-sm-1 ml-1 mr-auto my-0 px-0 py-0 d-none" id="text-most-popular">
+                                Most Popular TV on Mude
+                            </h5>
+                            <h5 class="ml-md-0 ml-sm-1 ml-1 mr-auto my-0 px-0 py-0 d-none" id="text-most-popular-m">
+                                Popular Movies
+                            </h5>
+                            <h5 class="ml-md-0 ml-sm-1 ml-1 mr-auto my-0 px-0 py-0 d-none" id="text-tv-picks">
+                                Guaranteed TV Picks
+                            </h5>
+                            <h5 class="ml-md-0 ml-sm-1 ml-1 mr-auto my-0 px-0 py-0 d-none" id="text-a-winner">
+                                Academy Award Winners
+                            </h5>
+                            <h5 class="ml-md-0 ml-sm-1 ml-1 mr-auto my-0 px-0 py-0 d-none" id="text-c-movie">
+                                Certified Fresh
+                            </h5>
+                            <h5 class="ml-md-0 ml-sm-1 ml-1 mr-auto my-0 px-0 py-0 d-none" id="text-h-rate-m">
+                                Highest Rated
+                            </h5>
+                            <h5 class="ml-md-0 ml-sm-1 ml-1 mr-auto my-0 px-0 py-0 d-none" id="text-h-rate-tv">
+                                Highest Rated
+                            </h5>
+                        </div>
+                    </div>
+                    <div class="row ml-0 mr-2 mt-3 mb-0 px-0 py-0 border border-white" id="filterOptions">
+                        <div class="dropdown mx-0 my-1 px-0 py-0">
+                            <a class="top-dropdown dropdown-toggle hover-blue px-3" href="#" id="scaler" role="button" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">
+                                <b><span class="my-0 bronze" id="min">50%</span> -----
+                                <span class="my-0 gold" id="max">80%</span></b>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-left bg-dark border-white rounded-0 mx-0 mt-2 mb-0 px-3 py-3" aria-labelledby="scaler"
+                                style="width: 350px;" id="left">
+                                <h6 class="text-white">MudeMeter</h6>
+                                <div class="mt-3" id="drag"></div>
+                                <div class="form-check mt-3">
+                                    <input type="checkbox" class="form-check-input" id="exampleCheck8">
+                                    <label class="form-check-label text-white" for="exampleCheck8">Guaranteed Picks Only</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dropdown ml-3 my-1 px-0 py-0 mr-auto">
+                            <a class="top-dropdown dropdown-toggle hover-blue" href="#" id="genre" role="button" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">
+                                Genre:
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-left bg-dark border-white rounded-0 mx-0 mt-2 mb-0 px-0 py-0" aria-labelledby="genre"
+                                style="width: 200px;" id="genre_checkbox">
+                                <a class="dropdown-item mx-0 my-0 px-1 py-1" href="#">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="smaction" value="ACTION" onchange="genre_checkbox_changed(0)" checked>
+                                        <label class="form-check-label text-white" for="smaction">Action</label>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item mx-0 my-0 px-1 py-1" href="#">
+                                    <div class="form-check mt-1">
+                                        <input type="checkbox" class="form-check-input" id="smanimation" value="ANIMATION" onchange="genre_checkbox_changed(0)" checked>
+                                        <label class="form-check-label text-white" for="smanimation">Animation</label>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item mx-0 my-0 px-1 py-1" href="#">
+                                    <div class="form-check mt-1">
+                                        <input type="checkbox" class="form-check-input" id="smart" value="ARTFOREIGN" onchange="genre_checkbox_changed(0)" checked>
+                                        <label class="form-check-label text-white" for="smart">Art Foreign</label>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item mx-0 my-0 px-1 py-1" href="#">
+                                    <div class="form-check mt-1">
+                                        <input type="checkbox" class="form-check-input" id="smclassics" value="CLASSIC" onchange="genre_checkbox_changed(0)" checked>
+                                        <label class="form-check-label text-white" for="smclassics">Classics</label>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item mx-0 my-0 px-1 py-1" href="#">
+                                    <div class="form-check mt-1">
+                                        <input type="checkbox" class="form-check-input" id="smcomedy" value="COMEDY" onchange="genre_checkbox_changed(0)" checked>
+                                        <label class="form-check-label text-white" for="smcomedy">Comedy</label>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item mx-0 my-0 px-1 py-1" href="#">
+                                    <div class="form-check mt-1">
+                                        <input type="checkbox" class="form-check-input" id="smdocumentary" value="DOCUMENTARY" onchange="genre_checkbox_changed(0)" checked>
+                                        <label class="form-check-label text-white" for="smdocumentary">Documentary</label>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item mx-0 my-0 px-1 py-1" href="#">
+                                    <div class="form-check mt-1">
+                                        <input type="checkbox" class="form-check-input" id="smdrama" value="DRAMA" onchange="genre_checkbox_changed(0)" checked>
+                                        <label class="form-check-label text-white" for="smdrama">Drama</label>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item mx-0 my-0 px-1 py-1" href="#">
+                                    <div class="form-check mt-1">
+                                        <input type="checkbox" class="form-check-input" id="smhorror" value="HORROR" onchange="genre_checkbox_changed(0)" checked>
+                                        <label class="form-check-label text-white" for="smhorror">Horror</label>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item mx-0 my-0 px-1 py-1" href="#">
+                                    <div class="form-check mt-1">
+                                        <input type="checkbox" class="form-check-input" id="smkids" value="KIDSFAMILY" onchange="genre_checkbox_changed(0)" checked>
+                                        <label class="form-check-label text-white" for="smkids">Kids & Family</label>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item mx-0 my-0 px-1 py-1" href="#">
+                                    <div class="form-check mt-1">
+                                        <input type="checkbox" class="form-check-input" id="smmystery" value="MYSTERY" onchange="genre_checkbox_changed(0" checked>
+                                        <label class="form-check-label text-white" for="smmystery">Mystery</label>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item mx-0 my-0 px-1 py-1" href="#">
+                                    <div class="form-check mt-1">
+                                        <input type="checkbox" class="form-check-input" id="smromance" value="ROMANCE" onchange="genre_checkbox_changed(0)" checked>
+                                        <label class="form-check-label text-white" for="smromance">Romance</label>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item mx-0 my-0 px-1 py-1" href="#">
+                                    <div class="form-check mt-1">
+                                        <input type="checkbox" class="form-check-input" id="smscifi" value="SFFANTASY" onchange="genre_checkbox_changed(0)" checked>
+                                        <label class="form-check-label text-white" for="smscifi">Sci-fi & Fantasy</label>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="dropdown mx-0 my-1 px-0 py-0">
+                            <a class="top-dropdown dropdown-toggle mx-0 pr-4 hover-blue" href="#" id="sort" role="button" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">
+                                Sort By:
+                                <b id="sortby_label">Release Date</b>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-left bg-dark border-white rounded-0 mx-0 mt-2 mb-0 px-0 py-0" aria-labelledby="sort">
+                                <a class="dropdown-item mx-0 my-0 px-1 py-1 text-white release-date" href="#" onclick="window.sortby='RELEASE_DATE'; genre_checkbox_changed(0);">
+                                    Release Date
+                                </a>
+                                <a class="dropdown-item mx-0 my-0 px-1 py-1 text-white mudemeter" href="#" onclick="window.sortby='MUDEMETER'; genre_checkbox_changed(0);">
+                                    MudeMeter
+                                </a>
+                                <a class="dropdown-item mx-0 my-0 px-1 py-1 text-white popularity" href="#" onclick="window.sortby='POPULARITY'; genre_checkbox_changed(0);">
+                                    Popularity
+                                </a>
+                                <a class="dropdown-item mx-0 my-0 px-1 py-1 text-white box-office" href="#" onclick="window.sortby='BOX_OFFICE'; genre_checkbox_changed(0);">
+                                    Box Office
+                                </a>
+                                <a class="dropdown-item mx-0 my-0 px-1 py-1 text-white alphabet" href="#" onclick="window.sortby='ALPHABET'; genre_checkbox_changed(0);">
+                                    Alphabetical Order
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row ml-0 mr-2 mt-3 mb-0 px-0 py-0 border border-white" id="awardwinnerFilterOptions">
+                        <div class="col-12 mx-0 my-0 px-0 py-2">
+                            <h6 class="ml-lg-3 ml-md-2 mr-auto my-1 px-0 py-0 text-danger">
+                                <small>Show Year:</small>
+                            </h6>
+                        </div>
+                        <div class="col-12 mx-0 my-0 px-0 py-2">
+                             <select id="awardYearOptions"></select>
+                        </div>
+                    </div>
+                    <div class="row mt-3 mx-0 mb-0 px-0 py-0">
+                        <b class="ml-3 mr-auto my-2 px-0 py-0" id="count">Showing 26 of 26</b>
+                        <div class="btn-group ml-0 mr-2 my-0 px-0 py-0" role="group" aria-label="Basic example">
+                            <button type="button" class="btn btn-outline-light rounded-0 col-6 active" onclick="gridView()" id="grid-button">
+                                <i class="fa fa-th-large"></i> Grid</button>
+                            <button type="button" class="btn btn-outline-light rounded-0 col-6" onclick="listView()" id="list-button">
+                                <i class="fa fa-bars"></i> List</button>
+                        </div>
+                    </div>
+                    <div class="col-box-parent m-0 p-0">
+                        <div class="column-box row mt-3 ml-0 mr-2 mb-0 px-0 pt-3 pb-0 border-white border-top" id="displayMovies">
+                            <div class="column col-lg-3 col-md-4 col-sm-4 col-6 mx-0 my-0 px-1 py-1">
+                                <a class="mx-0 my-0 px-0 py-0 hover-blue media-page" href="movie?mediaID=4997">
+                                    <div class="column-child mx-0 my-0 px-0 py-0">
+                                        <div class="img-box mx-0 my-0 px-0 py-0 text-center">
+                                            <img class="img-fluid" src="images/v1.jpeg" alt="Card image cap">
+                                        </div>
+                                        <div class="box-text mx-0 mt-3 mb-0 px-0 py-0 text-center">
+                                            <h6 class="mx-0 my-0 px-0 py-0 child-name">Annihilation</h6>
+                                            <div class="row mx-0 my-0 px-0 py-0">
+                                                <h3 class="ml-auto mr-0 my-0 px-0 py-0 gold child-scoreSymbole">
+                                                    M
+                                                </h3>
+                                                <b class="my-auto mr-auto mx-0 px-0 py-0 text-white child-score">100%</b>
+                                                <!-- <h3 class="ml-2 mr-1 my-0 px-0 py-0 gold" style="font-family: 'Blogger Sans Bold';">
+                                                    m
+                                                </h3>
+                                                <b class="my-auto ml-0 mr-auto px-0 py-0 text-white">94%</b> -->
+                                            </div>
+                                            <p class="mx-0 my-0 px-0 py-0 list-text d-none child-cast">Storm Reid, Oprah Winfrey</p>
+                                            <p class="mx-0 my-0 px-0 py-0 list-text list-explain d-none text-muted child-comment">Description</p>
+                                            <p class="mx-0 my-0 px-0 py-0 list-text list-explain d-none child-description">Based on Jeff VanderMeer's best-selling Southern Reach Trilogy, Annihilation stars Natalie Portman, Jennifer Jason
+                                                Leigh, Gina Rodriguez, Tessa Thompson, Tuva Novotny and Oscar Isaac. It was written and directed by Alex Garland
+                                                (Ex Machina, 28 Days Later).</p>
+                                            <p class="mx-0 my-0 px-0 py-0 list-text text-uppercase child-rating-runtime">PG 13, 2 HR 15 MIN</p>
+                                            <p class="mx-0 my-0 px-0 py-0 text-muted child-releasedate">
+                                                In Theaters March 9
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mx-0 p-0">
+                        <div class="mx-auto p-2">
+                            <div class="">
+                              <div class="pagination2" id="pagination">
+                                <!-- <a href="#">&laquo;</a>
+                                <a href="#">1</a>
+                                <a href="#" class="active">2</a>
+                                <a href="#">3</a>
+                                <a href="#">4</a>
+                                <a href="#">5</a>
+                                <a href="#">6</a>
+                                <a href="#">7</a>
+                                <a href="#">&raquo;</a> -->
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="mx-0 my-3 px-0 py-0 text-center d-none">
+                        <a class="btn btn-outline-light col-10" href="#">
+                            <h5 class="my-auto">Show More</h5>
+                        </a>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="px-0 d-none" th:replace="index :: footer">
+    </footer>
+    <script src="/jquery/jquery-3.3.1.min.js"></script>
+    <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="owlcarousel/owl.carousel.min.js"></script>
+    <script src="nouislider/nouislider.min.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/browse.js"></script>
+    <script type="text/javascript">
+    var tab = getParameterByName( "tab" );
+    $(".list").click(function(){
+        var OptionSelected = $(this).find("p").text();
+        if(OptionSelected == "Coming Soon")
+            window.filterParam = "/browse/comingsoon";
+
+        else if(OptionSelected == "Top Box Office")
+            window.filterParam = "/browse/topboxoffice";
+
+        else if(OptionSelected == "Opening This Week")
+            window.filterParam = "/browse/openthisweek";
+
+        else if(OptionSelected == "Certified Movies")
+            window.filterParam = "/browse/certifiedmovie";
+
+        else if(OptionSelected == "Highest Rated Movies")
+            window.filterParam = "/browse/heighestmovie";
+
+        else if(OptionSelected == "Popular Movies")
+            window.filterParam = "/browse/popularmovie";
+
+        else if(OptionSelected == "Award Winner"){
+            window.filterParam = "/browse/awardwinner";
+            $("#filterOptions").hide();
+            $("#awardwinnerFilterOptions").show();
+        }
+
+        else if(OptionSelected == "New TV Tonight")
+            window.filterParam = "/browse/newtvtonight";
+
+        else if(OptionSelected == "Certified TV")
+            window.filterParam = "/browse/certifiedtv";
+
+        else if(OptionSelected == "Highest Rated TV")
+            window.filterParam = "/browse/heighesttv";
+
+        else if(OptionSelected == "Popular TV on Mude")
+            window.filterParam = "/browse/populartv";
+
+        if(OptionSelected != "Award Winner"){
+            $("#awardwinnerFilterOptions").hide();
+            $("#filterOptions").show();
+        }
+
+        genre_checkbox_changed(0);
+    });
+    if( tab == 0 ) {
+        $( '.movie-coming-soon' ).addClass( 'active' ).siblings().removeClass('active');
+        $( '#text-coming-movie').removeClass('d-none').siblings().addClass('d-none');
+        // window.filterParam = "/browse/comingsoon";
+    } else if( tab == 1 ) {
+        $( '.top-box-office' ).addClass( 'active' ).siblings().removeClass('active');
+        $( '#text-top-box' ).removeClass('d-none').siblings().addClass('d-none');
+        $( '#box-earnings' ).removeClass('d-none');
+        // window.filterParam = "/browse/topboxoffice";
+    } else if( tab == 2 ) {
+        $( '.opening-this-week' ).addClass( 'active' ).siblings().removeClass('active');
+        $( '#text-opening' ).removeClass('d-none').siblings().addClass('d-none');
+        // window.filterParam = "/browse/openthisweek";
+    } else if( tab == 3 ) {
+        $( '.a-winner-m' ).addClass( 'active' ).siblings().removeClass('active');
+        $( '#text-a-winner').removeClass('d-none').siblings().addClass('d-none');
+        // window.filterParam = "/browse/awardwinner";
+    } else if( tab == 4 ) {
+        $( '.c-movie' ).addClass( 'active' ).siblings( ).removeClass( 'active' );
+        $( '#text-c-movie' ).removeClass('d-none').siblings().addClass('d-none');
+        // window.filterParam = "certified_movie";
+    } else if( tab == 5 ) {
+        $( '.h-rate-m' ).addClass( 'active' ).siblings( ).removeClass( 'active' );
+        $( '#text-h-rate-m' ).removeClass( 'd-none' ).siblings( ).addClass( 'd-none' );
+        // window.filterParam = "/browse/heighestmovie";
+    } else if( tab == 6 ) {
+        $( '.h-rate-tv' ).addClass( 'active' ).siblings( ).removeClass( 'active' );
+        $( '#text-h-rate-m' ).removeClass( 'd-none' ).siblings( ).addClass( 'd-none' );
+        // window.filterParam = "highest_rated_tv";
+    } else if( tab == 7 ) {
+        $( '.c-tv' ).addClass( 'active' ).siblings( ).removeClass( 'active' );
+        $( '#text-c-movie' ).removeClass('d-none').siblings().addClass('d-none');
+        // window.filterParam = "certified_tv";
+    } else if( tab == 8 ) {
+        $( '.popular-tv' ).addClass( 'active' ).siblings( ).removeClass( 'active' );
+        $( '#text-most-popular' ).removeClass('d-none').siblings().addClass('d-none');
+        // window.filterParam = "popular_tv";
+    
+    } else if( tab == 9 ) {
+        $( '.new-tv-tonight' ).addClass( 'active' ).siblings( ).removeClass( 'active' );
+        $( '#text-new-tv' ).removeClass('d-none').siblings().addClass('d-none');
+        // window.filterParam = "new_tv_tonight";
+        
+    }
+    function genre_checkbox_changed(pageNo){
+        var x = document.getElementById( "min" ).innerHTML;
+        var y = document.getElementById( "max" ).innerHTML;
+
+        x = x.substring( 0, x.length-2 );
+        y = y.substring( 0, y.length-2 );
+        // console.log(x);
+        // console.log(y);
+        var checkedValues = $('#genre_checkbox input:checkbox:checked').map(function() {
+            return this.value;
+        }).get();
+        // console.log(checkedValues.length);
+        // console.log(window.sortby);
+        var selected_genre = "";
+        for(i=0;i<checkedValues.length;i++){
+            selected_genre += (checkedValues[i]+",");
+        }
+
+
+        if(window.filterParam == "/browse/awardwinner")
+            urlData = "awardYear="+document.getElementById('awardYearOptions').value+"&sortby="+window.sortby+"&mudemeterStart="+x+"&mudemeterEnd="+y+"&pageNo="+pageNo;
+        else
+            urlData = "genre="+selected_genre+"&sortby="+window.sortby+"&mudemeterStart="+x+"&mudemeterEnd="+y+"&pageNo="+pageNo;
+        console.log(window.filterParam+urlData);
+        $.ajax({
+            url: window.filterParam,
+            type: "GET",
+            data: urlData,
+            complete: function(data){
+                var response = JSON.parse(data.responseText);
+                if(response.success){
+                    console.log(response);
+                    if(response.totalCnt > 0){
+                        if(window.filterParam == "/browse/openthisweek")
+                            movies = response.openThisWeek;
+                        else if(window.filterParam == "/browse/topboxoffice")
+                            movies = response.boxOffice;
+                        else if(window.filterParam == "/browse/comingsoon")
+                            movies = response.comingSoon;
+                        else if(window.filterParam == "/browse/heighestmovie")
+                            movies = response.heighest;
+                        else if(window.filterParam == "/browse/certifiedmovie")
+                            movies = response.certified;
+                        else if(window.filterParam == "/browse/popularmovie")
+                            movies = response.popular;
+
+                        else if(window.filterParam == "/browse/newtvtonight")
+                            movies = response.newTVTonight;
+                        else if(window.filterParam == "/browse/certifiedtv")
+                            movies = response.certified;
+                        else if(window.filterParam == "/browse/heighesttv")
+                            movies = response.heighest;
+                        else if(window.filterParam == "/browse/populartv")
+                            movies = response.popular;
+
+                        if (movies.length > 0) {
+                            $("#displayMovies .column").not(".column:eq(0)").remove();
+                        }
+                        if (window.filterParam == "/browse/awardwinner") {
+                            movies = response.awardWinners;
+                            for(i =0;i<movies.length;i++){
+                                var movie = movies[i].media;
+                                $(".column:eq(0)").clone().appendTo(".column-box").each(function(){
+                                    if(movie.mediaType == "MOVIE"){
+                                        console.log("here");
+                                        $(this).find(".media-page").attr("href","/movie?mediaID="+movie.id);
+                                    }
+                                    else if(movie.mediaType == "TVSERIES")
+                                        $(this).find(".media-page").attr("href","/tvseries?mediaID="+movie.id);
+                                    else if(movie.mediaType == "SEASON")
+                                        $(this).find(".media-page").attr("href","/season?mediaID="+movie.id);
+                                    else if(movie.mediaType == "EPISODE")
+                                        $(this).find(".media-page").attr("href","/episode?mediaID="+movie.id);
+
+                                    $(this).find("img").attr("src", "http://23.94.27.164/"+movie.resourcePath+"/photos/0.jpg");
+                                    $(this).find("h6").text(""+movie.mediaName);
+                                    $(this).find(".child-score").text(""+Math.round(movie.mudemeter.criticMudemeter)+"%");
+                                    $(this).find(".child-cast").text(""+movie.from);
+                                    $(this).find(".child-description").text(""+movie.desc);
+                                    $(this).find(".child-rating-runtime").text(""+movie.filmRating+", "+movie.runtime+" MIN");
+                                    $(this).find(".child-releasedate").text("In Theaters "+movie.releaseDate.theatre.split("T")[0]);
+                                });
+                            }
+                        }
+                        else{
+                            // $("#displayMovies .column").show();
+                            for(i =0;i<movies.length;i++){
+                                $(".column:eq(0)").clone().appendTo(".column-box").each(function(){
+                                   
+                                    if(movies[i].mediaType == "MOVIE")
+                                        $(this).find(".media-page").attr("href","/movie?mediaID="+movies[i].id);
+                                    else if(movies[i].mediaType == "TVSERIES")
+                                        $(this).find(".media-page").attr("href","/tvseries?mediaID="+movies[i].id);
+                                    else if(movies[i].mediaType == "SEASON")
+                                        $(this).find(".media-page").attr("href","/season?mediaID="+movies[i].id);
+                                    else if(movies[i].mediaType == "EPISODE")
+                                        $(this).find(".media-page").attr("href","/episode?mediaID="+movies[i].id);
+
+                                    $(this).find("img").attr("src", "http://23.94.27.164/"+movies[i].resourcePath+"/photos/0.jpg");
+                                    $(this).find("h6").text(""+movies[i].mediaName);
+                                    $(this).find(".child-score").text(""+Math.round(movies[i].mudemeter.criticMudemeter)+"%");
+                                    $(this).find(".child-cast").text(""+movies[i].from);
+                                    $(this).find(".child-description").text(""+movies[i].desc);
+                                    $(this).find(".child-rating-runtime").text(""+movies[i].filmRating+", "+movies[i].runtime+" MIN");
+                                    $(this).find(".child-releasedate").text("In Theaters "+movies[i].releaseDate.theatre.split("T")[0]);
+                                });
+                            }
+                        }
+                    }
+                    else{
+                        $("#displayMovies .column").not(".column:eq(0)").remove();
+                    }
+
+                    $("#displayMovies .column").show();
+                    $("#displayMovies .column:eq(0)").hide();
+
+                    var numberOfPages = response.totalCnt / 12;
+                    numberOfPages = parseInt(numberOfPages);
+                    if(response.totalCnt % 12 != 0)
+                        numberOfPages++;
+
+                    $("#pagination").html("");
+                    for(i=0;i<numberOfPages;i++){
+                        var pn = i + 1;
+                        
+                        if(pn < pageNo - 3 || pn > pageNo + 3){
+                            $("#pagination").append('<a class="mx-2" href="#" onclick="genre_checkbox_changed('+i+')" style="display:none;">'+pn+'</a>');
+                        }
+                        else{
+                            $("#pagination").append('<a class="mx-2" href="#" onclick="genre_checkbox_changed('+i+')">'+pn+'</a>');
+                        }
+                    }
+                    var showing = (pageNo+1) * 12;
+                    if(response.totalCnt <= 12){
+                        showing = response.totalCnt;
+                    }
+                    if(showing > response.totalCnt){
+                        showing =response.totalCnt;
+                    }
+                    $("#count").text("Showing "+showing+" of "+ response.totalCnt);
+                }
+            }
+        });
+    }
+    $( "#awardYearOptions" ).change(function() {
+        genre_checkbox_changed(0);
+    });
+    function awardYearSelectOption(){
+        $("#awardYearOptions").html("<option value='ALL' selected>ALL</option>")
+        for(i=2017;i>=1950;i--){
+            $("#awardYearOptions").append("<option value="+i+">"+i+"</option>")
+        }
+    }
+    $(function(){
+        if(window.filterParam != "/browse/awardwinner"){
+            $("#awardwinnerFilterOptions").hide();
+            $("#filterOptions").show();
+        }
+        awardYearSelectOption(0);
+        genre_checkbox_changed(0);
+    });
+    $( '.release-date' ).click( function( ) {
+        $( '#sortby_label' ).html( 'Release Date' );
+    });
+    $( '.mudemeter' ).click( function( ) {
+        $( '#sortby_label' ).html( 'MudeMeter' );
+    });
+    $( '.popularity' ).click( function( ) {
+        $( '#sortby_label' ).html( 'Popularity' );
+    });
+    $( '.box-office' ).click( function( ) {
+        $( '#sortby_label' ).html( 'Box Office' );
+    });
+    $( '.alphabet' ).click( function( ) {
+        $( '#sortby_label' ).html( 'Aphabetical Order' );
+    });
+    </script>
+</body>
+</html>

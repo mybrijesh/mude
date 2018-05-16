@@ -1,0 +1,85 @@
+.list.active {
+    background-color: #696b6e !important;
+}
+.list.active * {
+    color: #fff !important;
+}
+.list.active:hover {
+    background-color: #696b6e !important;
+}
+.list.active *:hover {
+    color: #fff;
+}
+
+.bat:hover p {
+    color: #ff8a80;
+}
+
+.noUi-connect {
+    background: #ff8a80 !important;
+}
+
+.noUi-target {
+    background:#FAFAFA;
+    border-radius:4px;
+    border:1px solid #D3D3D3;
+    box-shadow:inset 0 1px 1px #F0F0F0, 0 3px 6px -5px #BBB
+}
+
+.dropdown-item:hover {
+    background-color: #696b6e;
+    color:white;
+}
+
+.dropdown-item:active, .dropdown-item:focus {
+    background-color: transparent;
+}
+
+.active#grid-button {
+    background-color: #ff8a80 !important;
+    border: 1px #ff8a80 !important;
+    color: #fff !important;
+    z-index: 0 !important;
+}
+
+.active#list-button {
+    background-color: #ff8a80 !important;
+    border: 1px #ff8a80 !important;
+    color: #fff !important;
+    z-index: 0 !important;
+}
+
+#dropdownMenuButton:active, #dropdownMenuButton:focus, #dropdownMenuButton:hover {
+    background-color: transparent !important;
+    color: #ff8a80 !important;
+    border-color: #ff8a80 !important;
+}
+
+.show > #dropdownMenuButton.dropdown-toggle {
+    background-color: transparent !important;
+    color: #ff8a80 !important;
+    border-color: #ff8a80 !important;
+}
+
+#filter-dropdown {
+    position: static !important;
+}
+
+#dropdownMenuButtonBox {
+    position: absolute !important;
+    width: 100%; 
+    background-color: rgba(0,0,0,0.87) !important; 
+    color:#fff;
+}
+
+.scrollable-menu {
+    height: auto;
+    max-height: 600px;
+    overflow-x: hidden;
+}
+
+
+.center {
+    text-align: center;
+}
+

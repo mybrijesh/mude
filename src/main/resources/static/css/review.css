@@ -1,0 +1,78 @@
+@import "../fontawesome/css/font-awesome.min.css";
+
+.nav-tabs a.nav-link {
+    border: none !important;
+}
+
+.nav-tabs a.nav-link.active {
+    background-color: #fff !important;
+    color: #ff8a80 !important;
+    z-index: 0;
+    border-top: 1px solid rgba(255, 255, 255, 1) !important;
+    border-left: 1px solid rgba(255, 255, 255, 1) !important;
+    border-right: 1px solid rgba(255, 255, 255, 1) !important;
+}
+
+.nav-tabs a.nav-link.active:hover {
+    color: #ff8a80 !important;
+}
+
+ul.nav {
+    border: none !important;
+}
+
+.tab-content {
+    border-radius: 5px !important;
+    border-top-left-radius: 0px !important;
+    border: 1px solid rgba(255, 255, 255, 1) !important;
+}
+
+.review-row:not(.first) {
+    border-top: 1px solid rgba(255, 255, 255, 0.5) !important;
+}
+
+.page-link {
+    background-color: #fff !important;
+}
+
+.page-item.active .page-link {
+    background-color: #ff8a80 !important;
+    border: 1px solid #ff8a80 !important;
+    color: #fff !important;
+    cursor: default;
+}
+
+.page-item.disabled {
+    opacity: 0.5 !important;
+}
+
+.page-link:focus {
+  box-shadow: none !important;
+  -moz-box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+}
+
+.page-link:active {
+  box-shadow: none !important;
+  -moz-box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+}
+
+.page-item:not(.active):hover {
+    background-color: #ff8a80 !important;
+    color: #fff !important;
+    opacity: 0.5;
+    box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+}
+
+.page-item.disabled .page-link {
+    background-color: transparent !important;
+    opacity: 0.5;
+}
+
+.page-item.disabled:hover {
+    background-color: transparent !important;
+    opacity: 1;
+}

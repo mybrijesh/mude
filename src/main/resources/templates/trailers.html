@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>View Trailers | Mude</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="shortcut icon" href="images/logo-white.ico">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="fontawesome/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <section class="px-0" th:replace="index :: header"></section>
+    <div th:replace="index :: header-modal"></div>
+    <section th:replace="index :: loader"></section>
+
+    <!-- Video Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <button type="button" class="close text-right ml-auto" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="modal-body">
+                    <!-- 16:9 aspect ratio -->
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <iframe class="embed-responsive-item video" src="" frameborder="0" seamless="seamless" allowFullScreen></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="d-none">
+        <div class="container-fluid mx-0 my-0 px-2 pt-5 pb-0 bg-dark">
+            <h1 class="my-0 py-0" style="font-family: 'Blogger Sans Bold';">TRAILERS on Mude</h1>
+        </div>
+    </section>
+
+    <section class="d-none">
+        <div class="container-fluid mx-0 my-0 px-0 py-0 bg-dark" >
+            <div class="mx-0 my-0 px-0 pt-4 pb-0 bg-dark">
+                <div class="row mx-0 mt-md-4 mt-0 px-0 py-0 bg-danger header-label">
+                    <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:2%;"></div>
+                    <h4 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark d-md-block d-none">
+                        Opening IN THEATERS
+                    </h4>
+                    <h5 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark d-md-none d-block">
+                        Opening IN THEATERS
+                    </h5>
+                </div>
+            </div>
+    
+            <div th:if="${openThisWeek == null or openThisWeek.isEmpty()}" class="mx-0 mt-3 mb-0 px-0 pt-3 pb-0 text-center">
+                <h4 class="my-0 py-0">Not Yet Available!</h4>
+            </div>
+    
+            <div th:if="${openThisWeek != null and !openThisWeek.isEmpty()}" class="row mx-0 mt-3 mb-0 px-1 pt-3 pb-0"
+                style="z-index:0;" id="movie-video">
+                <th:block th:each="tr, trStat : ${openThisWeek}">
+                    <div class="col-2 mx-0 my-0 px-2 py-0">
+                        <a class="mx-0 my-0 px-0 py-0 hover-blue trailer-btn active" style="cursor: pointer;" data-toggle="modal" data-src="https://www.youtube.com/embed/xjDjIWPwcPU"
+                            data-target="#myModal" data-index="0" th:data-index="${trStat.index}" 
+                            th:data-src="${tr.trailers != null and !tr.trailers.isEmpty()} ? ${tr.trailers[0]} : 'https://www.youtube.com/embed/xjDjIWPwcPU'">
+                            <div class="card px-0 py-0 mx-0 my-0">
+                                <img class="card-img-top rounded-0" src="images/poster.png" th:src="@{${T(us.mude.common.GlobalProps).FS_URI + '/' + tr.resourcePath + '/' + T(us.mude.common.GlobalProps).POSTER}}"
+                                onerror="this.onerror=null; this.src='images/poster.png';" alt="Trailer-Image">
+                                <div class="card-img-overlay text-right mx-0 my-0 px-0 py-0">
+                                    <div class="row mx-0 my-0 px-0 py-0 h-100 w-100">
+                                        <i class="fas fa-play fa-5x mx-auto my-auto px-3 py-3" style="opacity:0.7;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="mx-0 my-0 px-0 py-2">
+                            <span style="font-size: 1.3rem;" class="mx-0 my-0">
+                                <span th:text="${tr.mediaName}">Doctor Strange</span>
+                            </span>
+                        </div>
+                    </div>
+                </th:block>
+            </div>
+        </div>
+    </section>
+
+    <section class="d-none">
+        <div class="container-fluid mx-0 my-0 px-0 py-0 bg-dark" >
+            <div class="mx-0 my-0 px-0 pt-4 pb-0 bg-dark">
+                <div class="row mx-0 mt-md-4 mt-0 px-0 py-0 bg-danger header-label">
+                    <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:2%;"></div>
+                    <h4 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark d-md-block d-none">
+                        Top Box Office
+                    </h4>
+                    <h5 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark d-md-none d-block">
+                        Top Box Office
+                    </h5>
+                </div>
+            </div>
+    
+            <div th:if="${topBoxOffice == null or topBoxOffice.isEmpty()}" class="mx-0 mt-3 mb-0 px-0 pt-3 pb-0 text-center">
+                <h4 class="my-0 py-0">Not Yet Available!</h4>
+            </div>
+    
+            <div th:if="${topBoxOffice != null and !topBoxOffice.isEmpty()}" class="row mx-0 mt-3 mb-0 px-1 pt-3 pb-0" style="z-index:0;"
+                id="movie-video">
+                <th:block th:each="tr, trStat : ${topBoxOffice}">
+                    <div class="col-2 mx-0 my-0 px-2 py-0">
+                        <a class="mx-0 my-0 px-0 py-0 hover-blue trailer-btn active" style="cursor: pointer;" data-toggle="modal" data-src="https://www.youtube.com/embed/xjDjIWPwcPU"
+                            data-target="#myModal" data-index="0" th:data-index="${trStat.index}" th:data-src="${tr.trailers != null and !tr.trailers.isEmpty()} ? ${tr.trailers[0]} : 'https://www.youtube.com/embed/xjDjIWPwcPU'">
+                            <div class="card px-0 py-0 mx-0 my-0">
+                                <img class="card-img-top rounded-0" src="images/poster.png" th:src="@{${T(us.mude.common.GlobalProps).FS_URI + '/' + tr.resourcePath + '/' + T(us.mude.common.GlobalProps).POSTER}}"
+                                onerror="this.onerror=null; this.src='images/poster.png';" alt="Trailer-Image">
+                                <div class="card-img-overlay text-right mx-0 my-0 px-0 py-0">
+                                    <div class="row mx-0 my-0 px-0 py-0 h-100 w-100">
+                                        <i class="fas fa-play fa-5x mx-auto my-auto px-3 py-3" style="opacity:0.7;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="mx-0 my-0 px-0 py-2">
+                            <span style="font-size: 1.3rem;" class="mx-0 my-0">
+                                <span th:text="${tr.mediaName}">Doctor Strange</span>
+                            </span>
+                        </div>
+                    </div>
+                </th:block>
+            </div>
+        </div>
+    </section>
+
+    <section class="d-none">
+        <div class="container-fluid mx-0 my-0 px-0 py-0 bg-dark" >
+            <div class="mx-0 my-0 px-0 pt-4 pb-0 bg-dark">
+                <div class="row mx-0 mt-md-4 mt-0 px-0 py-0 bg-danger header-label">
+                    <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:2%;"></div>
+                    <h4 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark d-md-block d-none">
+                        Coming Soon To Theaters
+                    </h4>
+                    <h5 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark d-md-none d-block">
+                        Coming Soon To Theaters
+                    </h5>
+                </div>
+            </div>
+    
+            <div th:if="${comingSoon == null or comingSoon.isEmpty()}" class="mx-0 mt-3 mb-0 px-0 pt-3 pb-0 text-center">
+                <h4 class="my-0 py-0">Not Yet Available!</h4>
+            </div>
+    
+            <div th:if="${comingSoon != null and !comingSoon.isEmpty()}" class="row mx-0 mt-3 mb-0 px-1 pt-3 pb-0" style="z-index:0;"
+                id="movie-video">
+                <th:block th:each="tr, trStat : ${comingSoon}">
+                    <div class="col-2 mx-0 my-0 px-2 py-0">
+                        <a class="mx-0 my-0 px-0 py-0 hover-blue trailer-btn active" style="cursor: pointer;" data-toggle="modal" data-src="https://www.youtube.com/embed/xjDjIWPwcPU"
+                            data-target="#myModal" data-index="0" th:data-index="${trStat.index}" th:data-src="${tr.trailers != null and !tr.trailers.isEmpty()} ? ${tr.trailers[0]} : 'https://www.youtube.com/embed/xjDjIWPwcPU'">
+                            <div class="card px-0 py-0 mx-0 my-0">
+                                <img class="card-img-top rounded-0" src="images/poster.png" th:src="@{${T(us.mude.common.GlobalProps).FS_URI + '/' + tr.resourcePath + '/' + T(us.mude.common.GlobalProps).POSTER}}"
+                                    onerror="this.onerror=null; this.src='images/poster.png';" alt="Trailer-Image">
+                                <div class="card-img-overlay text-right mx-0 my-0 px-0 py-0">
+                                    <div class="row mx-0 my-0 px-0 py-0 h-100 w-100">
+                                        <i class="fas fa-play fa-5x mx-auto my-auto px-3 py-3" style="opacity:0.7;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="mx-0 my-0 px-0 py-2">
+                            <span style="font-size: 1.3rem;" class="mx-0 my-0">
+                                <span th:text="${tr.mediaName}">Doctor Strange</span>
+                            </span>
+                        </div>
+                    </div>
+                </th:block>
+            </div>
+        </div>
+    </section>
+
+    <section class="d-none">
+        <div class="container-fluid mx-0 my-0 px-0 py-0 bg-dark" >
+            <div class="mx-0 my-0 px-0 pt-4 pb-0 bg-dark">
+                <div class="row mx-0 mt-md-4 mt-0 px-0 py-0 bg-danger header-label">
+                    <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:2%;"></div>
+                    <h4 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark d-md-block d-none">
+                        Ceritifed Fresh Movies
+                    </h4>
+                    <h5 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark d-md-none d-block">
+                        Ceritifed Fresh Movies
+                    </h5>
+                </div>
+            </div>
+    
+            <div th:if="${certified == null or certified.isEmpty()}" class="mx-0 mt-3 mb-0 px-0 pt-3 pb-0 text-center">
+                <h4 class="my-0 py-0">Not Yet Available!</h4>
+            </div>
+    
+            <div th:if="${certified != null and !certified.isEmpty()}" class="row mx-0 mt-3 mb-0 px-1 pt-3 pb-0" style="z-index:0;"
+                id="movie-video">
+                <th:block th:each="tr, trStat : ${certified}">
+                    <div class="col-2 mx-0 my-0 px-2 py-0">
+                        <a class="mx-0 my-0 px-0 py-0 hover-blue trailer-btn active" style="cursor: pointer;" data-toggle="modal" data-src="https://www.youtube.com/embed/xjDjIWPwcPU"
+                            data-target="#myModal" data-index="0" th:data-index="${trStat.index}" th:data-src="${tr.trailers != null and !tr.trailers.isEmpty()} ? ${tr.trailers[0]} : 'https://www.youtube.com/embed/xjDjIWPwcPU'">
+                            <div class="card px-0 py-0 mx-0 my-0">
+                                <img class="card-img-top rounded-0" src="images/poster.png" th:src="@{${T(us.mude.common.GlobalProps).FS_URI + '/' + tr.resourcePath + '/' + T(us.mude.common.GlobalProps).POSTER}}"
+                                    onerror="this.onerror=null; this.src='images/poster.png';" alt="Trailer-Image">
+                                <div class="card-img-overlay text-right mx-0 my-0 px-0 py-0">
+                                    <div class="row mx-0 my-0 px-0 py-0 h-100 w-100">
+                                        <i class="fas fa-play fa-5x mx-auto my-auto px-3 py-3" style="opacity:0.7;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="mx-0 my-0 px-0 py-2">
+                            <span style="font-size: 1.3rem;" class="mx-0 my-0">
+                                <span th:text="${tr.mediaName}">Doctor Strange</span>
+                            </span>
+                        </div>
+                    </div>
+                </th:block>
+            </div>
+        </div>
+    </section>
+
+    <section class="d-none">
+        <div class="container-fluid mx-0 my-0 px-0 py-0 bg-dark" >
+            <div class="mx-0 my-0 px-0 pt-4 pb-0 bg-dark">
+                <div class="row mx-0 mt-md-4 mt-0 px-0 py-0 bg-danger header-label">
+                    <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:2%;"></div>
+                    <h4 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark d-md-block d-none">
+                        Ceritifed Fresh TVs
+                    </h4>
+                    <h5 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark d-md-none d-block">
+                        Ceritifed Fresh TVs
+                    </h5>
+                </div>
+            </div>
+    
+            <div th:if="${certifiedTV == null or certifiedTV.isEmpty()}" class="mx-0 mt-3 mb-0 px-0 pt-3 pb-0 text-center">
+                <h4 class="my-0 py-0">Not Yet Available!</h4>
+            </div>
+    
+            <div th:if="${certifiedTV != null and !certifiedTV.isEmpty()}" class="row mx-0 mt-3 mb-0 px-1 pt-3 pb-0" style="z-index:0;" id="movie-video">
+                <th:block th:each="tr, trStat : ${certifiedTV}">
+                    <div class="col-2 mx-0 my-0 px-2 py-0">
+                        <a class="mx-0 my-0 px-0 py-0 hover-blue trailer-btn active" style="cursor: pointer;" data-toggle="modal" data-src="https://www.youtube.com/embed/xjDjIWPwcPU"
+                            data-target="#myModal" data-index="0" th:data-index="${trStat.index}" th:data-src="${tr.trailers != null and !tr.trailers.isEmpty()} ? ${tr.trailers[0]} : 'https://www.youtube.com/embed/xjDjIWPwcPU'">
+                            <div class="card px-0 py-0 mx-0 my-0">
+                                <img class="card-img-top rounded-0" src="images/poster.png" th:src="@{${T(us.mude.common.GlobalProps).FS_URI + '/' + tr.resourcePath + '/' + T(us.mude.common.GlobalProps).POSTER}}"
+                                    onerror="this.onerror=null; this.src='images/poster.png';" alt="Trailer-Image">
+                                <div class="card-img-overlay text-right mx-0 my-0 px-0 py-0">
+                                    <div class="row mx-0 my-0 px-0 py-0 h-100 w-100">
+                                        <i class="fas fa-play fa-5x mx-auto my-auto px-3 py-3" style="opacity:0.7;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="mx-0 my-0 px-0 py-2">
+                            <span style="font-size: 1.3rem;" class="mx-0 my-0">
+                                <span th:text="${tr.mediaName}">Doctor Strange</span>
+                            </span>
+                        </div>
+                    </div>
+                </th:block>
+            </div>
+        </div>
+    </section>
+
+    <section class="d-none">
+        <div class="container-fluid mx-0 my-0 px-0 py-0 bg-dark" >
+            <div class="mx-0 my-0 px-0 pt-4 pb-0 bg-dark">
+                <div class="row mx-0 mt-md-4 mt-0 px-0 py-0 bg-danger header-label">
+                    <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:2%;"></div>
+                    <h4 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark d-md-block d-none">
+                        Top Movies
+                    </h4>
+                    <h5 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark d-md-none d-block">
+                        Top Movies
+                    </h5>
+                </div>
+            </div>
+    
+            <div th:if="${topMovie == null or topMovie.isEmpty()}" class="mx-0 mt-3 mb-0 px-0 pt-3 pb-0 text-center">
+                <h4 class="my-0 py-0">Not Yet Available!</h4>
+            </div>
+    
+            <div th:if="${topMovie != null and !topMovie.isEmpty()}" class="row mx-0 mt-3 mb-0 px-1 pt-3 pb-0" style="z-index:0;"
+                id="movie-video">
+                <th:block th:each="tr, trStat : ${topMovie}">
+                    <div class="col-2 mx-0 my-0 px-2 py-0">
+                        <a class="mx-0 my-0 px-0 py-0 hover-blue trailer-btn active" style="cursor: pointer;" data-toggle="modal" data-src="https://www.youtube.com/embed/xjDjIWPwcPU"
+                            data-target="#myModal" data-index="0" th:data-index="${trStat.index}" th:data-src="${tr.trailers != null and !tr.trailers.isEmpty()} ? ${tr.trailers[0]} : 'https://www.youtube.com/embed/xjDjIWPwcPU'">
+                            <div class="card px-0 py-0 mx-0 my-0">
+                                <img class="card-img-top rounded-0" src="images/poster.png" th:src="@{${T(us.mude.common.GlobalProps).FS_URI + '/' + tr.resourcePath + '/' + T(us.mude.common.GlobalProps).POSTER}}"
+                                    onerror="this.onerror=null; this.src='images/poster.png';" alt="Trailer-Image">
+                                <div class="card-img-overlay text-right mx-0 my-0 px-0 py-0">
+                                    <div class="row mx-0 my-0 px-0 py-0 h-100 w-100">
+                                        <i class="fas fa-play fa-5x mx-auto my-auto px-3 py-3" style="opacity:0.7;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="mx-0 my-0 px-0 py-2">
+                            <span style="font-size: 1.3rem;" class="mx-0 my-0">
+                                <span th:text="${tr.mediaName}">Doctor Strange</span>
+                            </span>
+                        </div>
+                    </div>
+                </th:block>
+            </div>
+        </div>
+    </section>
+
+    <section class="d-none">
+        <div class="container-fluid mx-0 my-0 px-0 py-0 bg-dark" >
+            <div class="mx-0 my-0 px-0 pt-4 pb-0 bg-dark">
+                <div class="row mx-0 mt-md-4 mt-0 px-0 py-0 bg-danger header-label">
+                    <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:2%;"></div>
+                    <h4 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark d-md-block d-none">
+                        Top TV Shows
+                    </h4>
+                    <h5 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark d-md-none d-block">
+                        Top TV Shows
+                    </h5>
+                </div>
+            </div>
+    
+            <div th:if="${topTVSeason == null or topTVSeason.isEmpty()}" class="mx-0 mt-3 mb-0 px-0 pt-3 pb-0 text-center">
+                <h4 class="my-0 py-0">Not Yet Available!</h4>
+            </div>
+    
+            <div th:if="${topTVSeason != null and !topTVSeason.isEmpty()}" class="row mx-0 mt-3 mb-0 px-1 pt-3 pb-0" style="z-index:0;" id="movie-video">
+                <th:block th:each="tr, trStat : ${topTVSeason}">
+                    <div class="col-2 mx-0 my-0 px-2 py-0">
+                        <a class="mx-0 my-0 px-0 py-0 hover-blue trailer-btn active" style="cursor: pointer;" data-toggle="modal" data-src="https://www.youtube.com/embed/xjDjIWPwcPU"
+                            data-target="#myModal" data-index="0" th:data-index="${trStat.index}" th:data-src="${tr.trailers != null and !tr.trailers.isEmpty()} ? ${tr.trailers[0]} : 'https://www.youtube.com/embed/xjDjIWPwcPU'">
+                            <div class="card px-0 py-0 mx-0 my-0">
+                                <img class="card-img-top rounded-0" src="images/poster.png" th:src="@{${T(us.mude.common.GlobalProps).FS_URI + '/' + tr.resourcePath + '/' + T(us.mude.common.GlobalProps).POSTER}}"
+                                    onerror="this.onerror=null; this.src='images/poster.png';" alt="Trailer-Image">
+                                <div class="card-img-overlay text-right mx-0 my-0 px-0 py-0">
+                                    <div class="row mx-0 my-0 px-0 py-0 h-100 w-100">
+                                        <i class="fas fa-play fa-5x mx-auto my-auto px-3 py-3" style="opacity:0.7;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="mx-0 my-0 px-0 py-2">
+                            <span style="font-size: 1.3rem;" class="mx-0 my-0">
+                                <span th:text="${tr.mediaName}">Doctor Strange</span>
+                            </span>
+                        </div>
+                    </div>
+                </th:block>
+            </div>
+        </div>
+    </section>
+
+    <section class="d-none">
+        <div class="container-fluid mx-0 my-0 px-0 py-0 bg-dark" >
+            <div class="mx-0 my-0 px-0 pt-4 pb-0 bg-dark">
+                <div class="row mx-0 mt-md-4 mt-0 px-0 py-0 bg-danger header-label">
+                    <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:2%;"></div>
+                    <h4 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark d-md-block d-none">
+                        New TV Tonight
+                    </h4>
+                    <h5 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark d-md-none d-block">
+                        New TV Tonight
+                    </h5>
+                </div>
+            </div>
+    
+            <div th:if="${newTVTonight == null or newTVTonight.isEmpty()}" class="mx-0 mt-3 mb-0 px-0 pt-3 pb-0 text-center">
+                <h4 class="my-0 py-0">Not Yet Available!</h4>
+            </div>
+    
+            <div th:if="${newTVTonight != null and !newTVTonight.isEmpty()}" class="row mx-0 mt-3 mb-0 px-1 pt-3 pb-0" style="z-index:0;"
+                id="movie-video">
+                <th:block th:each="tr, trStat : ${newTVTonight}">
+                    <div class="col-2 mx-0 my-0 px-2 py-0">
+                        <a class="mx-0 my-0 px-0 py-0 hover-blue trailer-btn active" style="cursor: pointer;" data-toggle="modal" data-src="https://www.youtube.com/embed/xjDjIWPwcPU"
+                            data-target="#myModal" data-index="0" th:data-index="${trStat.index}" th:data-src="${tr.trailers != null and !tr.trailers.isEmpty()} ? ${tr.trailers[0]} : 'https://www.youtube.com/embed/xjDjIWPwcPU'">
+                            <div class="card px-0 py-0 mx-0 my-0">
+                                <img class="card-img-top rounded-0" src="images/poster.png" th:src="@{${T(us.mude.common.GlobalProps).FS_URI + '/' + tr.resourcePath + '/' + T(us.mude.common.GlobalProps).POSTER}}"
+                                    onerror="this.onerror=null; this.src='images/poster.png';" alt="Trailer-Image">
+                                <div class="card-img-overlay text-right mx-0 my-0 px-0 py-0">
+                                    <div class="row mx-0 my-0 px-0 py-0 h-100 w-100">
+                                        <i class="fas fa-play fa-5x mx-auto my-auto px-3 py-3" style="opacity:0.7;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="mx-0 my-0 px-0 py-2">
+                            <span style="font-size: 1.3rem;" class="mx-0 my-0">
+                                <span th:text="${tr.mediaName}">Doctor Strange</span>
+                            </span>
+                        </div>
+                    </div>
+                </th:block>
+            </div>
+        </div>
+    </section>
+
+    <section class="d-none">
+        <div class="container-fluid mx-0 my-0 px-0 py-0 bg-dark" >
+            <div class="mx-0 my-0 px-0 pt-4 pb-0 bg-dark">
+                <div class="row mx-0 mt-md-4 mt-0 px-0 py-0 bg-danger header-label">
+                    <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:2%;"></div>
+                    <h4 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark d-md-block d-none">
+                        Popular TV on Mude
+                    </h4>
+                    <h5 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark d-md-none d-block">
+                        Popular TV on Mude
+                    </h5>
+                </div>
+            </div>
+    
+            <div th:if="${popularTV == null or popularTV.isEmpty()}" class="mx-0 mt-3 mb-0 px-0 pt-3 pb-0 text-center">
+                <h4 class="my-0 py-0">Not Yet Available!</h4>
+            </div>
+    
+            <div th:if="${popularTV != null and !popularTV.isEmpty()}" class="row mx-0 mt-3 mb-0 px-1 pt-3 pb-0" style="z-index:0;"
+                id="movie-video">
+                <th:block th:each="tr, trStat : ${popularTV}">
+                    <div class="col-2 mx-0 my-0 px-2 py-0">
+                        <a class="mx-0 my-0 px-0 py-0 hover-blue trailer-btn active" style="cursor: pointer;" data-toggle="modal" data-src="https://www.youtube.com/embed/xjDjIWPwcPU"
+                            data-target="#myModal" data-index="0" th:data-index="${trStat.index}" th:data-src="${tr.trailers != null and !tr.trailers.isEmpty()} ? ${tr.trailers[0]} : 'https://www.youtube.com/embed/xjDjIWPwcPU'">
+                            <div class="card px-0 py-0 mx-0 my-0">
+                                <img class="card-img-top rounded-0" src="images/poster.png" th:src="@{${T(us.mude.common.GlobalProps).FS_URI + '/' + tr.resourcePath + '/' + T(us.mude.common.GlobalProps).POSTER}}"
+                                    onerror="this.onerror=null; this.src='images/poster.png';" alt="Trailer-Image">
+                                <div class="card-img-overlay text-right mx-0 my-0 px-0 py-0">
+                                    <div class="row mx-0 my-0 px-0 py-0 h-100 w-100">
+                                        <i class="fas fa-play fa-5x mx-auto my-auto px-3 py-3" style="opacity:0.7;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="mx-0 my-0 px-0 py-2">
+                            <span style="font-size: 1.3rem;" class="mx-0 my-0">
+                                <span th:text="${tr.mediaName}">Doctor Strange</span>
+                            </span>
+                        </div>
+                    </div>
+                </th:block>
+            </div>
+        </div>
+    </section>
+
+    <footer class="px-0 d-none" th:replace="index :: footer">
+    </footer>
+
+    <script src="jquery/jquery-3.3.1.min.js"></script>
+    <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="owlcarousel/owl.carousel.min.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/details.js"></script>
+    <script>
+        $(function () {
+            var $videoSrc;
+            $('.trailer-btn').click(function () {
+                $videoSrc = $(this).data("src");
+            });
+            $('#myModal').on('shown.bs.modal', function (e) {
+                $('.container-fluid').addClass('light-off');
+                $('.video:eq(0)').attr('src', $videoSrc);
+            });
+
+            $('#myModal').on('hide.bs.modal', function (e) {
+                $('.container-fluid').removeClass('light-off');
+                $('.video:eq(0)').attr('src', $videoSrc);
+            });
+        });
+    </script>
+</body>
+
+</html>

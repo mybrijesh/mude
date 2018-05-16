@@ -1,0 +1,312 @@
+@import "../fontawesome/css/font-awesome.min.css";
+
+@media only screen and (max-width: 575px) {
+    .xs-text {
+        font-size: 0.63rem !important;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    textarea {
+        height: 5rem !important;
+    }
+    
+    .meter-box {
+        height: 50% !important;
+    }
+
+    .details p, .details h6 {
+        font-size: 1.0rem !important;
+    }
+
+    .info-box {
+        font-size: 1.0rem !important;
+    }
+    .art-img-container {
+        height: 250px;
+        overflow: hidden;
+    }
+    .art-img-container img {
+        width:200% !important;
+    }
+
+    .rating > label:before {
+        margin-left: 5px !important; 
+        font-size: 2.2rem !important;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) { 
+    textarea {
+        height: 4rem !important;
+    }
+
+    .details p, .details h6 {
+        font-size: 1.2rem !important;
+    }
+
+    .rating > label:before {
+        margin-left: 5px !important; 
+        font-size: 1.8em !important;
+    }
+ }
+
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    textarea {
+        height: 5rem !important;
+    } 
+
+    .rating > label:before {
+        margin-left: 5px !important; 
+        font-size: 2em !important;
+    }
+ }
+@media (min-width: 1200px) and (max-width: 1399.98px) {
+    textarea {
+        height: 6rem !important;
+    } 
+} 
+
+textarea::placeholder {
+    font-size: 1.3rem !important;
+    color: #ddd;
+}
+
+.meter-box {
+        height: 100%;
+    }
+
+.panel {
+    border: 1px solid rgba(255, 255, 255, .5);
+}
+
+.list.bat {
+    background-color: #696b6e;
+}
+
+.list.bat.active {
+    background-color: transparent; 
+}
+
+.list:hover * {
+    color: #ff8a80;
+}
+
+.bg-gray {
+    background-color: #696b6e !important;
+}
+
+.streaming img {
+    -webkit-filter: brightness(50%); 
+    filter: brightness(50%);
+}
+
+.streaming img:hover {
+    -webkit-filter: brightness(120%); 
+    filter: brightness(120%);
+}
+
+.trailer img {
+    transition: all 0.5s ease-in-out;
+}
+
+.trailer-link:hover, .trailer-link:active, .trailer-link:focus * {
+    color: #fff;
+}
+
+.trailer:hover img {
+    transform: scale(1.1);
+    -webkit-filter: brightness(50%);
+    -moz-filter: brightness(50%);
+    -o-filter: brightness(50%);
+    -ms-filter: brightness(50%);
+    filter: brightness(50%);
+}
+
+.trailer:hover .trailer-text{
+    max-height: 200px;
+}
+
+.trailer .badge {
+    border-radius: 25px;
+    transition: all 0.5s ease-in-out;
+}
+
+.trailer .badge:hover {
+    background-color: #fff;
+    color:#000;
+}
+
+.trailer-text {
+    max-height: 0;
+    overflow: hidden;
+    -webkit-transition: max-height 0.7s;
+    -moz-transition: max-height 0.7s;
+    transition: max-height 0.7s;
+}
+
+.wts-box:hover {
+    background-color: #4285F4 !important;
+    color: #fff !important;
+}
+
+.wts-box:hover p {
+    color: #fff !important;
+}
+
+.ni-box:hover {
+    background-color: #ff4444 !important;
+    color: #fff !important;
+}
+
+.ni-box:hover p {
+    color: #fff !important;
+}
+
+.add-box:hover {
+    background-color: #ffbb33 !important;
+    color: #fff !important;
+}
+
+.add-box:hover p {
+    color: #fff !important;
+}
+
+.rating { 
+  border: none;
+  float: left;
+}
+
+.rating > input { display: none; } 
+
+.rating > label:before {
+    margin-left: 10px; 
+    font-size: 3.2rem;
+    font-family: FontAwesome;
+    display: inline-block;
+    content: "\f005";
+}
+
+.rating > .half:before { 
+    content: "\f089";
+    position: absolute;
+}
+
+.rating > label { 
+    color: #ddd; 
+    float: right; 
+}
+
+/***** CSS Magic to Highlight Stars on Hover *****/
+.rating > input:checked ~ label, /* show gold star when clicked */
+.rating:not(:checked) > label:hover, /* hover current star */
+.rating:not(:checked) > label:hover ~ label { color: #FFD700;  } /* hover previous stars in list */
+
+.rating > input:checked + label:hover, /* hover current star when changing rating */
+.rating > input:checked ~ label:hover,
+.rating > label:hover ~ input:checked ~ label, /* lighten current selection */
+.rating > input:checked ~ label:hover ~ label { color: #FFED85;  }
+
+.owl-dots {
+    display: none;
+}
+
+.owl-nav {
+    font-family: "Lulo Clean One Bold";
+}
+
+.owl-item .card {
+    overflow: hidden !important;
+}
+
+.owl-item img {
+  transition: all .2s ease-in-out;
+}
+
+.owl-item:hover img {
+  transform: scale(1.1);
+}
+
+.review-box {
+    border-bottom: 1px solid rgba(255, 255, 255, .5);
+}
+
+.movie-box-item {
+    border-bottom: 1px solid rgba(255, 255, 255, .5);
+}
+
+.not-rated {
+    color: white; 
+    font-family: "Roboto, sans-serif";
+}
+
+#movie-box-head {
+    border-bottom: 2px solid rgba(255, 255, 255, .5);
+}
+
+#video-box .card {
+    height: 250px;
+    overflow: hidden;
+}
+
+#photo-box .card {
+    height: 300px;
+    overflow: hidden;
+}
+
+#photo-box .card img {
+    -webkit-filter: brightness(80%);
+    -moz-filter: brightness(80%);
+    -o-filter: brightness(80%);
+    -ms-filter: brightness(80%);
+    filter: brightness(80%);
+}
+
+#cast-box .card {
+    height: 250px;
+}
+
+#cast-box .owl-stage {
+    display: flex;
+}
+
+#cast-box .owl-item img {
+    width: 100%;
+    height: 250px;
+}
+
+#episode-box .card {
+    height: 300px;
+    overflow: hidden;
+}
+
+#episode-box .owl-item img {
+    width: 100%;
+    height: 300px;
+}
+
+.viewCollectionButton:active, .viewCollectionButton:focus, .viewCollectionButton:hover {
+    background-color: transparent !important;
+    color: #ff8a80 !important;
+    border-color: #ff8a80 !important;
+}
+
+#photoModal .modal-content {
+    border: 0px !important;
+    background-color: transparent !important;
+    padding: 0px !important;
+}
+
+#photoModal .modal-body {
+    border: 0px !important;
+    background-color: transparent !important;
+    position: relative !important;
+    padding: 0px !important;
+}
+
+#photoModal .close {
+    font-size:3rem;
+    font-weight: normal;
+    color:#fff;
+    opacity:1;
+}

@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>TV Season | Mude</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="shortcut icon" href="images/logo-white.ico">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="fontawesome/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="owlcarousel/owl.carousel.min.css">
+    <link rel="stylesheet" href="owlcarousel/owl.theme.default.min.css">
+    <link rel="stylesheet" href="css/details.css">
+</head>
+<body>
+    <section class="px-0" th:replace="index :: header"></section>
+    <div th:replace="index :: header-modal"></div>
+    <section th:replace="index :: loader"></section>
+
+    <div class="modal fade" id="photoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <div class="mx-0 my-0 px-0 py-0 w-100">
+                        <img id="image" src="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="d-none">
+        <div class="container-fluid px-0 py-0 mt-md-0 mt-5 bg-dark">
+            <div class="row mx-0 my-0 px-0 py-2 bg-dark d-md-block d-none">
+                <a class="mx-2 my-0 px-0 py-0 text-danger-light hover-dark text-uppercase" href="#" th:href="@{/}">Home</a>
+                &gt;
+                <th:block th:if="${currentSeason != null and currentSeason.parent != null}">
+                    <th:block th:if="${currentSeason.parent.parent != null}">
+                        <th:block th:if="${currentSeason.parent.parent.parent != null}">
+                            <a class="mx-2 my-0 px-0 py-0 text-danger-light hover-dark text-uppercase" href="#" th:href="@{${'/' + #strings.toLowerCase(#strings.toString(currentSeason.parent.parent.parent.mediaType)) + '?mediaID=' + currentSeason.parent.parent.parent.id}}"
+                                th:text="${currentSeason.parent.parent.parent.mediaName}">
+                                Marvel Cinematic Universe
+                            </a>
+                            &gt;
+                        </th:block>
+                        <a class="mx-2 my-0 px-0 py-0 text-danger-light hover-dark text-uppercase" href="#" th:href="@{${'/' + #strings.toLowerCase(#strings.toString(currentSeason.parent.parent.mediaType)) + '?mediaID=' + currentSeason.parent.parent.id}}"
+                            th:text="${currentSeason.parent.parent.mediaName}">
+                            Marvel Cinematic Universe
+                        </a>
+                        &gt;
+                    </th:block>
+                    <a class="mx-2 my-0 px-0 py-0 text-danger-light hover-dark text-uppercase" href="#" th:href="@{${'/' + #strings.toLowerCase(#strings.toString(currentSeason.parent.mediaType)) + '?mediaID=' + currentSeason.parent.id}}"
+                        th:text="${currentSeason.parent.mediaName}">
+                        Marvel Cinematic Universe
+                    </a>
+                    &gt;
+                </th:block>
+                <a class="mx-2 my-0 px-0 py-0 text-uppercase hover-none">
+                    [[${currentSeason.mediaName}]]</a>
+            </div>  
+            <div class="row mx-0 my-0 px-2 pt-md-2 pt-sm-4 pt-3 pb-0">
+                <h4 class="my-2 d-md-inline d-none">
+                    <span class="season-title" th:text="${currentSeason.mediaName}">MARVEL'S AGENTS OF S.H.I.E.L.D.:</span>
+                    <b class="text-danger-light season-number" th:text="${currentSeason.mediaName}">SEASON 4</b>
+                    <small class="my-auto" style="white-space: nowrap;"> ([[${#strings.substring(currentSeason.releaseDate.theatre, 0, 4)}]])</small>
+                </h4>
+                <h6 class="my-2 d-md-none d-inline">
+                    <span class="season-title" th:text="${currentSeason.mediaName}">MARVEL'S AGENTS OF S.H.I.E.L.D.:</span>
+                    <b class="text-danger-light season-number" th:text="${currentSeason.mediaName}">SEASON 4</b> 
+                    <small class="my-auto" style="white-space: nowrap;"> ([[${#strings.substring(currentSeason.releaseDate.theatre, 0, 4)}]])</small>
+                </h6>
+            </div>
+            <div th:if="${currentSeason.parent != null and currentSeason.parent.submedia != null and !currentSeason.parent.submedia.isEmpty()}" 
+            class="row mx-2 my-0 px-2 py-2 dropdown bg-black rounded">
+                <h5 class="mx-0 mx-0 mt-2 px-0 py-0" style="font-family:'Lovelo Black';">Navigate To:</h5>
+                <a class="btn btn-outline-danger dropdown-toggle ml-auto mr-0 my-auto" href="#" role="button" id="season-toggle" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false" style="font-size: 1.3rem !important;">
+                    [[${currentSeason.mediaName}]]
+                </a>
+                <div class="dropdown-menu dropdown-menu-right mt-2" aria-labelledby="season-toggle" style="max-height:400px; overflow: scroll;">
+                    <th:block th:each="season, seasonStat : ${currentSeason.parent.submedia}">
+                        <a class="dropdown-item" href="#" th:href="@{/season(mediaID=${season.id})}">
+                            <h5 style="font-family:'Lovelo Black';">Season&#8195;[[${seasonStat.index + 1}]]</h5>
+                        </a>
+                    </th:block>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="d-none">
+        <div class="container-fluid mx-0 my-0 px-0 py-0 bg-dark">
+            <div class="row mx-0 my-0 px-2 py-2">
+                <div class="col-xl-9 col-lg-8 col-12 mx-0 my-0 px-lg-3 px-2 py-0">
+                    <div class="row mx-0 my-2 px-0 py-0" id="poster-meter-box">
+                        <div class="col-xl-3 col-lg-4 col-md-3 col-4 mx-0 my-0 pl-0 pr-2 py-0">
+                            <a class="hover-none mx-0 my-0 px-0 py-0">
+                                <img class="img-fluid" src="images/poster.png" style="width: 100%;" th:src="@{${T(us.mude.common.GlobalProps).FS_URI + '/' + currentSeason.resourcePath
+                                + '/' + T(us.mude.common.GlobalProps).POSTER}}" onerror="this.onerror=null; this.src='images/poster.png';" alt="Trailer-Image" id="poster">
+                            </a>
+                        </div>
+                        <div class="col-xl-9 col-lg-8 col-md-9 col-8 mx-0 my-0 pl-2 pr-0 py-0">
+                            <div class="row mx-0 my-0 px-0 py-0 bg-black-light meter-box">
+                                <div class="col-xl-8 col-lg-6 col-md-8 col-6 mx-0 my-auto px-0 py-0 border-right border-dark">
+                                    <div class="row mx-0 my-0 px-0 py-2">
+                                        <div class="col-xl-6 col-lg-12 col-md-6 col-12 mx-0 my-0 px-0 py-0 text-center">
+                                            <h6 class="my-0 d-md-block d-none">MudeMeter
+                                                <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="left" title="The percentage of Mudemeter critics who have given this media a positive review."></i>
+                                            </h6>
+                                            <p class="my-0 py-0 d-md-none d-block text-uppercase">MudeMeter
+                                                <i class="fas fa-question-circle my-0 py-0 d-sm-inline d-none" data-toggle="tooltip" data-placement="left" title="The percentage of Mudemeter 
+                    																	critics who have given this media a positive review."></i>
+                                            </p>
+                                            <div th:if="${currentSeason != null}" 
+											class="row mx-0 my-0 px-0 py-md-2 py-3" id="mudemeter">
+												<h1 th:if="${currentSeason.mudemeter.criticMudemeter >= 80}" 
+												class="ml-auto my-0 py-0 neon">M</h1>
+												<h1 th:if="${currentSeason.mudemeter.criticMudemeter >= 70 
+												and currentSeason.mudemeter.criticMudemeter < 80.00}" 
+												class="ml-auto my-0 py-0 gold">M</h1>
+												<h1 th:if="${currentSeason.mudemeter.criticMudemeter >= 60 
+												and currentSeason.mudemeter.criticMudemeter < 70}" 
+												class="ml-auto my-0 py-0 silver">M</h1>
+												<h1 th:if="${currentSeason.mudemeter.criticMudemeter >= 50 
+												and currentSeason.mudemeter.criticMudemeter < 60}" 
+												class="ml-auto my-0 py-0 bronze">M</h1>
+												<h1 th:if="${currentSeason.mudemeter.criticMudemeter < 50 
+												and currentSeason.mudemeter.criticMudemeter > 0}" 
+												class="ml-auto my-0 py-0 black">M</h1>
+												<h2 th:if="${currentSeason.mudemeter.criticMudemeter == 0}" 
+												class="mx-auto my-0 py-0"
+												style="color:white; font-family: 'Roboto', sans-serif;">
+													Not Available
+												</h2>
+												<h3 th:if="${currentSeason.mudemeter.criticMudemeter != 0}" 
+												th:text="${T(java.lang.Math).round(currentSeason.mudemeter.criticMudemeter) 
+													+ '%'}" 
+												class="ml-1 mr-auto my-auto py-0 c-mudemeter">98%</h3>
+											</div>
+											<div th:if="${currentSeason == null}" 
+											class="row mx-0 my-0 px-0 py-md-2 py-3 mudemeter">
+												<h1 class="ml-auto my-0 py-0 gold">M</h1>
+												<h3 class="ml-1 mr-auto my-auto py-0">98%</h3>
+											</div>
+											<div th:if="${currentSeason != null}" 
+											class="mx-0 my-0 px-0 py-1 d-md-block d-none">
+												<p class="my-md-2 my-0">Average Score:
+													<b th:if="${currentSeason.mudemeter.criticAvgScore != 0}" 
+													class="text-danger-light c-score">
+							[[${#strings.toString(T(java.lang.Math).round(currentSeason.mudemeter.criticAvgScore * 10) / 10.0)
+															 + "  /  5"}]]
+													</b>
+													<b th:if="${currentSeason.mudemeter.criticAvgScore == 0}"
+													class="text-danger-light">
+													No Score
+													</b>
+												</p>
+											</div>
+											<div th:if="${currentSeason == null}"
+											class="mx-0 my-0 px-0 py-1 d-md-block d-none">
+												<p class="my-md-2 my-0">Average Score:
+													<b class="text-danger-light">8.2/10</b>
+												</p>
+												<p class="my-md-2 my-0 d-xl-block d-none">Box Office:
+													<b class="text-danger-light">$201.8M</b>
+												</p>
+											</div>
+                                        </div>
+                                        <div th:if="${currentSeason != null}" class="col-xl-6 col-lg-12 col-6 mx-0 my-0 px-0 py-0 d-xl-block 
+										d-lg-none d-md-block d-none text-center">
+											<div class="row mx-0 my-0 px-0 py-0 text-uppercase">
+												<a class="hover-blue ml-auto mr-2 px-0 my-0 py-0" 
+												href="#" th:href="@{/media/review(mediaID=${currentSeason.id}, tab=0)}">
+													<b>Critics</b>
+												</a>
+												<a class="hover-blue ml-2 mr-auto px-0 my-0 py-0" href="#" th:href="@{/media/review(mediaID=${currentSeason.id}, tab=1)}">
+													Audiences
+												</a>
+											</div>
+											<div class="progress mx-3 mt-3 mb-2 px-0 py-0" style="height:30%; 
+											border-radius:25px;">
+												<div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" 
+												role="progressbar" aria-valuenow="98" aria-valuemin="0"
+												 aria-valuemax="100" style="width: 98%;" 
+												 th:style="'width: ' + ${T(java.lang.Math).round(currentSeason.mudemeter.criticMudemeter) + '%;'}"></div>
+											</div>
+											<div class="mx-0 my-0 px-2 py-0">
+												<p class="my-0 py-0" id="consensus-big">
+													<b>Critics Consensus</b>:&#8195;
+													<span th:if="${currentSeason.reviews != null}">
+														<th:block th:each="review, reviewStat : ${currentSeason.reviews}" 
+														th:if="${review.ratingType == T(us.mude.common.RatingType).CRITIC}" th:unless="${reviewStat.index > 0}">
+															[[${review.comment}]]
+														</th:block>
+														<th:block th:each="review, reviewStat : ${currentSeason.reviews}" th:if="${review.ratingType != T(us.mude.common.RatingType).CRITIC}"
+														 th:unless="${reviewStat.index > 0}">
+															No Data
+														</th:block>
+													</span>
+													<span th:if="${currentSeason.reviews == null}"
+													class="text-danger-light">
+														No Data
+													</span>
+												</p>
+											</div>
+										</div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-6 col-md-4 col-6 mx-0 my-auto px-0 py-0 text-center border-left border-dark">
+                                    <div class="row mx-0 my-0 px-0 py-2">
+                                        <div class="col-12 mx-0 my-0 px-0 py-0 text-center">
+                                            <h6 class="my-0 d-md-block d-none">User Score
+                                                <i class="fas fa-question-circle" data-toggle="tooltip" data-placement="left" title="The 
+                    																	percentage of users who have reviewed this movie with 3.5 stars or higher."></i>
+                                            </h6>
+                                            <p class="my-0 py-0 d-md-none d-block text-uppercase d-md-none d-block">User Score
+                                                <i class="fas fa-question-circle my-0 py-0 d-sm-inline d-none" data-toggle="tooltip" data-placement="left" title="The percentage of users who have reviewed this movie with 3.5 stars or higher."></i>
+                                            </p>
+                                            <div th:if="${currentSeason != null}" class="row mx-0 my-0 px-0 py-md-2 py-3" id="user-score">
+                                                <h1 th:if="${currentSeason.mudemeter.audienceMudemeter >= 80}" class="ml-auto my-0 py-0 neon">M</h1>
+                                                <h1 th:if="${currentSeason.mudemeter.audienceMudemeter >= 70 
+                                            												and currentSeason.mudemeter.audienceMudemeter < 80.00}" class="ml-auto my-0 py-0 gold">M</h1>
+                                                <h1 th:if="${currentSeason.mudemeter.audienceMudemeter >= 60 
+                                            												and currentSeason.mudemeter.audienceMudemeter < 70}" class="ml-auto my-0 py-0 silver">M</h1>
+                                                <h1 th:if="${currentSeason.mudemeter.audienceMudemeter >= 50 
+                                            												and currentSeason.mudemeter.audienceMudemeter < 60}" class="ml-auto my-0 py-0 bronze">M</h1>
+                                                <h1 th:if="${currentSeason.mudemeter.audienceMudemeter < 50 
+                                            												and currentSeason.mudemeter.audienceMudemeter > 0}" class="ml-auto my-0 py-0 black">M</h1>
+                                                <h2 th:if="${currentSeason.mudemeter.audienceMudemeter == 0}" class="mx-auto my-0 py-0" style="color:white; font-family: 'Roboto', sans-serif;">
+                                                    Not Available
+                                                </h2>
+                                                <h3 th:if="${currentSeason.mudemeter.audienceMudemeter != 0}" th:text="${T(java.lang.Math).round(currentSeason.mudemeter.audienceMudemeter) 
+                                            													+ '%'}" class="ml-1 mr-auto my-auto py-0 a-mudemeter">98%</h3>
+                                            </div>
+                                            <div th:if="${currentSeason == null}" class="row mx-0 my-0 px-0 py-md-2 py-3 mudemeter">
+                                                <h1 class="ml-auto my-0 py-0 gold">M</h1>
+                                                <h3 class="ml-1 mr-auto my-auto py-0">98%</h3>
+                                            </div>
+                                            <div th:if="${currentSeason != null}" class="mx-0 my-0 px-0 py-1 d-md-block d-none">
+                                                <p class="my-md-2 my-0">Average Score:
+                                                    <b th:if="${currentSeason.mudemeter.audienceAvgScore != 0}" class="text-danger-light a-score">
+                                                        [[${#strings.toString(T(java.lang.Math).round(currentSeason.mudemeter.audienceAvgScore * 10) / 10.0) + " /5"}]]
+                                                    </b>
+                                                    <b th:if="${currentSeason.mudemeter.audienceAvgScore == 0}" class="text-danger-light">
+                                                        No Score
+                                                    </b>
+                                                </p>
+                                            </div>
+                                            <div th:if="${currentSeason == null}" class="mx-0 my-0 px-0 py-1 d-md-block d-none">
+                                                <p class="my-md-2 my-0">Average Score:
+                                                    <b class="text-danger-light">8.2/10</b>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mx-0 my-0 px-0 py-2 bg-black-light d-md-none d-block meter-box">
+                                <div class="mx-0 my-0 px-1 py-0">
+                                    <p class="my-0 py-0 xs-text text-center" id="consensus-small">
+                                        <b>Critics Consensus</b>:&#8195;
+                                        <span th:if="${currentSeason.reviews != null}">
+                                            <th:block th:each="review, reviewStat : ${currentSeason.reviews}" th:unless="${reviewStat.index > 1}">
+                                                [[${review.comment}]]
+                                            </th:block>
+                                        </span>
+                                        <span th:if="${currentSeason.reviews == null}" class="text-danger-light">
+                                            No Data
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mx-0 my-0 px-0 py-0 d-md-block d-none" id="review-box-big">
+						<div class="mx-0 my-lg-4 my-3 px-0 py-0 review-box-big">
+							<h6 class="py-0 my-0">Add Your Review</h6>
+						</div>
+						<div class="mx-0 my-0 px-0 py-0" style="display: flex;">
+							<div th:if="${session.member == null}" class="col-12 mx-0 my-0 px-0 py-0 review-cover" 
+							style="width:100%; height:20%; z-index:1; position: absolute; display: none;">
+							</div>
+							<div class="col-12 mx-0 my-0 px-0 py-0" id="load-page-bounce-review" 
+							style="width:100%; height:15%; z-index:1; position: absolute; display: none;">
+								<div class="row mx-0 my-0 px-2 py-0" style="height:100%;">
+									<div class="mx-auto my-auto spinner">
+										<div class="bounce1"></div>
+										<div class="bounce2"></div>
+										<div class="bounce3"></div>
+										<div class="bounce4"></div>
+									</div>
+								</div>
+							</div>
+							<div class="col-2 mx-0 my-0 px-0 py-0 text-center review-box-big" style="min-height: 100%;">
+								<img src="images/critics.gif" class="rounded-circle" style="width:90%;">
+							</div>
+							<div class="col-10 mx-0 my-0 px-1 py-0 review-box-big" style="min-height: 100%;">
+								<div class="row mx-0 my-0 px-0 py-0">
+									<div class="mx-0 my-auto px-2 py-0">
+										<button class="btn btn-outline-primary col-12 text-uppercase d-xl-none d-lg-block 
+										d-md-none d-block wts-button">
+											<small>Want to See</small>
+										</button>
+										<button class="btn btn-outline-primary col-12 text-uppercase d-xl-block d-lg-none 
+										d-md-block d-none wts-button">
+											<h6 class="ml-1 mt-2">Want to See</h6>
+										</button>
+									</div>
+									<div class="mx-0 my-auto px-2 py-0">
+										<button class="btn btn-outline-danger col-12 text-uppercase d-xl-none d-lg-block 
+										d-md-none d-block ni-button">
+											<small>Not Intersted</small>
+										</button>
+										<button class="btn btn-outline-danger col-12 text-uppercase d-xl-block d-lg-none 
+										d-md-block d-none ni-button">
+											<h6 class="ml-1 mt-2">Not Intersted</h6>
+										</button>
+									</div>
+									<fieldset class="ml-auto mt-0 mb-0 pt-2 pb-0 rating">
+										<input type="radio" class="starRadio" id="star5" name="rating" value="5" />
+										<label class="full" for="star5" title="Hell-Ya! - 5 stars" 
+										style="cursor: pointer;"></label>
+										<input type="radio" class="starRadio" id="star4half" name="rating" 
+										value="4.5" />
+										<label class="half" for="star4half" title="Very Good - 4.5 stars" 
+										style="cursor: pointer;"></label>
+										<input type="radio" class="starRadio" id="star4" name="rating" value="4" />
+										<label class="full" for="star4" title="Pretty good - 4 stars" 
+										style="cursor: pointer;"></label>
+										<input type="radio" class="starRadio" id="star3half" name="rating" 
+										value="3.5" />
+										<label class="half" for="star3half" title="Not bad - 3.5 stars" 
+										style="cursor: pointer;"></label>
+										<input type="radio" class="starRadio" id="star3" name="rating" value="3" />
+										<label class="full" for="star3" title="So-so - 3 stars" 
+										style="cursor: pointer;"></label>
+										<input type="radio" class="starRadio" id="star2half" name="rating" 
+										value="2.5" />
+										<label class="half" for="star2half" title="Kinda bad - 2.5 stars" 
+										style="cursor: pointer;"></label>
+										<input type="radio" class="starRadio" id="star2" name="rating" value="2" />
+										<label class="full" for="star2" title="Bad - 2 stars" 
+										style="cursor: pointer;"></label>
+										<input type="radio" class="starRadio" id="star1half" name="rating" 
+										value="1.5" />
+										<label class="half" for="star1half" title="Meh - 1.5 stars" 
+										style="cursor: pointer;"></label>
+										<input type="radio" class="starRadio" id="star1" name="rating" value="1" />
+										<label class="full" for="star1" title="Sucks - 1 star" 
+										style="cursor: pointer;"></label>
+										<input type="radio" class="starRadio" id="starhalf" name="rating" value="0.5" />
+										<label class="half" for="starhalf" title="Yuk! - 0.5 stars" 
+										style="cursor: pointer;"></label>
+									</fieldset>
+								</div>
+								<div class="mx-0 my-0 px-2 py-0">
+									<textarea id="review-comment" placeholder="Add a Review" 
+									style="width: 100%; height: 7.2rem; z-index: auto; position: relative; 
+									line-height: normal; font-size: 16px; transition: none; background: transparent !important; 
+									color: white;"
+									 spellcheck="true"></textarea>
+								</div>
+								<div class="row mx-0 my-0 px-2 py-3">
+									<div class="row mx-0 my-0 px-2 py-1" style="display: none;" 
+									id="post-button-alert">
+										<p class="ml-auto mx-0 my-0 px-0 py-0 text-danger-light" 
+										style="font-size: 1.5rem;">
+											POSTED!!
+										</p>
+									</div>
+									<a class="ml-auto my-auto btn btn-outline-light" id="post-button" style="cursor: pointer;">Post</a>
+									<a class="ml-auto my-auto btn btn-outline-success" id="edit-button" 
+									style="cursor: pointer; display: none;">Edit</a>
+									<a class="ml-2 my-auto btn btn-outline-info" id="delete-button" 
+									style="cursor: pointer; display: none;">Delete</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row mx-0 mt-3 mb-0 px-0 py-0 d-md-none d-flex w-100" id="review-box-small">
+						<div class="col-4 mx-0 my-0 px-2 py-2 text-center panel text-uppercase text-primary wts-box" 
+						style="cursor: pointer;">
+							<p class="my-0 text-primary">
+								<i class="fas fa-plus fa-2x"></i>
+							</p>
+							Want To See
+						</div>
+						<div class="col-4 mx-0 my-0 px-2 py-2 text-center text-uppercase text-danger ni-box" 
+						style="border-top: 1px solid rgba(255, 255, 255, .5); 
+						border-bottom: 1px solid rgba(255, 255, 255, .5); cursor: pointer;">
+							<p class="my-0 text-danger">
+								<i class="fas fa-times fa-2x"></i>
+								</i>
+							</p>
+							Not Intersted
+						</div>
+						<div class="col-4 mx-0 my-0 px-2 py-2 text-center panel text-uppercase 
+						text-warning add-box" style="cursor: pointer;">
+							<p class="my-0 text-warning">
+								<i class="fas fa-star fa-2x"></i>
+								</i>
+							</p>
+							Add Review
+						</div>
+					</div>
+					<div class="col-12 mx-0 my-0 px-0 py-2 bg-dark" id="review-slide" style="display:none;">
+						<div class="mx-0 my-0 px-0 py-0">
+							<div th:if="${session.member == null}" class="col-12 mx-0 my-0 px-0 py-0 review-cover" 
+							style="width:100%; height:15%; z-index:1; position: absolute; display: none;">
+							</div>
+							<div class="col-12 mx-0 my-0 px-0 py-0" id="load-page-bounce-review-small" 
+							style="width:100%; height:100%; z-index:1; position: absolute; display: none;">
+								<div class="row mx-0 my-0 px-0 py-0" style="height:100%;">
+									<div class="mx-auto my-auto spinner">
+										<div class="bounce1"></div>
+										<div class="bounce2"></div>
+										<div class="bounce3"></div>
+										<div class="bounce4"></div>
+									</div>
+								</div>
+							</div>
+							<div class="mx-0 my-0 px-0 py-0 review-box-small" style="display: flex;">
+								<div class="col-sm-3 col-4 mx-0 my-0 px-0 py-2 text-center" style="min-height: 100%;">
+									<img src="images/critics.gif" class="rounded-circle" style="width:90%;">
+								</div>
+								<div class="col-sm-9 col-8 mx-0 my-0 px-1 py-0 review-box-small" style="min-height: 100%;">
+									<div class="row mx-0 my-0 px-0 py-0">
+										<fieldset class="ml-auto mt-0 mb-0 pt-2 pb-0 rating">
+											<input type="radio" id="star5" name="rating" value="5" />
+											<label class="full" for="star5" title="Hell-Ya! - 5 stars" 
+											style="cursor: pointer;"></label>
+											<input type="radio" id="star4half" name="rating" value="4.5" />
+											<label class="half" for="star4half" title="Very Good - 4.5 stars" 
+											style="cursor: pointer;"></label>
+											<input type="radio" id="star4" name="rating" value="4" />
+											<label class="full" for="star4" title="Pretty good - 4 stars" 
+											style="cursor: pointer;"></label>
+											<input type="radio" id="star3half" name="rating" value="3.5" />
+											<label class="half" for="star3half" title="Not bad - 3.5 stars" 
+											style="cursor: pointer;"></label>
+											<input type="radio" id="star3" name="rating" value="3" />
+											<label class="full" for="star3" title="So-so - 3 stars" 
+											style="cursor: pointer;"></label>
+											<input type="radio" id="star2half" name="rating" value="2.5" />
+											<label class="half" for="star2half" title="Kinda bad - 2.5 stars" 
+											style="cursor: pointer;"></label>
+											<input type="radio" id="star2" name="rating" value="2" />
+											<label class="full" for="star2" title="Bad - 2 stars" 
+											style="cursor: pointer;"></label>
+											<input type="radio" id="star1half" name="rating" value="1.5" />
+											<label class="half" for="star1half" title="Meh - 1.5 stars" 
+											style="cursor: pointer;"></label>
+											<input type="radio" id="star1" name="rating" value="1" />
+											<label class="full" for="star1" title="Sucks - 1 star" 
+											style="cursor: pointer;"></label>
+											<input type="radio" id="starhalf" name="rating" value="0.5" />
+											<label class="half" for="starhalf" title="Yuk! - 0.5 stars" 
+											style="cursor: pointer;"></label>
+										</fieldset>
+									</div>
+									<div class="mx-0 my-0 px-2 py-0 review-box-small">
+										<textarea placeholder="Add a Review" 
+										style="width: 100%; height: 6.2rem; z-index: auto; position: relative; 
+										line-height: normal; font-size: 16px; transition: none; 
+										background: transparent !important; color: white;"
+										 spellcheck="true"></textarea>
+									</div>
+									<div class="row mx-0 my-0 px-2 py-3 review-box-small">
+										<a class="ml-auto btn btn-outline-light" href="#" id="post-button-small">Post</a>
+									</div>
+									<div class="row mx-0 my-0 px-2 py-1" style="display: none;" id="post-button-small-alert">
+										<p class="ml-auto mx-0 my-0 px-0 py-0 text-danger-light">
+											POSTED!!
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+                    </div>
+                    
+                    <div class="mx-0 my-0 px-0 pt-0 pb-0" id="info-box">
+                        <div class="row mx-0 my-0 px-0 py-xl-4 py-lg-3 py-md-2 py-4 header-label">
+                            <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:2%;"></div>
+                            <h5 class="mx-0 my-auto px-2 py-0 text-uppercase bg-dark">
+                                Season Info
+                            </h5>
+                        </div>
+                        <div class="col-12 mx-0 my-0 px-2 py-2" id="info-box-text">
+                            <span th:text="${currentSeason.desc}">In Season 4, Ghost Rider Robbie Reyes (Gabriel Luna) crosses paths with former agent Daisy "Quake" Johnson (Chloe Bennet).
+                            Together, they investigate the worrying appearance of ghosts at a scientific facility. S.H.I.E.L.D are also on the trail,
+                            uncovering the mysterious Darkhold, a book of knowledge that is...</span>
+                        </div>
+                        <div class="row mx-0 my-0 px-2 py-1">
+                            <div class="col-3 mx-0 my-0 px-2 py-1 text-right">
+                                <b>Genre</b>
+                            </div>
+                            <div class="col-9 mx-0 my-0 px-2 py-1">
+                                <th:block th:each="g, gStat : ${currentSeason.genre}">
+                                    <a th:text="${g}" class="text-danger-light">Action & Adventure</a>
+                                    <span th:unless="${gStat.last}">&#8195;</span>
+                                </th:block>
+                            </div>
+
+                            <div class="col-3 mx-0 my-0 px-2 py-1 text-right">
+                                <b>Network</b>
+                            </div>
+                            <div class="col-9 mx-0 my-0 px-2 py-1">
+                                <a th:text="${currentSeason.from}" class="text-danger-light">Marvel Studios</a>
+                            </div>
+
+                            <div class="col-3 mx-0 my-0 px-2 py-1 text-right">
+                                <b>Premiere Date</b>
+                            </div>
+                            <div class="col-9 mx-0 my-0 px-2 py-1">
+                                <th:block th:if="${currentSeason.releaseDate != null}">
+                                    <th:block th:if="${currentSeason.releaseDate.theatre != null}">
+                                        [[${currentSeason.parseDate(currentSeason.releaseDate.theatre) + ', ' + #strings.substring(currentSeason.releaseDate.theatre,
+                                        0, 4)}]]
+                                    </th:block>
+                                </th:block>
+                                <th:block th:if="${currentSeason.releaseDate == null or currentSeason.releaseDate.theatre == null}">
+                                    Not Available
+                                </th:block>
+                            </div>
+
+                            <div class="col-3 mx-0 my-0 px-2 py-1 text-right">
+                                <b>Creators</b>
+                            </div>
+                            <div class="col-9 mx-0 my-0 px-2 py-1 creator-info">
+                                <th:block th:if="${currentSeason.casts != null}" th:each="d, dStat : ${currentSeason.casts}">
+                                    <a th:if="${d.artistType == T(us.mude.common.ArtistType).CREATOR}" href="#" th:href="@{/artist(artistID=${d.artist.id})}"
+                                        class="text-danger-light hover-dark">
+                                        [[${d.artist.name.firstName + " " + d.artist.name.lastName}]]
+                                    </a>
+                                    <span th:if="${d.artistType == T(us.mude.common.ArtistType).CREATOR}">&#8195;</span>
+                                </th:block>
+                            </div>
+
+                            <div class="col-3 mx-0 my-0 px-2 py-1 text-right d-xl-block d-lg-none d-md-none d-block">
+                                <b>Exec. Producers</b>
+                            </div>
+                            <div class="col-9 mx-0 my-0 px-2 py-1 d-xl-block d-lg-none d-md-none d-block producer-info">
+                                <th:block th:if="${currentSeason.casts != null}" th:each="d, dStat : ${currentSeason.casts}" th:unless="${dStat.index > 3}">
+                                    <a th:if="${d.artistType == T(us.mude.common.ArtistType).PRODUCER}" href="#" th:href="@{/artist(artistID=${d.artist.id})}"
+                                        class="text-danger-light hover-dark">
+                                        [[${d.artist.name.firstName + " " + d.artist.name.lastName}]]
+                                    </a>
+                                    <span th:if="${d.artistType == T(us.mude.common.ArtistType).PRODUCER}">&#8195;</span>
+                                </th:block>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-4 mx-0 my-0 px-0 pt-2 pb-0 d-lg-block d-none" id="right-pane">
+                    <div th:replace="movie :: left-pane"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="d-none" id="audience-review-box">
+        <div class="container-fluid mx-0 my-0 px-0 py-0 bg-dark">
+            <div class="mx-0 my-0 px-0 pt-4 pb-0 bg-dark">
+                <div class="row mx-0 mt-md-4 mt-0 mb-0 px-0 py-0 bg-danger header-label">
+                    <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:2%;"></div>
+                    <h4 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark d-md-block d-none">
+                        Audience REVIEWS
+                    </h4>
+                    <h5 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark d-md-none d-block">
+                        Audience REVIEWS
+                    </h5>
+                </div>
+            </div>
+            <!-- For Spacing -->
+            <div class="mx-0 my-3 px-0 py-2">
+            </div>
+            <div class="row mx-0 my-0 px-0 py-0 aReviewBox-div">
+                <div class="col-lg-4 col-md-6 col-12 mx-0 my-0 px-2 py-2 aReviewBox">
+                    <div class="col-12 mx-0 my-0 px-0 py-0 review-box" style="min-height:100% !important;">
+                        <div class="row mx-0 my-0 px-0 py-0">
+                            <div class="col-md-4 col-sm-3 col-4 mx-0 my-0 px-2 py-0 text-center">
+                                <img src="images/critics.gif" class="rounded-circle img-fluid" />
+                            </div>
+                            <div class="col-md-8 col-sm-9 col-8 mx-0 my-0 pl-2 pr-0 py-0">
+                                <p class="my-0" style="font-size:1.2rem;">
+                                    <a href="#" class="mx-0 mt-2 mb-0 px-0 py-0 hover-blue 
+    									arb-name">Jens S.</a>
+                                </p>
+                                <div class="row mx-0 my-0 px-0 py-1">
+                                    <div class="row mx-0 my-0 px-0 py-0 arb-star-box">
+                                        <i class="icon-star my-auto text-warning arb-star" style="display: none;"></i>
+                                        <i class="icon-star-half my-auto text-warning arb-star-half" style="display: none;"></i>
+                                    </div>
+                                    <span class="ml-3 my-auto text-warning arb-score">5</span>
+                                </div>
+                                <div class="row mx-0 my-0 px-0 py-0">
+                                    <p class="text-muted py-0 my-0 arb-reg">February 19, 2018</p>
+                                    <!--<p class="py-0 my-0 ml-auto text-danger-light hover-dark report-button" style="cursor: pointer; display: none;" onclick="">Report</p>-->
+									<p class="py-0 my-0 ml-auto text-danger-light hover-dark report-button" th:if="${session.member != null}" style="cursor: pointer;" onclick="">Report</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 mx-0 my-0 px-2 py-2 text-center arb-comment" style="overflow:hidden;">
+                            <span>Marvel's most unusual film of its Cinematic Universe is big on world-building, empowerment, strong
+                                (female) characters and jabs at the current state of the world. All that mixed with the ingredients
+                                of a blockbuster film, a great cast, good humorous timing and...
+                            </span>
+                            <p class="mt-4 mb-0 pb-0 text-right">
+                                <a href="#" class="mx-0 my-0 px-0 py-0 text-danger-light hover-dark">
+                                    <b>More</b>
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col text-right px-2 my-sm-0 mt-3 mb-0 view-all-a" style="display: none;">
+                <a href="#" th:href="@{/media/review(mediaID=${currentSeason.id}, tab=0)}" class="mr-auto text-danger-light hover-dark">
+                    <b>View All Audience Reviews</b>
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <section class="d-none" id="critic-review-box">
+        <div class="container-fluid mx-0 my-0 px-0 py-0 bg-dark">
+            <div class="mx-0 my-0 px-0 pt-4 pb-0 bg-dark">
+                <div class="row mx-0 mt-md-4 mt-0 mb-0 px-0 py-0 bg-danger header-label">
+                    <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:2%;"></div>
+                    <h4 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark d-md-block d-none">
+                        CRITIC REVIEWS
+                    </h4>
+                    <h5 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark d-md-none d-block">
+                        CRITIC REVIEWS
+                    </h5>
+                </div>
+            </div>
+            <!-- For Spacing -->
+            <div class="mx-0 my-3 px-0 py-2">
+            </div>
+            <div class="row mx-0 my-0 px-0 py-0 cReviewBox-div">
+                <div class="col-lg-4 col-md-6 col-12 mx-0 my-0 px-2 py-2 cReviewBox">
+                    <div class="col-12 mx-0 my-0 px-0 py-0 review-box" style="min-height:100% !important;">
+                        <div class="row mx-0 my-0 px-0 py-0">
+                            <div class="col-md-4 col-sm-3 col-4 mx-0 my-0 px-2 py-0 text-center">
+                                <img src="images/critics.gif" class="rounded-circle img-fluid" />
+                            </div>
+                            <div class="col-md-8 col-sm-9 col-8 mx-0 my-0 pl-2 pr-0 py-0">
+                                <div class="row m-0 px-0 py-0">
+                                    <p class="my-0" style="font-size:1.2rem;">
+                                        <a href="#" class="mx-0 mt-2 mb-0 px-0 py-0 
+                                        hover-blue crb-name">Matthew Rozsa</a>
+                                    </p>
+                                    <p class="my-0 ml-3 crb-badge" style="font-size:1.2rem; display: none;">
+                                        <span class="badge badge-danger px-2 py-2">TOP</span>
+                                    </p>
+                                </div>
+                                <div class="row mx-0 my-0 px-0 py-1">
+                                    <div class="row mx-0 my-0 px-0 py-0 crb-star-box">
+                                        <i class="icon-star my-auto text-warning crb-star" style="display: none;"></i>
+                                        <i class="icon-star-half my-auto text-warning crb-star-half" style="display: none;"></i>
+                                    </div>
+                                    <span class="ml-3 my-auto text-warning crb-score">5</span>
+                                </div>
+                                <div class="row mx-0 my-0 px-0 py-0">
+                                    <p class="text-muted py-0 my-0 crb-reg">February 19, 2018</p>
+                                    <!--<p class="py-0 my-0 ml-auto text-danger-light hover-dark report-button" style="cursor: pointer; display: none;" onclick="">Report</p>-->
+									<p class="py-0 my-0 ml-auto text-danger-light hover-dark report-button" th:if="${session.member != null}" style="cursor: pointer;" onclick="">Report</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 mx-0 my-0 px-2 py-2 text-center crb-comment" style="overflow:hidden;">
+                            <span>
+                                When it comes to creative visuals, engaging action and likable characters, "Black Panther" stands confidently next to the
+                                best fare offered up by the Marvel Cinematic Universe.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col text-right px-2 my-sm-0 mt-3 mb-0 view-all-c" style="display: none;">
+                <a href="#" th:href="@{/media/review(mediaID=${currentSeason.id}, tab=1)}" class="mr-auto text-danger-light hover-dark">
+                    <b>View All Critic Reviews</b>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="d-none">
+        <div class="container-fluid mx-0 my-0 px-0 py-0 bg-black" id="episode-box">
+            <div class="mx-0 my-0 px-0 pt-4 pb-0">
+                <div class="row mx-0 mt-md-4 mt-0 mb-0 px-0 py-0 bg-light">
+                    <div class="mx-0 my-0 px-0 py-0 bg-white header-label-left" style="width:2%;"></div>
+                    <h4 class="mx-0 my-0 px-2 py-0 text-uppercase text-danger bg-black d-md-block d-none">
+                        Episodes
+                    </h4>
+                    <h5 class="mx-0 my-0 px-2 py-0 text-uppercase text-danger bg-black d-md-none d-block">
+                        Episodes
+                    </h5>
+                </div>
+            </div>
+
+            <div th:if="${currentSeason.submedia == null or currentSeason.submedia.isEmpty()}" class="mx-0 mt-3 mb-0 px-0 pt-3 pb-0 text-center" id="no-photo" style="display: none;">
+                <h4 class="my-0 py-0">Not Yet Available!</h4>
+            </div>
+
+            <div th:if="${currentSeason.submedia != null and !currentSeason.submedia.isEmpty()}" class="details owl-carousel owl-theme mx-0 mt-3 mb-4 px-0 pt-3 pb-0" style="z-index:0;">
+                <th:block th:each="e, eStat : ${currentSeason.submedia}">
+                    <div class="item">
+                        <a class="mx-0 my-0 px-0 py-0 hover-none" href="#" th:href="@{/episode(mediaID=${e.id})}">
+                            <div class="mx-0 my-0 px-0 py-2">
+                                <h6 class="mx-0 my-0 text-light episode-number">[[${e.mediaName}]]</h6>
+                            </div>
+                            <div class="card px-0 py-0 mx-0 my-0">
+                                <img class="card-img-top img-fluid rounded-0" src="images/banner.png" 
+                                th:src="@{${T(us.mude.common.GlobalProps).FS_URI + '/' + e.resourcePath + '/' + T(us.mude.common.GlobalProps).BANNER}}"
+                                onerror="this.onerror=null; this.src='images/banner.png';" alt="Card image cap">
+                            </div>
+                            <div class="mx-0 my-0 px-2 py-2">
+                                <h6 class="mx-0 my-0 text-danger-light episode-title">[[${e.mediaName}]]</h6>
+                                <b class="text-light">[[${e.parseDate(e.releaseDate.theatre) + ', ' + #strings.substring(e.releaseDate.theatre,
+                                0, 4)}]]</b>
+                            </div>
+                        </a>
+                    </div>
+                </th:block>
+            </div>
+        </div>
+    </section>
+
+    <section class="d-none">
+        <div class="container-fluid mx-0 my-0 px-0 py-0 bg-dark" id="photo-box">
+            <div class="mx-0 my-0 px-0 pt-4 pb-0 bg-dark">
+                <div class="row mx-0 mt-md-4 mt-0 mb-0 px-0 py-0 bg-danger header-label">
+                    <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:2%;"></div>
+                    <h4 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark d-md-block d-none">
+                        Photos
+                    </h4>
+                    <h5 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark d-md-none d-block">
+                        Photos
+                    </h5>
+                </div>
+            </div>
+    
+            <div class="mx-0 mt-3 mb-0 px-0 pt-3 pb-0 text-center" id="no-photo" style="display: none;">
+                <h4 class="my-0 py-0">Not Yet Available!</h4>
+            </div>
+    
+            <div class="mx-0 mt-3 mb-0 px-1 pt-3 pb-0" id="photo-container" style="z-index:0;">
+                <th:block th:each="i : ${#numbers.sequence(5, 0, -1)}">
+                    <div class="item">
+                        <a class="mx-0 my-0 px-0 py-0 hover-blue img-btn" style="cursor: pointer;" data-toggle="modal" data-src="images/banner.jpg"
+                            data-target="#photoModal" th:data-src="${T(us.mude.common.GlobalProps).FS_URI} + '/' + ${currentSeason.resourcePath} + '/photos/' + ${i + 1} + '.jpg'">
+                            <div class="card px-0 py-0 mx-0 my-0">
+                                <img class="card-img-top rounded-0" src="images/banner.jpg" th:src="@{${T(us.mude.common.GlobalProps).FS_URI} + '/' + ${currentSeason.resourcePath} + '/photos/' +
+    								${i + 1} + '.jpg'}" onerror="this.parentNode.parentNode.parentNode.style.display='none';">
+                            </div>
+                        </a>
+                    </div>
+                </th:block>
+            </div>
+            <div class="col text-right px-2 my-sm-0 mt-3 mb-0 photo-button" style="display: none;">
+                <a class="mr-auto text-danger-light hover-dark" style="cursor: pointer;">
+                    <b>View All Photos</b>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="d-none">
+        <div class="container-fluid mx-0 my-0 px-0 py-0 bg-dark" id="cast-box">
+            <div class="mx-0 my-0 px-0 pt-4 pb-0 bg-dark">
+                <div class="row mx-0 mt-md-4 mt-0 mb-0 px-0 py-0 bg-danger header-label">
+                    <div class="mx-0 my-0 px-0 py-0 bg-danger header-label-left" style="width:2%;"></div>
+                    <h4 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark d-md-block d-none">
+                        Cast
+                    </h4>
+                    <h6 class="mx-0 my-0 px-2 py-0 text-uppercase bg-dark d-md-none d-block">
+                        Cast
+                    </h6>
+                </div>
+            </div>
+    
+            <div th:if="${currentSeason.casts == null or currentSeason.casts.isEmpty()}" class="mx-0 mt-3 mb-0 px-0 pt-3 pb-3 text-center"
+                id="no-artist" style="display: none;">
+                <h4 class="my-0 py-0">Not Yet Available!</h4>
+            </div>
+    
+            <div th:if="${currentSeason.casts != null and !currentSeason.casts.isEmpty()}" class="details owl-carousel owl-theme mx-0 mt-3 mb-0 px-1 pt-3 pb-3"
+                style="z-index:0;">
+                <th:block th:each="d, dStat : ${currentSeason.casts}" th:unless="${dStat.index > 8}">
+                    <div class="item">
+                        <a class="mx-0 my-0 px-0 py-0 hover-none" href="#" th:href="@{/artist(artistID=${d.artist.id})}">
+                            <div class="card px-0 py-0 mx-0 my-0">
+                                <img class="card-img-top rounded-0" src="images/critics.gif" th:src="@{${T(us.mude.common.GlobalProps).FS_URI} + '/' + ${d.artist.resourcePath} + '/photos/0.jpg'}"
+                                    onerror="this.onerror=null; this.src='images/critics.gif';" alt="Card image cap" style="min-height: 100%;">
+                            </div>
+                            <div class="mx-0 my-0 px-2 py-2">
+                                <h6 class="mx-0 my-0 text-danger-light">[[${d.artist.name.firstName + " " + d.artist.name.lastName}]]</h6>
+                                <b th:if="${d.artistRole != null and d.artistRole != ''}" class="text-light">as
+                                    <span th:text="${d.artistRole}">Kylo Ren</span>
+                                </b>
+                            </div>
+                        </a>
+                    </div>
+                </th:block>
+            </div>
+        </div>
+    </section>
+
+    <footer class="px-0 d-none" th:replace="index :: footer">
+    </footer>
+
+    <script src="jquery/jquery-3.3.1.min.js"></script>
+    <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="owlcarousel/owl.carousel.min.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/details.js"></script>
+    <script src="js/season.js"></script>
+    <script>
+        $(function () {
+            $(".season-title").each(function () {
+                $(this).text($(this).text().split("Season")[0]);
+            });
+            $(".season-number").each(function () {
+                if ($(this).text().indexOf("Season") >= 0)
+                    $(this).text("Season" + $(this).text().split("Season")[1]);
+                else {
+                    $(this).remove();
+                }
+            });
+
+            $(".episode-title").each(function () {
+                $(this).text($(this).text().split("Episode")[0]);
+            });
+            $(".episode-number").each(function () {
+                if ($(this).text().indexOf("Episode") >= 0)
+                    $(this).text("Episode" + $(this).text().split("Episode")[1]);
+                else {
+                    $(this).remove();
+                }
+            });
+
+            if ($(".creator-info").children().length <= 0) {
+                var str = "<span>Not Available</span>";
+                var html = $.parseHTML(str);
+                $(".creator-info").append(html);
+            }
+
+            if ($(".producer-info").children().length <= 0) {
+                var str = "<span>Not Available</span>";
+                var html = $.parseHTML(str);
+                $(".producer-info").append(html);
+            }
+
+            setTimeout(function () {
+                $("#photo-container").find(":hidden").remove();
+                if ($("#photo-container").children().hasClass('item')) {
+                    $("#photo-container").addClass("photos owl-carousel owl-theme");
+                    $('.photos').owlCarousel({
+                        margin: 10,
+                        autoWidth: false,
+                        nav: true,
+                        items: 4,
+                        responsive: {
+                            0: {
+                                items: 1
+                            },
+                            500: {
+                                items: 2
+                            },
+                            1000: {
+                                items: 4
+                            }
+                        }
+                    });
+                    if ($("#photo-container .item").length > 5)
+                        $(".photo-button").show();
+                }
+                else {
+                    $("#no-photo").show();
+                    $("#photo-container").hide();
+                    $(".photo-button").hide();
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
